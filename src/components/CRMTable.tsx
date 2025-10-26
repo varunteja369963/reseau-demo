@@ -299,41 +299,43 @@ export const CRMTable = ({
   return (
     <div className="bg-card rounded-3xl shadow-soft overflow-hidden w-full">
       {/* Table */}
-      <div className="overflow-auto max-h-[700px]">
-        <Table className="min-w-max">
-          <TableHeader className="bg-muted/50 z-10">
-            <TableRow className="bg-muted/50 hover:bg-muted/50">
-              {columns.map((col) => (
-                <TableHead
-                  key={col}
-                  className="sticky top-0 bg-card z-20 font-semibold text-foreground whitespace-nowrap relative shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
-                  style={{
-                    width: columnWidths[col] ? `${columnWidths[col]}px` : undefined,
-                    minWidth: 120,
-                    maxWidth: 400,
-                  }}
-                >
-                  {COLUMN_LABELS[col] || col}
-                  <span
-                    className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize select-none"
-                    onMouseDown={(e) => onResizeMouseDown(col, e)}
-                  />
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {paginatedLeads.map((lead) => (
-              <TableRow key={lead.leadId}>
+      <div className="overflow-x-auto">
+        <div className="overflow-y-auto max-h-[700px]">
+          <Table className="min-w-max">
+            <TableHeader className="bg-muted/50 z-10">
+              <TableRow className="bg-muted/50 hover:bg-muted/50">
                 {columns.map((col) => (
-                  <React.Fragment key={col}>
-                    {renderCellContent(lead, col)}
-                  </React.Fragment>
+                  <TableHead
+                    key={col}
+                    className="sticky top-0 bg-card z-20 font-semibold text-foreground whitespace-nowrap relative shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+                    style={{
+                      width: columnWidths[col] ? `${columnWidths[col]}px` : undefined,
+                      minWidth: 120,
+                      maxWidth: 400,
+                    }}
+                  >
+                    {COLUMN_LABELS[col] || col}
+                    <span
+                      className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize select-none hover:bg-primary/20"
+                      onMouseDown={(e) => onResizeMouseDown(col, e)}
+                    />
+                  </TableHead>
                 ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {paginatedLeads.map((lead) => (
+                <TableRow key={lead.leadId}>
+                  {columns.map((col) => (
+                    <React.Fragment key={col}>
+                      {renderCellContent(lead, col)}
+                    </React.Fragment>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       {/* Pagination Footer */}
