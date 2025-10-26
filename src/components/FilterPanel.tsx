@@ -23,19 +23,20 @@ export const FilterPanel = ({ onToggle }: FilterPanelProps) => {
   });
 
   return (
-    <div className="bg-card rounded-3xl shadow-soft p-6 sticky top-24">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-foreground">Lead Filter</h3>
-        <button 
-          onClick={onToggle}
-          className="p-2 hover:bg-muted rounded-lg transition-smooth"
-          aria-label="Close filter panel"
-        >
-          <X className="w-5 h-5 text-muted-foreground" />
-        </button>
-      </div>
-      
-      <div className="space-y-8">
+    <div className="bg-card rounded-3xl shadow-soft sticky top-24 max-h-[700px] overflow-auto">
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-semibold text-foreground">Lead Filter</h3>
+          <button 
+            onClick={onToggle}
+            className="p-2 hover:bg-muted rounded-lg transition-smooth"
+            aria-label="Close filter panel"
+          >
+            <X className="w-5 h-5 text-muted-foreground" />
+          </button>
+        </div>
+        
+        <div className="space-y-8">
             {/* Lead Status */}
             <div>
               <h3 className="text-base font-semibold mb-4 text-foreground">Lead Status</h3>
@@ -129,6 +130,7 @@ export const FilterPanel = ({ onToggle }: FilterPanelProps) => {
         <Button className="w-full h-12 rounded-2xl gradient-blue text-white font-semibold shadow-soft hover:shadow-medium transition-smooth">
           ADD NEW CONTACT
         </Button>
+        </div>
       </div>
     </div>
   );
