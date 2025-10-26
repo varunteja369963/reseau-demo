@@ -151,9 +151,10 @@ export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTabl
                   />
                 </div>
                 {date?.from && (
-                  <div className="border-t border-border p-3">
+                  <div className="border-t border-border p-3 flex justify-end">
                     <Button 
-                      className="w-full h-9 rounded-lg"
+                      size="sm"
+                      className="h-8 px-6 rounded-lg"
                       onClick={() => setIsDatePickerOpen(false)}
                     >
                       Select
