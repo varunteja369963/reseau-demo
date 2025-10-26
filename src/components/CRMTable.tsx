@@ -206,11 +206,6 @@ export const CRMTable = ({
 
   return (
     <div className="bg-card rounded-3xl shadow-soft overflow-hidden">
-      {/* Table Header */}
-      <div className="p-6 border-b border-border">
-        <h2 className="text-lg font-semibold text-foreground">Good Morning Sean. Here are your leads!</h2>
-      </div>
-
       {/* Table */}
       <div className="overflow-x-auto">
         <Table>
