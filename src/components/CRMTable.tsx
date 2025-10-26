@@ -374,11 +374,10 @@ export const CRMTable = ({
   return (
     <div className="bg-card rounded-3xl shadow-soft overflow-hidden w-full">
       {/* Table */}
-      <div className="relative overflow-x-auto">
-        <div className="max-h-[700px] overflow-y-auto">
+      <div className="relative max-h-[700px] overflow-auto">
         <Table className="min-w-max">
-          <TableHeader className="sticky top-0 z-20 bg-card after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-border">
-            <TableRow className="hover:bg-transparent border-b-0">
+          <TableHeader className="sticky top-0 z-20 bg-card shadow-sm">
+            <TableRow className="hover:bg-transparent border-b">
               {columns.map((col) => (
                 <TableHead
                   key={col}
@@ -417,7 +416,6 @@ export const CRMTable = ({
             ))}
           </TableBody>
         </Table>
-        </div>
       </div>
 
       {/* Pagination Footer */}
