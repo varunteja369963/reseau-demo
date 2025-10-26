@@ -1,4 +1,4 @@
-import { TrendingUp, CheckCircle, Inbox, XCircle, LucideIcon } from "lucide-react";
+import { TrendingUp, CheckCircle, Inbox, PhoneMissed, LucideIcon } from "lucide-react";
 
 interface Stat {
   title: string;
@@ -33,9 +33,9 @@ const stats: Stat[] = [
   {
     title: "DNP",
     value: 52,
-    gradient: "gradient-teal",
-    icon: XCircle,
-    lightBg: "bg-[hsl(var(--teal-light))]",
+    gradient: "gradient-red",
+    icon: PhoneMissed,
+    lightBg: "bg-[hsl(var(--red-light))]",
   },
 ];
 

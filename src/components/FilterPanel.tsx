@@ -1,5 +1,4 @@
-import { Search, Star } from "lucide-react";
-import { Input } from "./ui/input";
+import { Star } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -21,14 +20,6 @@ export const FilterPanel = () => {
 
   return (
     <div className="bg-card rounded-3xl shadow-soft p-6 sticky top-24">
-      <div className="mb-6 relative">
-        <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Search Leads..."
-          className="rounded-2xl border-muted bg-muted/50 h-12 pl-11"
-        />
-      </div>
-
       <div className="space-y-8">
         {/* Lead Status */}
         <div>
