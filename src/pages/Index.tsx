@@ -15,7 +15,12 @@ import { Lead } from "@/types/lead";
 const Index = () => {
   const [activeTab, setActiveTab] = useState<string>("crm");
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(['fullName', 'email', 'phoneNumber', 'leadStatus', 'leadSource', 'vehicleMake', 'model', 'year', 'budgetRange', 'dealStage', 'leadScoring']);
+  const [visibleColumns, setVisibleColumns] = useState<string[]>([
+    'fullName', 'email', 'phoneNumber', 'leadStatus', 'leadScoring', 
+    'leadSource', 'leadChannel', 'campaignName', 'dateOfInquiry', 'assignedSalesperson',
+    'vehicleMake', 'model', 'year', 'trim', 'colorPreference', 'newUsed', 'budgetRange', 
+    'tradeIn', 'dealStage', 'dealValue', 'closeProbability', 'expectedCloseDate'
+  ]);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [showProfileModal, setShowProfileModal] = useState<boolean>(false);
   const [showContactModal, setShowContactModal] = useState<boolean>(false);
@@ -39,14 +44,14 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Sidebar />
       
-      <div className="ml-24 min-h-screen flex flex-col">
+      <div className="ml-24 min-h-screen flex flex-col max-w-[100vw]">
         <TopNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
         
-        <main className="flex-1 p-8">
-          <div className="max-w-[1600px] mx-auto">
+        <main className="flex-1 p-8 overflow-x-hidden">
+          <div className="max-w-full mx-auto">
             {activeTab === "crm" && (
               <>
                 <StatsCards />

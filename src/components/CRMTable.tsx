@@ -6,7 +6,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./ui/pagination";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
-const DEFAULT_COLUMNS = ['fullName', 'email', 'phoneNumber', 'leadStatus', 'leadSource', 'vehicleMake', 'model', 'year', 'budgetRange', 'dealStage', 'leadScoring'];
+const DEFAULT_COLUMNS = [
+  'fullName', 'email', 'phoneNumber', 'leadStatus', 'leadScoring', 
+  'leadSource', 'leadChannel', 'campaignName', 'dateOfInquiry', 'assignedSalesperson',
+  'vehicleMake', 'model', 'year', 'trim', 'colorPreference', 'newUsed', 'budgetRange', 
+  'tradeIn', 'dealStage', 'dealValue', 'closeProbability', 'expectedCloseDate'
+];
 
 interface CRMTableProps {
   leads: Lead[];
@@ -20,33 +25,73 @@ interface CRMTableProps {
 }
 
 const COLUMN_LABELS: Record<string, string> = {
-  fullName: 'Full Name',
-  email: 'Email',
-  phoneNumber: 'Phone',
-  leadStatus: 'Status',
+  // Lead Information
+  leadId: 'Lead ID',
   leadSource: 'Lead Source',
   leadChannel: 'Channel',
   campaignName: 'Campaign',
   dateOfInquiry: 'Inquiry Date',
+  leadStatus: 'Status',
   assignedSalesperson: 'Salesperson',
+  leadOwner: 'Lead Owner',
+  leadNotes: 'Notes',
+  
+  // Customer Information
+  customerId: 'Customer ID',
+  fullName: 'Full Name',
+  email: 'Email',
+  phoneNumber: 'Phone',
+  address: 'Address',
+  city: 'City',
+  province: 'Province',
+  postalCode: 'Postal Code',
+  preferredContactMethod: 'Contact Method',
+  customerType: 'Customer Type',
+  communicationConsent: 'Consent',
+  tags: 'Tags',
+  
+  // Vehicle Interest
   vehicleMake: 'Make',
   model: 'Model',
+  vehicleModel: 'Vehicle Model',
   year: 'Year',
   trim: 'Trim',
   colorPreference: 'Color',
   newUsed: 'New/Used',
+  vin: 'VIN',
+  stockNumber: 'Stock #',
   budgetRange: 'Budget',
   tradeIn: 'Trade-In',
+  tradeInDetails: 'Trade-In Details',
+  
+  // Deal & Sales Pipeline
   dealStage: 'Deal Stage',
   dealValue: 'Deal Value',
   paymentType: 'Payment Type',
+  depositAmount: 'Deposit',
+  financingInstitution: 'Financing',
   closeProbability: 'Close Prob %',
   expectedCloseDate: 'Expected Close',
+  dealStatus: 'Deal Status',
+  lostReason: 'Lost Reason',
+  
+  // Marketing & Attribution
+  utmSource: 'UTM Source',
+  utmMedium: 'UTM Medium',
+  landingPageUrl: 'Landing Page',
+  conversionEvent: 'Conversion',
+  timeToFirstContact: 'Time to Contact',
+  responseTime: 'Response Time',
   leadScoring: 'Score',
-  city: 'City',
-  province: 'Province',
-  customerType: 'Customer Type',
-  tags: 'Tags',
+  
+  // Operational Metadata
+  recordCreatedBy: 'Created By',
+  recordCreatedDate: 'Created Date',
+  lastModifiedBy: 'Modified By',
+  lastModifiedDate: 'Modified Date',
+  dataSource: 'Data Source',
+  crmSyncStatus: 'Sync Status',
+  duplicateFlag: 'Duplicate',
 };
 
 export const CRMTable = ({ 
@@ -162,19 +207,29 @@ export const CRMTable = ({
       );
     }
 
-    if (col === 'tradeIn') {
+    if (col === 'tradeIn' || col === 'communicationConsent' || col === 'duplicateFlag') {
+      const value = lead[col as keyof Lead];
       return (
         <TableCell className="text-sm text-muted-foreground">
-          {lead.tradeIn ? 'Yes' : 'No'}
+          {value ? 'Yes' : 'No'}
         </TableCell>
       );
     }
 
-    if (col === 'dealValue') {
-      const value = lead.dealValue;
+    if (col === 'dealValue' || col === 'depositAmount') {
+      const value = lead[col as keyof Lead] as number | null;
       return (
         <TableCell className="text-sm text-muted-foreground">
           {value ? `$${value.toLocaleString()}` : '-'}
+        </TableCell>
+      );
+    }
+
+    if (col === 'recordCreatedDate' || col === 'lastModifiedDate') {
+      const date = lead[col as keyof Lead] as Date | null;
+      return (
+        <TableCell className="text-sm text-muted-foreground">
+          {date ? new Date(date).toLocaleDateString() : '-'}
         </TableCell>
       );
     }
@@ -205,9 +260,9 @@ export const CRMTable = ({
   };
 
   return (
-    <div className="bg-card rounded-3xl shadow-soft overflow-hidden">
+    <div className="bg-card rounded-3xl shadow-soft overflow-hidden w-full">
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto overflow-y-auto max-h-[600px]">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">

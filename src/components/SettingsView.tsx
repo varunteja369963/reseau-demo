@@ -9,42 +9,80 @@ interface Column {
 
 const AVAILABLE_COLUMNS: Column[] = [
   // Lead Information
-  { key: 'fullName', label: 'Full Name' },
-  { key: 'email', label: 'Email' },
-  { key: 'phoneNumber', label: 'Phone Number' },
-  { key: 'leadStatus', label: 'Lead Status' },
-  { key: 'leadScoring', label: 'Lead Rating' },
+  { key: 'leadId', label: 'Lead ID' },
   { key: 'leadSource', label: 'Lead Source' },
   { key: 'leadChannel', label: 'Lead Channel' },
   { key: 'campaignName', label: 'Campaign Name' },
   { key: 'dateOfInquiry', label: 'Inquiry Date' },
+  { key: 'leadStatus', label: 'Lead Status' },
   { key: 'assignedSalesperson', label: 'Salesperson' },
+  { key: 'leadOwner', label: 'Lead Owner' },
+  { key: 'leadNotes', label: 'Notes' },
   
   // Customer Information
+  { key: 'customerId', label: 'Customer ID' },
+  { key: 'fullName', label: 'Full Name' },
+  { key: 'email', label: 'Email' },
+  { key: 'phoneNumber', label: 'Phone Number' },
+  { key: 'address', label: 'Address' },
   { key: 'city', label: 'City' },
   { key: 'province', label: 'Province' },
+  { key: 'postalCode', label: 'Postal Code' },
+  { key: 'preferredContactMethod', label: 'Contact Method' },
   { key: 'customerType', label: 'Customer Type' },
+  { key: 'communicationConsent', label: 'Communication Consent' },
   { key: 'tags', label: 'Tags' },
   
   // Vehicle Interest
   { key: 'vehicleMake', label: 'Vehicle Make' },
   { key: 'model', label: 'Model' },
+  { key: 'vehicleModel', label: 'Vehicle Model' },
   { key: 'year', label: 'Year' },
   { key: 'trim', label: 'Trim' },
-  { key: 'colorPreference', label: 'Color' },
+  { key: 'colorPreference', label: 'Color Preference' },
   { key: 'newUsed', label: 'New/Used' },
-  { key: 'budgetRange', label: 'Budget' },
+  { key: 'vin', label: 'VIN' },
+  { key: 'stockNumber', label: 'Stock Number' },
+  { key: 'budgetRange', label: 'Budget Range' },
   { key: 'tradeIn', label: 'Trade-In' },
+  { key: 'tradeInDetails', label: 'Trade-In Details' },
   
   // Deal & Sales Pipeline
   { key: 'dealStage', label: 'Deal Stage' },
   { key: 'dealValue', label: 'Deal Value' },
   { key: 'paymentType', label: 'Payment Type' },
+  { key: 'depositAmount', label: 'Deposit Amount' },
+  { key: 'financingInstitution', label: 'Financing Institution' },
   { key: 'closeProbability', label: 'Close Probability' },
   { key: 'expectedCloseDate', label: 'Expected Close Date' },
+  { key: 'dealStatus', label: 'Deal Status' },
+  { key: 'lostReason', label: 'Lost Reason' },
+  
+  // Marketing & Attribution
+  { key: 'utmSource', label: 'UTM Source' },
+  { key: 'utmMedium', label: 'UTM Medium' },
+  { key: 'landingPageUrl', label: 'Landing Page' },
+  { key: 'conversionEvent', label: 'Conversion Event' },
+  { key: 'timeToFirstContact', label: 'Time to First Contact' },
+  { key: 'responseTime', label: 'Response Time' },
+  { key: 'leadScoring', label: 'Lead Scoring' },
+  
+  // Operational Metadata
+  { key: 'recordCreatedBy', label: 'Created By' },
+  { key: 'recordCreatedDate', label: 'Created Date' },
+  { key: 'lastModifiedBy', label: 'Modified By' },
+  { key: 'lastModifiedDate', label: 'Modified Date' },
+  { key: 'dataSource', label: 'Data Source' },
+  { key: 'crmSyncStatus', label: 'CRM Sync Status' },
+  { key: 'duplicateFlag', label: 'Duplicate Flag' },
 ];
 
-const DEFAULT_COLUMNS = ['fullName', 'email', 'phoneNumber', 'leadStatus', 'leadSource', 'vehicleMake', 'model', 'year', 'budgetRange', 'dealStage', 'leadScoring'];
+const DEFAULT_COLUMNS = [
+  'fullName', 'email', 'phoneNumber', 'leadStatus', 'leadScoring', 
+  'leadSource', 'leadChannel', 'campaignName', 'dateOfInquiry', 'assignedSalesperson',
+  'vehicleMake', 'model', 'year', 'trim', 'colorPreference', 'newUsed', 'budgetRange', 
+  'tradeIn', 'dealStage', 'dealValue', 'closeProbability', 'expectedCloseDate'
+];
 
 interface SettingsViewProps {
   visibleColumns?: string[];
