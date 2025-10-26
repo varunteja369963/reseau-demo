@@ -7,7 +7,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 const DEFAULT_COLUMNS = [
-  'fullName', 'email', 'phoneNumber', 'leadStatus', 'leadScoring', 
+  'fullName', 'email', 'phoneNumber', 'dealership', 'leadStatus', 'leadScoring', 
   'leadSource', 'leadChannel', 'campaignName', 'dateOfInquiry', 'assignedSalesperson',
   'vehicleMake', 'model', 'year', 'trim', 'colorPreference', 'newUsed', 'budgetRange', 
   'tradeIn', 'dealStage', 'dealValue', 'closeProbability', 'expectedCloseDate'
@@ -35,6 +35,7 @@ const COLUMN_LABELS: Record<string, string> = {
   assignedSalesperson: 'Salesperson',
   leadOwner: 'Lead Owner',
   leadNotes: 'Notes',
+  dealership: 'Dealership',
   
   // Customer Information
   customerId: 'Customer ID',
@@ -373,15 +374,15 @@ export const CRMTable = ({
   return (
     <div className="bg-card rounded-3xl shadow-soft overflow-hidden w-full">
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="relative overflow-x-auto">
         <div className="max-h-[700px] overflow-y-auto">
         <Table className="min-w-max">
-          <TableHeader className="sticky top-0 z-20 bg-card">
-            <TableRow className="hover:bg-muted/50">
+          <TableHeader className="sticky top-0 z-20 bg-card after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-border">
+            <TableRow className="hover:bg-transparent border-b-0">
               {columns.map((col) => (
                 <TableHead
                   key={col}
-                  className="bg-card font-semibold text-foreground whitespace-nowrap relative shadow-[0_2px_8px_rgba(0,0,0,0.08)] border-b group cursor-pointer"
+                  className="bg-card font-semibold text-foreground whitespace-nowrap relative border-b-0 group cursor-pointer"
                   style={{
                     width: columnWidths[col] ? `${columnWidths[col]}px` : undefined,
                     minWidth: 120,

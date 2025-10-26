@@ -61,6 +61,7 @@ export const generateDemoLeads = (): Lead[] => {
       assignedSalesperson: random(salespeople),
       leadOwner: random(dealerships),
       leadNotes: leadStatus === 'Lost' ? 'Price too high' : leadStatus === 'Sold' ? 'Deal closed successfully' : 'Follow up scheduled',
+      dealership: random(dealerships),
       
       // Customer Information
       customerId: `CUST-${String(i).padStart(5, '0')}`,

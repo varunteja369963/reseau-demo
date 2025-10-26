@@ -17,7 +17,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState<string>("crm");
   const [leads, setLeads] = useState<Lead[]>([]);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
-    'fullName', 'email', 'phoneNumber', 'leadStatus', 'leadScoring', 
+    'fullName', 'email', 'phoneNumber', 'dealership', 'leadStatus', 'leadScoring', 
     'leadSource', 'leadChannel', 'campaignName', 'dateOfInquiry', 'assignedSalesperson',
     'vehicleMake', 'model', 'year', 'trim', 'colorPreference', 'newUsed', 'budgetRange', 
     'tradeIn', 'dealStage', 'dealValue', 'closeProbability', 'expectedCloseDate'
@@ -27,7 +27,7 @@ const Index = () => {
   const [showContactModal, setShowContactModal] = useState<boolean>(false);
   const [contactType, setContactType] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
 
   useEffect(() => {

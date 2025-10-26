@@ -9,6 +9,7 @@ export interface Lead {
   assignedSalesperson: string;
   leadOwner: string;
   leadNotes: string;
+  dealership: string;
   
   // Customer Information
   customerId: string;
