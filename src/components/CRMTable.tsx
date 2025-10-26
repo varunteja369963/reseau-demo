@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Mail, Phone, Star } from "lucide-react";
+import { Mail, Phone, Star, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Lead } from "@/types/lead";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
@@ -105,10 +105,60 @@ export const CRMTable = ({
   onItemsPerPageChange
 }: CRMTableProps) => {
   const columns = visibleColumns || DEFAULT_COLUMNS;
-  const totalPages = Math.ceil(leads.length / itemsPerPage);
+  
+  // Sorting state
+  const [sortColumn, setSortColumn] = React.useState<string | null>(null);
+  const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('asc');
+
+  // Sort leads based on current sort column and direction
+  const sortedLeads = React.useMemo(() => {
+    if (!sortColumn) return leads;
+
+    return [...leads].sort((a, b) => {
+      const aValue = a[sortColumn as keyof Lead];
+      const bValue = b[sortColumn as keyof Lead];
+
+      // Handle null/undefined values
+      if (aValue == null && bValue == null) return 0;
+      if (aValue == null) return sortDirection === 'asc' ? 1 : -1;
+      if (bValue == null) return sortDirection === 'asc' ? -1 : 1;
+
+      // Date comparison
+      if (sortColumn === 'dateOfInquiry' || sortColumn === 'expectedCloseDate' || 
+          sortColumn === 'recordCreatedDate' || sortColumn === 'lastModifiedDate') {
+        const aTime = new Date(aValue as Date).getTime();
+        const bTime = new Date(bValue as Date).getTime();
+        return sortDirection === 'asc' ? aTime - bTime : bTime - aTime;
+      }
+
+      // Number comparison
+      if (sortColumn === 'leadScoring' || sortColumn === 'dealValue' || 
+          sortColumn === 'depositAmount' || sortColumn === 'closeProbability') {
+        const aNum = Number(aValue);
+        const bNum = Number(bValue);
+        return sortDirection === 'asc' ? aNum - bNum : bNum - aNum;
+      }
+
+      // Boolean comparison
+      if (sortColumn === 'tradeIn' || sortColumn === 'communicationConsent' || sortColumn === 'duplicateFlag') {
+        const aBool = aValue ? 1 : 0;
+        const bBool = bValue ? 1 : 0;
+        return sortDirection === 'asc' ? aBool - bBool : bBool - aBool;
+      }
+
+      // String comparison (default)
+      const aStr = String(aValue).toLowerCase();
+      const bStr = String(bValue).toLowerCase();
+      if (aStr < bStr) return sortDirection === 'asc' ? -1 : 1;
+      if (aStr > bStr) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [leads, sortColumn, sortDirection]);
+
+  const totalPages = Math.ceil(sortedLeads.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedLeads = leads.slice(startIndex, endIndex);
+  const paginatedLeads = sortedLeads.slice(startIndex, endIndex);
 
   // Column resizing state and handlers
   const [columnWidths, setColumnWidths] = React.useState<Record<string, number>>({});
@@ -146,6 +196,30 @@ export const CRMTable = ({
       window.removeEventListener('mouseup', onResizeMouseUp);
     };
   }, [onResizeMouseMove, onResizeMouseUp]);
+
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      // Toggle direction or clear sort
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else {
+        setSortColumn(null);
+        setSortDirection('asc');
+      }
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
+  const getSortIcon = (column: string) => {
+    if (sortColumn !== column) {
+      return <ArrowUpDown className="w-4 h-4 ml-2 opacity-40" />;
+    }
+    return sortDirection === 'asc' 
+      ? <ArrowUp className="w-4 h-4 ml-2 text-[hsl(var(--teal))]" />
+      : <ArrowDown className="w-4 h-4 ml-2 text-[hsl(var(--teal))]" />
+  };
 
   const renderCellContent = (lead: Lead, col: string) => {
     if (col === 'fullName') {
@@ -302,22 +376,29 @@ export const CRMTable = ({
       <div className="overflow-x-auto">
         <div className="max-h-[700px] overflow-y-auto">
         <Table className="min-w-max">
-          <TableHeader>
+          <TableHeader className="sticky top-0 z-20 bg-card">
             <TableRow className="hover:bg-muted/50">
               {columns.map((col) => (
                 <TableHead
                   key={col}
-                  className="sticky top-0 bg-card z-20 font-semibold text-foreground whitespace-nowrap relative shadow-[0_2px_8px_rgba(0,0,0,0.08)] border-b group"
+                  className="bg-card font-semibold text-foreground whitespace-nowrap relative shadow-[0_2px_8px_rgba(0,0,0,0.08)] border-b group cursor-pointer"
                   style={{
                     width: columnWidths[col] ? `${columnWidths[col]}px` : undefined,
                     minWidth: 120,
                     maxWidth: 400,
                   }}
+                  onClick={() => handleSort(col)}
                 >
-                  {COLUMN_LABELS[col] || col}
+                  <div className="flex items-center justify-between pr-4">
+                    <span>{COLUMN_LABELS[col] || col}</span>
+                    {getSortIcon(col)}
+                  </div>
                   <span
                     className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize select-none opacity-0 group-hover:opacity-100 hover:bg-primary/20 transition-opacity"
-                    onMouseDown={(e) => onResizeMouseDown(col, e)}
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                      onResizeMouseDown(col, e);
+                    }}
                   />
                 </TableHead>
               ))}
@@ -353,7 +434,7 @@ export const CRMTable = ({
             </SelectContent>
           </Select>
           <span className="text-sm text-muted-foreground whitespace-nowrap">
-            {startIndex + 1}-{Math.min(endIndex, leads.length)} of {leads.length}
+            {startIndex + 1}-{Math.min(endIndex, sortedLeads.length)} of {sortedLeads.length}
           </span>
         </div>
 
