@@ -3,11 +3,11 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
 interface CRMTableNavbarProps {
-  showFilterButton?: boolean;
-  onOpenFilter?: () => void;
+  isFilterOpen?: boolean;
+  onToggleFilter?: () => void;
 }
 
-export const CRMTableNavbar = ({ showFilterButton, onOpenFilter }: CRMTableNavbarProps) => {
+export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTableNavbarProps) => {
   return (
     <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
       <div className="relative flex-1 max-w-md">
@@ -18,19 +18,26 @@ export const CRMTableNavbar = ({ showFilterButton, onOpenFilter }: CRMTableNavba
         />
       </div>
       <div className="flex items-center gap-3">
-        {showFilterButton && (
-          <Button 
-            onClick={onOpenFilter}
-            variant="outline" 
-            className="h-10 rounded-2xl border-border hover:bg-muted transition-smooth"
-          >
-            <SlidersHorizontal className="w-4 h-4 mr-2" />
-            Show Filters
-          </Button>
-        )}
-        <Button variant="outline" className="h-10 rounded-2xl border-border hover:bg-muted transition-smooth">
-          <Filter className="w-4 h-4 mr-2" />
-          Filter
+        <Button 
+          onClick={onToggleFilter}
+          variant={isFilterOpen ? "default" : "outline"}
+          className={`h-10 rounded-2xl transition-smooth ${
+            isFilterOpen 
+              ? "shadow-medium" 
+              : "border-border hover:bg-muted"
+          }`}
+        >
+          {isFilterOpen ? (
+            <>
+              <Filter className="w-4 h-4 mr-2" />
+              Filter
+            </>
+          ) : (
+            <>
+              <SlidersHorizontal className="w-4 h-4 mr-2" />
+              Show Filters
+            </>
+          )}
         </Button>
         <Button variant="outline" className="h-10 rounded-2xl border-border hover:bg-muted transition-smooth">
           <Calendar className="w-4 h-4 mr-2" />

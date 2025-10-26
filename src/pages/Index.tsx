@@ -61,8 +61,8 @@ const Index = () => {
                 <div className={`grid grid-cols-1 gap-8 ${isFilterPanelOpen ? 'xl:grid-cols-[1fr_280px]' : ''}`}>
                   <div className="min-w-0">
                     <CRMTableNavbar 
-                      showFilterButton={!isFilterPanelOpen}
-                      onOpenFilter={() => setIsFilterPanelOpen(true)}
+                      isFilterOpen={isFilterPanelOpen}
+                      onToggleFilter={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
                     />
                     <CRMTable 
                       leads={leads} 
