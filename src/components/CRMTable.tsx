@@ -262,12 +262,16 @@ export const CRMTable = ({
   return (
     <div className="bg-card rounded-3xl shadow-soft overflow-hidden w-full">
       {/* Table */}
-      <div className="overflow-auto max-h-[600px]">
+      <div className="overflow-auto max-h-[700px]">
         <Table className="min-w-max">
-          <TableHeader className="sticky top-0 bg-muted/50 z-10">
+          <TableHeader className="sticky top-0 bg-muted/50 z-10 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
             <TableRow className="bg-muted/50 hover:bg-muted/50">
               {columns.map((col) => (
-                <TableHead key={col} className="font-semibold text-foreground whitespace-nowrap">
+                <TableHead 
+                  key={col} 
+                  className="font-semibold text-foreground whitespace-nowrap resize-x overflow-auto min-w-[120px]"
+                  style={{ maxWidth: '400px' }}
+                >
                   {COLUMN_LABELS[col] || col}
                 </TableHead>
               ))}
@@ -289,8 +293,7 @@ export const CRMTable = ({
 
       {/* Pagination Footer */}
       <div className="p-6 border-t border-border flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Rows per page:</span>
+        <div className="flex items-center gap-4">
           <Select value={String(itemsPerPage)} onValueChange={(val) => onItemsPerPageChange(Number(val))}>
             <SelectTrigger className="w-[80px] h-9">
               <SelectValue />
@@ -302,8 +305,8 @@ export const CRMTable = ({
               <SelectItem value="100">100</SelectItem>
             </SelectContent>
           </Select>
-          <span className="text-sm text-muted-foreground ml-4">
-            Showing {startIndex + 1}-{Math.min(endIndex, leads.length)} of {leads.length}
+          <span className="text-sm text-muted-foreground">
+            {startIndex + 1}-{Math.min(endIndex, leads.length)} of {leads.length}
           </span>
         </div>
 

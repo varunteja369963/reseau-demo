@@ -56,7 +56,7 @@ const Index = () => {
               <>
                 <StatsCards />
                 
-                <div className="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8">
+                <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-8">
                   <div className="min-w-0">
                     <CRMTableNavbar />
                     <CRMTable 
