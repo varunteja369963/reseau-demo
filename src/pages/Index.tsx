@@ -86,7 +86,7 @@ const Index = () => {
                 {!isFilterPanelOpen && (
                   <button
                     onClick={() => setIsFilterPanelOpen(true)}
-                    className="fixed right-8 top-32 bg-card p-3 rounded-2xl shadow-soft hover:shadow-medium transition-smooth z-10"
+                    className="fixed right-8 top-40 bg-card p-3 rounded-2xl shadow-soft hover:shadow-medium transition-smooth z-50"
                     aria-label="Open filter panel"
                   >
                     <ChevronDown className="w-5 h-5 text-muted-foreground -rotate-90" />
