@@ -2,8 +2,15 @@ import { Mail, Phone, Calendar, TrendingUp, Tag } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import { Lead } from "@/types/lead";
 
-export const CustomerProfileModal = ({ isOpen, onClose, lead }) => {
+interface CustomerProfileModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  lead: Lead | null;
+}
+
+export const CustomerProfileModal = ({ isOpen, onClose, lead }: CustomerProfileModalProps) => {
   if (!lead) return null;
 
   return (
@@ -91,7 +98,7 @@ export const CustomerProfileModal = ({ isOpen, onClose, lead }) => {
                   </div>
                   <div>
                     <div className="text-muted-foreground">Date of Inquiry</div>
-                    <div className="font-medium">{lead.dateOfInquiry}</div>
+                    <div className="font-medium">{lead.dateOfInquiry.toString()}</div>
                   </div>
                   <div>
                     <div className="text-muted-foreground">Vehicle Interest</div>

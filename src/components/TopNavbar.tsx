@@ -1,13 +1,18 @@
-import { ChevronDown, DollarSign, Building2 } from "lucide-react";
+import { ChevronDown, Building2 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-export const TopNavbar = ({ activeTab, setActiveTab }) => {
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [showDealershipDropdown, setShowDealershipDropdown] = useState(false);
-  const [selectedDealership, setSelectedDealership] = useState('Reseau (Org)');
+interface TopNavbarProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
 
-  const dealerships = [
+export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [showDealershipDropdown, setShowDealershipDropdown] = useState<boolean>(false);
+  const [selectedDealership, setSelectedDealership] = useState<string>('Reseau (Org)');
+
+  const dealerships: string[] = [
     'Reseau (Org)',
     'Reseau Chev Kelowna',
     'Reseau Kia Penticton',

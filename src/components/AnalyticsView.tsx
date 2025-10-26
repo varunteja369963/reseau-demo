@@ -1,6 +1,22 @@
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const leadSourceData = [
+interface LeadSourceData {
+  name: string;
+  value: number;
+}
+
+interface DealStageData {
+  stage: string;
+  count: number;
+}
+
+interface MonthlyTrendData {
+  month: string;
+  leads: number;
+  deals: number;
+}
+
+const leadSourceData: LeadSourceData[] = [
   { name: 'Google Ads', value: 45 },
   { name: 'Facebook', value: 32 },
   { name: 'Website', value: 28 },
@@ -8,7 +24,7 @@ const leadSourceData = [
   { name: 'Referral', value: 22 },
 ];
 
-const dealStageData = [
+const dealStageData: DealStageData[] = [
   { stage: 'New', count: 52 },
   { stage: 'Contacted', count: 38 },
   { stage: 'Qualified', count: 45 },
@@ -17,7 +33,7 @@ const dealStageData = [
   { stage: 'Sold', count: 63 },
 ];
 
-const monthlyTrend = [
+const monthlyTrend: MonthlyTrendData[] = [
   { month: 'Jan', leads: 45, deals: 12 },
   { month: 'Feb', leads: 52, deals: 15 },
   { month: 'Mar', leads: 61, deals: 18 },

@@ -4,8 +4,15 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
+interface Filters {
+  qualified: boolean;
+  cold: boolean;
+  lost: boolean;
+  todayOnly: boolean;
+}
+
 export const FilterPanel = () => {
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<Filters>({
     qualified: true,
     cold: false,
     lost: false,

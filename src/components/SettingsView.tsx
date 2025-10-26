@@ -2,7 +2,12 @@ import { useState } from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const AVAILABLE_COLUMNS = [
+interface Column {
+  key: string;
+  label: string;
+}
+
+const AVAILABLE_COLUMNS: Column[] = [
   { key: 'fullName', label: 'Full Name' },
   { key: 'email', label: 'Email' },
   { key: 'phoneNumber', label: 'Phone Number' },
@@ -21,10 +26,15 @@ const AVAILABLE_COLUMNS = [
 
 const DEFAULT_COLUMNS = ['fullName', 'email', 'phoneNumber', 'leadStatus', 'leadScoring'];
 
-export const SettingsView = ({ visibleColumns, onColumnChange }) => {
+interface SettingsViewProps {
+  visibleColumns?: string[];
+  onColumnChange: (columns: string[]) => void;
+}
+
+export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewProps) => {
   const columns = visibleColumns || DEFAULT_COLUMNS;
 
-  const toggleColumn = (columnKey) => {
+  const toggleColumn = (columnKey: string) => {
     if (columns.includes(columnKey)) {
       onColumnChange(columns.filter(c => c !== columnKey));
     } else {

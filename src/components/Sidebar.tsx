@@ -2,7 +2,14 @@ import { Radar, Mail, MessageSquare, Megaphone, Phone, Bot, Package, Plug, Zap }
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-const navItems = [
+interface NavItem {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  path: string;
+  active?: boolean;
+}
+
+const navItems: NavItem[] = [
   { icon: Radar, label: "My Radar", path: "/" },
   { icon: Mail, label: "CRM", path: "/crm", active: true },
   { icon: MessageSquare, label: "Email", path: "/email" },
@@ -16,7 +23,7 @@ const navItems = [
 ];
 
 export const Sidebar = () => {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-24 gradient-sidebar text-white z-50 flex flex-col items-center py-6 shadow-strong">

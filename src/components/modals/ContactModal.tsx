@@ -3,8 +3,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { Lead } from "@/types/lead";
 
-export const ContactModal = ({ isOpen, onClose, type, lead }) => {
+interface ContactModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  type: string | null;
+  lead: Lead | null;
+}
+
+export const ContactModal = ({ isOpen, onClose, type, lead }: ContactModalProps) => {
   if (!lead || !type) return null;
 
   const isEmail = type === "email";

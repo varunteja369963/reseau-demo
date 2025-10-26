@@ -1,3 +1,5 @@
+import { Lead } from '@/types/lead';
+
 // Generate 245 demo records for CRM
 
 const leadSources = ['Google Ads', 'Facebook', 'Website Form', 'Walk-in', 'Referral', 'Instagram', 'Dealer.com', 'AutoTrader'];
@@ -12,31 +14,31 @@ const dealerships = ['Reseau Chev Kelowna', 'Reseau Kia Penticton', 'Reseau Hond
 const firstNames = ['John', 'Sarah', 'Michael', 'Emily', 'David', 'Jessica', 'Chris', 'Amanda', 'Daniel', 'Jennifer', 'Matthew', 'Ashley', 'Andrew', 'Melissa', 'Ryan', 'Nicole', 'Brandon', 'Lauren', 'Tyler', 'Stephanie'];
 const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee'];
 
-const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
-const randomNum = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-const randomDate = (start, end) => {
+const random = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+const randomNum = (min: number, max: number): number => Math.floor(Math.random() * (max - min + 1)) + min;
+const randomDate = (start: Date, end: Date): Date => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
 
-const generatePhoneNumber = () => {
+const generatePhoneNumber = (): string => {
   const area = randomNum(200, 999);
   const prefix = randomNum(200, 999);
   const line = randomNum(1000, 9999);
   return `(${area}) ${prefix}-${line}`;
 };
 
-const generateEmail = (firstName, lastName) => {
+const generateEmail = (firstName: string, lastName: string): string => {
   const domains = ['gmail.com', 'yahoo.com', 'outlook.com', 'icloud.com', 'hotmail.com'];
   return `${firstName.toLowerCase()}.${lastName.toLowerCase()}${randomNum(1, 99)}@${random(domains)}`;
 };
 
-const generateLeadScore = () => {
+const generateLeadScore = (): number => {
   const scores = [0, 1, 2, 2.5, 3, 3.5, 4, 4.5, 5];
   return random(scores);
 };
 
-export const generateDemoLeads = () => {
-  const leads = [];
+export const generateDemoLeads = (): Lead[] => {
+  const leads: Lead[] = [];
   const startDate = new Date(2024, 0, 1);
   const endDate = new Date(2025, 9, 25);
 
@@ -48,7 +50,7 @@ export const generateDemoLeads = () => {
     const leadStatus = random(leadStatuses);
     const make = random(makes);
     
-    const lead = {
+    const lead: Lead = {
       // Lead Information
       leadId: `LEAD-${String(i).padStart(5, '0')}`,
       leadSource: random(leadSources),
@@ -77,6 +79,10 @@ export const generateDemoLeads = () => {
       // Vehicle Interest
       vehicleMake: make,
       model: make === 'Toyota' ? random(['Camry', 'RAV4', 'Highlander', 'Corolla']) :
+             make === 'Honda' ? random(['Civic', 'Accord', 'CR-V', 'Pilot']) :
+             make === 'Chevrolet' ? random(['Silverado', 'Equinox', 'Malibu', 'Blazer']) :
+             random(['Sedan', 'SUV', 'Truck', 'Coupe']),
+      vehicleModel: make === 'Toyota' ? random(['Camry', 'RAV4', 'Highlander', 'Corolla']) :
              make === 'Honda' ? random(['Civic', 'Accord', 'CR-V', 'Pilot']) :
              make === 'Chevrolet' ? random(['Silverado', 'Equinox', 'Malibu', 'Blazer']) :
              random(['Sedan', 'SUV', 'Truck', 'Coupe']),
@@ -132,6 +138,10 @@ export const generateDemoLeads = () => {
       // UI helpers
       initials: `${firstName[0]}${lastName[0]}`,
       color: leadStatus === 'Qualified' || leadStatus === 'Sold' ? 'bg-[hsl(var(--teal))]' :
+             leadStatus === 'Lost' ? 'bg-gradient-to-br from-red-300 to-red-400' :
+             leadStatus === 'New' ? 'bg-[hsl(var(--blue))]' :
+             'bg-[hsl(var(--purple))]',
+      avatarColor: leadStatus === 'Qualified' || leadStatus === 'Sold' ? 'bg-[hsl(var(--teal))]' :
              leadStatus === 'Lost' ? 'bg-gradient-to-br from-red-300 to-red-400' :
              leadStatus === 'New' ? 'bg-[hsl(var(--blue))]' :
              'bg-[hsl(var(--purple))]'

@@ -1,9 +1,17 @@
 import { Mail, Phone, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Lead } from "@/types/lead";
 
 const DEFAULT_COLUMNS = ['fullName', 'email', 'phoneNumber', 'leadStatus', 'leadScoring'];
 
-export const CRMTable = ({ leads, visibleColumns, onOpenProfile, onOpenContact }) => {
+interface CRMTableProps {
+  leads: Lead[];
+  visibleColumns?: string[];
+  onOpenProfile: (lead: Lead) => void;
+  onOpenContact: (lead: Lead, type: string) => void;
+}
+
+export const CRMTable = ({ leads, visibleColumns, onOpenProfile, onOpenContact }: CRMTableProps) => {
   const columns = visibleColumns || DEFAULT_COLUMNS;
   return (
     <div className="bg-card rounded-3xl shadow-soft overflow-hidden">
@@ -105,7 +113,7 @@ export const CRMTable = ({ leads, visibleColumns, onOpenProfile, onOpenContact }
               
               return (
                 <div key={col} className="min-w-[150px] text-sm text-muted-foreground">
-                  {lead[col] ? String(lead[col]) : '-'}
+                  {lead[col as keyof Lead] ? String(lead[col as keyof Lead]) : '-'}
                 </div>
               );
             })}

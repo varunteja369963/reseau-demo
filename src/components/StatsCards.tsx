@@ -1,6 +1,14 @@
-import { TrendingUp, CheckCircle, Inbox } from "lucide-react";
+import { TrendingUp, CheckCircle, Inbox, LucideIcon } from "lucide-react";
 
-const stats = [
+interface Stat {
+  title: string;
+  value: string;
+  gradient: string;
+  icon: LucideIcon;
+  lightBg: string;
+}
+
+const stats: Stat[] = [
   {
     title: "Leads",
     value: "245",

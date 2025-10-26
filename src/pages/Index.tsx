@@ -10,26 +10,27 @@ import { ContactModal } from "@/components/modals/ContactModal";
 import { AnalyticsView } from "@/components/AnalyticsView";
 import { SettingsView } from "@/components/SettingsView";
 import { generateDemoLeads } from "@/utils/demoData";
+import { Lead } from "@/types/lead";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState("crm");
-  const [leads, setLeads] = useState([]);
-  const [visibleColumns, setVisibleColumns] = useState(['fullName', 'email', 'phoneNumber', 'leadStatus', 'leadScoring']);
-  const [selectedLead, setSelectedLead] = useState(null);
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  const [showContactModal, setShowContactModal] = useState(false);
-  const [contactType, setContactType] = useState(null);
+  const [activeTab, setActiveTab] = useState<string>("crm");
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(['fullName', 'email', 'phoneNumber', 'leadStatus', 'leadScoring']);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [showProfileModal, setShowProfileModal] = useState<boolean>(false);
+  const [showContactModal, setShowContactModal] = useState<boolean>(false);
+  const [contactType, setContactType] = useState<string | null>(null);
 
   useEffect(() => {
     setLeads(generateDemoLeads());
   }, []);
 
-  const handleOpenProfile = (lead) => {
+  const handleOpenProfile = (lead: Lead) => {
     setSelectedLead(lead);
     setShowProfileModal(true);
   };
 
-  const handleOpenContact = (lead, type) => {
+  const handleOpenContact = (lead: Lead, type: string) => {
     setSelectedLead(lead);
     setContactType(type);
     setShowContactModal(true);
