@@ -299,14 +299,15 @@ export const CRMTable = ({
   return (
     <div className="bg-card rounded-3xl shadow-soft overflow-hidden w-full">
       {/* Table */}
-      <div className="overflow-auto max-h-[700px]">
+      <div className="overflow-x-auto">
+        <div className="max-h-[700px] overflow-y-auto">
         <Table className="min-w-max">
           <TableHeader>
             <TableRow className="hover:bg-muted/50">
               {columns.map((col) => (
                 <TableHead
                   key={col}
-                  className="sticky top-0 bg-card z-20 font-semibold text-foreground whitespace-nowrap relative shadow-[0_2px_8px_rgba(0,0,0,0.08)] border-b"
+                  className="sticky top-0 bg-card z-20 font-semibold text-foreground whitespace-nowrap relative shadow-[0_2px_8px_rgba(0,0,0,0.08)] border-b group"
                   style={{
                     width: columnWidths[col] ? `${columnWidths[col]}px` : undefined,
                     minWidth: 120,
@@ -315,7 +316,7 @@ export const CRMTable = ({
                 >
                   {COLUMN_LABELS[col] || col}
                   <span
-                    className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize select-none hover:bg-primary/20"
+                    className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize select-none opacity-0 group-hover:opacity-100 hover:bg-primary/20 transition-opacity"
                     onMouseDown={(e) => onResizeMouseDown(col, e)}
                   />
                 </TableHead>
