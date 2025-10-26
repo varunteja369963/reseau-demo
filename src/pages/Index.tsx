@@ -60,7 +60,10 @@ const Index = () => {
                 
                 <div className={`grid grid-cols-1 gap-8 ${isFilterPanelOpen ? 'xl:grid-cols-[1fr_280px]' : ''}`}>
                   <div className="min-w-0">
-                    <CRMTableNavbar />
+                    <CRMTableNavbar 
+                      showFilterButton={!isFilterPanelOpen}
+                      onOpenFilter={() => setIsFilterPanelOpen(true)}
+                    />
                     <CRMTable 
                       leads={leads} 
                       visibleColumns={visibleColumns}
@@ -82,16 +85,6 @@ const Index = () => {
                     </div>
                   )}
                 </div>
-                
-                {!isFilterPanelOpen && (
-                  <button
-                    onClick={() => setIsFilterPanelOpen(true)}
-                    className="fixed right-8 top-40 bg-card p-3 rounded-2xl shadow-soft hover:shadow-medium transition-smooth z-50"
-                    aria-label="Open filter panel"
-                  >
-                    <ChevronDown className="w-5 h-5 text-muted-foreground -rotate-90" />
-                  </button>
-                )}
               </>
             )}
 

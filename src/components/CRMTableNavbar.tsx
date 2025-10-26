@@ -1,8 +1,13 @@
-import { Filter, UserPlus, Calendar, Search } from "lucide-react";
+import { Filter, UserPlus, Calendar, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
-export const CRMTableNavbar = () => {
+interface CRMTableNavbarProps {
+  showFilterButton?: boolean;
+  onOpenFilter?: () => void;
+}
+
+export const CRMTableNavbar = ({ showFilterButton, onOpenFilter }: CRMTableNavbarProps) => {
   return (
     <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
       <div className="relative flex-1 max-w-md">
@@ -13,6 +18,16 @@ export const CRMTableNavbar = () => {
         />
       </div>
       <div className="flex items-center gap-3">
+        {showFilterButton && (
+          <Button 
+            onClick={onOpenFilter}
+            variant="outline" 
+            className="h-10 rounded-2xl border-border hover:bg-muted transition-smooth"
+          >
+            <SlidersHorizontal className="w-4 h-4 mr-2" />
+            Show Filters
+          </Button>
+        )}
         <Button variant="outline" className="h-10 rounded-2xl border-border hover:bg-muted transition-smooth">
           <Filter className="w-4 h-4 mr-2" />
           Filter
