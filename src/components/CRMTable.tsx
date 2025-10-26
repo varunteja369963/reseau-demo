@@ -262,12 +262,12 @@ export const CRMTable = ({
   return (
     <div className="bg-card rounded-3xl shadow-soft overflow-hidden w-full">
       {/* Table */}
-      <div className="overflow-x-auto overflow-y-auto max-h-[600px]">
-        <Table>
-          <TableHeader>
+      <div className="overflow-auto max-h-[600px]">
+        <Table className="min-w-max">
+          <TableHeader className="sticky top-0 bg-muted/50 z-10">
             <TableRow className="bg-muted/50 hover:bg-muted/50">
               {columns.map((col) => (
-                <TableHead key={col} className="font-semibold text-foreground">
+                <TableHead key={col} className="font-semibold text-foreground whitespace-nowrap">
                   {COLUMN_LABELS[col] || col}
                 </TableHead>
               ))}

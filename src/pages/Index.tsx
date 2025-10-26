@@ -56,25 +56,25 @@ const Index = () => {
               <>
                 <StatsCards />
                 
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
-                  <div>
+                <div className="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8">
+                  <div className="min-w-0">
                     <CRMTableNavbar />
-              <CRMTable 
-                leads={leads} 
-                visibleColumns={visibleColumns}
-                onOpenProfile={handleOpenProfile}
-                onOpenContact={handleOpenContact}
-                currentPage={currentPage}
-                itemsPerPage={itemsPerPage}
-                onPageChange={setCurrentPage}
-                onItemsPerPageChange={(items) => {
-                  setItemsPerPage(items);
-                  setCurrentPage(1);
-                }}
-              />
+                    <CRMTable 
+                      leads={leads} 
+                      visibleColumns={visibleColumns}
+                      onOpenProfile={handleOpenProfile}
+                      onOpenContact={handleOpenContact}
+                      currentPage={currentPage}
+                      itemsPerPage={itemsPerPage}
+                      onPageChange={setCurrentPage}
+                      onItemsPerPageChange={(items) => {
+                        setItemsPerPage(items);
+                        setCurrentPage(1);
+                      }}
+                    />
                   </div>
                   
-                  <div>
+                  <div className="flex-shrink-0">
                     <FilterPanel />
                   </div>
                 </div>
