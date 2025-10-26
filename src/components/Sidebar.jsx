@@ -5,7 +5,7 @@ import { useState } from "react";
 const navItems = [
   { icon: Radar, label: "My Radar", path: "/" },
   { icon: Mail, label: "CRM", path: "/crm", active: true },
-  { icon: MessageSquare, label: "Email Marketing", path: "/email" },
+  { icon: MessageSquare, label: "Email", path: "/email" },
   { icon: MessageSquare, label: "SMS", path: "/sms" },
   { icon: Megaphone, label: "Ads", path: "/ads" },
   { icon: Phone, label: "Calls", path: "/calls" },
@@ -28,29 +28,27 @@ export const Sidebar = () => {
       </div>
 
       {/* Navigation Items */}
-      <nav className="flex-1 flex flex-col gap-2 w-full px-3">
+      <nav className="flex-1 flex flex-col gap-2 w-full px-3 overflow-y-auto overflow-x-hidden">
         {navItems.map((item, index) => (
           <button
             key={item.label}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
             className={cn(
-              "flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-2xl transition-smooth relative group",
+              "flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-2xl transition-smooth relative group flex-shrink-0",
               item.active
                 ? "bg-white/20 backdrop-blur-sm"
                 : "hover:bg-white/10"
             )}
           >
             <item.icon className="w-5 h-5" />
-            <span className="text-[10px] font-medium text-center leading-tight">
-              {item.label.split(" ").map((word, i) => (
-                <div key={i}>{word}</div>
-              ))}
+            <span className="text-[10px] font-medium text-center leading-tight whitespace-nowrap">
+              {item.label}
             </span>
             
             {/* Hover tooltip for desktop */}
             {hoveredIndex === index && (
-              <div className="hidden lg:block absolute left-full ml-4 bg-white text-[hsl(var(--foreground))] px-3 py-2 rounded-lg shadow-medium whitespace-nowrap text-sm font-medium">
+              <div className="hidden lg:block absolute left-full ml-4 bg-white text-[hsl(var(--foreground))] px-3 py-2 rounded-lg shadow-medium whitespace-nowrap text-sm font-medium z-[100]">
                 {item.label}
                 <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-white" />
               </div>
