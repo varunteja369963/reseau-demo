@@ -114,14 +114,14 @@ export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTabl
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="end">
             <div className="flex">
-              <div className="border-r border-border p-3 space-y-1">
+              <div className="border-r border-border p-3 flex flex-col space-y-1">
                 <div className="text-sm font-medium mb-2">Quick Select</div>
                 {presets.map((preset) => (
                   <Button
                     key={preset.label}
                     variant="ghost"
                     size="sm"
-                    className="justify-start text-sm h-8 px-2"
+                    className="justify-start text-sm h-8 px-2 w-full"
                     onClick={() => {
                       setDate(preset.value());
                     }}
@@ -133,7 +133,7 @@ export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTabl
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="justify-start text-sm text-destructive hover:text-destructive h-8 px-2"
+                    className="justify-start text-sm text-destructive hover:text-destructive h-8 px-2 w-full"
                     onClick={() => setDate(undefined)}
                   >
                     Clear
