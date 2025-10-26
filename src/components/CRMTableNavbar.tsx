@@ -140,14 +140,26 @@ export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTabl
                   </Button>
                 )}
               </div>
-              <div className="p-3">
-                <CalendarComponent
-                  mode="range"
-                  selected={date}
-                  onSelect={setDate}
-                  numberOfMonths={2}
-                  className={cn("pointer-events-auto")}
-                />
+              <div className="flex flex-col">
+                <div className="p-3">
+                  <CalendarComponent
+                    mode="range"
+                    selected={date}
+                    onSelect={setDate}
+                    numberOfMonths={2}
+                    className={cn("pointer-events-auto")}
+                  />
+                </div>
+                {date?.from && (
+                  <div className="border-t border-border p-3">
+                    <Button 
+                      className="w-full h-9 rounded-lg"
+                      onClick={() => setIsDatePickerOpen(false)}
+                    >
+                      Select
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </PopoverContent>
