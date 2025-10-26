@@ -1,8 +1,7 @@
-import { Star, ChevronDown, X } from "lucide-react";
+import { Star, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface Filters {
   qualified: boolean;
@@ -22,31 +21,21 @@ export const FilterPanel = ({ onToggle }: FilterPanelProps) => {
     lost: false,
     todayOnly: false,
   });
-  const [isOpen, setIsOpen] = useState(true);
 
   return (
     <div className="bg-card rounded-3xl shadow-soft p-6 sticky top-24">
-      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-semibold text-foreground">Lead Filter</h3>
-          <div className="flex items-center gap-2">
-            <CollapsibleTrigger asChild>
-              <button className="p-2 hover:bg-muted rounded-lg transition-smooth">
-                <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-              </button>
-            </CollapsibleTrigger>
-            <button 
-              onClick={onToggle}
-              className="p-2 hover:bg-muted rounded-lg transition-smooth"
-              aria-label="Close filter panel"
-            >
-              <X className="w-5 h-5 text-muted-foreground" />
-            </button>
-          </div>
-        </div>
-        
-        <CollapsibleContent>
-          <div className="space-y-8">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-xl font-semibold text-foreground">Lead Filter</h3>
+        <button 
+          onClick={onToggle}
+          className="p-2 hover:bg-muted rounded-lg transition-smooth"
+          aria-label="Close filter panel"
+        >
+          <X className="w-5 h-5 text-muted-foreground" />
+        </button>
+      </div>
+      
+      <div className="space-y-8">
             {/* Lead Status */}
             <div>
               <h3 className="text-base font-semibold mb-4 text-foreground">Lead Status</h3>
@@ -136,13 +125,11 @@ export const FilterPanel = ({ onToggle }: FilterPanelProps) => {
               </div>
             </div>
 
-            {/* Add New Contact Button */}
-            <Button className="w-full h-12 rounded-2xl gradient-blue text-white font-semibold shadow-soft hover:shadow-medium transition-smooth">
-              ADD NEW CONTACT
-            </Button>
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
+        {/* Add New Contact Button */}
+        <Button className="w-full h-12 rounded-2xl gradient-blue text-white font-semibold shadow-soft hover:shadow-medium transition-smooth">
+          ADD NEW CONTACT
+        </Button>
+      </div>
     </div>
   );
 };
