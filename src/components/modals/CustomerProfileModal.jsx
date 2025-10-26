@@ -1,21 +1,9 @@
-import { X, Mail, Phone, Calendar, TrendingUp, Tag } from "lucide-react";
+import { Mail, Phone, Calendar, TrendingUp, Tag } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
-interface CustomerProfileModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  lead: {
-    name: string;
-    initials: string;
-    email: string;
-    phone: string;
-    color: string;
-  } | null;
-}
-
-export const CustomerProfileModal = ({ isOpen, onClose, lead }: CustomerProfileModalProps) => {
+export const CustomerProfileModal = ({ isOpen, onClose, lead }) => {
   if (!lead) return null;
 
   return (
@@ -25,11 +13,11 @@ export const CustomerProfileModal = ({ isOpen, onClose, lead }: CustomerProfileM
         <div className="gradient-teal p-6 text-white">
           <DialogHeader>
             <div className="flex items-center gap-4">
-              <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-xl", lead.color)}>
+              <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-xl", lead.avatarColor)}>
                 {lead.initials}
               </div>
               <div>
-                <DialogTitle className="text-2xl font-bold text-white mb-1">{lead.name}</DialogTitle>
+                <DialogTitle className="text-2xl font-bold text-white mb-1">{lead.fullName}</DialogTitle>
                 <div className="flex gap-4 text-white/90 text-sm">
                   <span className="flex items-center gap-1">
                     <Mail className="w-4 h-4" />
@@ -37,7 +25,7 @@ export const CustomerProfileModal = ({ isOpen, onClose, lead }: CustomerProfileM
                   </span>
                   <span className="flex items-center gap-1">
                     <Phone className="w-4 h-4" />
-                    {lead.phone}
+                    {lead.phoneNumber}
                   </span>
                 </div>
               </div>
@@ -70,9 +58,9 @@ export const CustomerProfileModal = ({ isOpen, onClose, lead }: CustomerProfileM
               <h3 className="font-semibold text-foreground">AI-Generated Insights</h3>
             </div>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>• <strong>Top 3 Preferences:</strong> Toyota, Budget under $30k, Red color</p>
-              <p>• <strong>Engagement:</strong> Last contacted 3 days ago, opened 2 emails this week</p>
-              <p>• <strong>Alert:</strong> High interest in SUV models, recommend showing new inventory</p>
+              <p>• <strong>Top Preferences:</strong> {lead.vehicleMake} {lead.vehicleModel}, Budget {lead.budgetRange}</p>
+              <p>• <strong>Lead Status:</strong> {lead.leadStatus}</p>
+              <p>• <strong>Source:</strong> {lead.leadSource} via {lead.leadChannel}</p>
             </div>
           </div>
 
@@ -83,7 +71,7 @@ export const CustomerProfileModal = ({ isOpen, onClose, lead }: CustomerProfileM
               Customer Preferences
             </h3>
             <div className="flex flex-wrap gap-2">
-              {["SUV Interest", "Budget: $25-30k", "Red Color", "Toyota Brand", "Financing Needed"].map((tag) => (
+              {lead.tags && lead.tags.map((tag) => (
                 <span key={tag} className="px-3 py-1.5 bg-muted rounded-full text-xs font-medium text-muted-foreground">
                   {tag}
                 </span>
@@ -93,22 +81,28 @@ export const CustomerProfileModal = ({ isOpen, onClose, lead }: CustomerProfileM
 
           {/* Interaction Logs */}
           <div>
-            <h3 className="font-semibold text-foreground mb-3">Recent Interactions</h3>
+            <h3 className="font-semibold text-foreground mb-3">Customer Details</h3>
             <div className="space-y-3">
-              {[
-                { type: "Email", message: "Sent inventory list for SUVs", time: "2 hours ago" },
-                { type: "Call", message: "Discussed financing options", time: "3 days ago" },
-                { type: "Visit", message: "Visited dealership for test drive", time: "1 week ago" },
-              ].map((log, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 bg-muted rounded-xl">
-                  <div className="w-2 h-2 rounded-full bg-[hsl(var(--teal))] mt-1.5" />
-                  <div className="flex-1">
-                    <div className="font-medium text-sm text-foreground">{log.type}</div>
-                    <div className="text-sm text-muted-foreground">{log.message}</div>
+              <div className="flex items-start gap-3 p-3 bg-muted rounded-xl">
+                <div className="flex-1 grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <div className="text-muted-foreground">Lead Source</div>
+                    <div className="font-medium">{lead.leadSource}</div>
                   </div>
-                  <div className="text-xs text-muted-foreground">{log.time}</div>
+                  <div>
+                    <div className="text-muted-foreground">Date of Inquiry</div>
+                    <div className="font-medium">{lead.dateOfInquiry}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Vehicle Interest</div>
+                    <div className="font-medium">{lead.vehicleMake} {lead.vehicleModel}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Budget</div>
+                    <div className="font-medium">{lead.budgetRange}</div>
+                  </div>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </div>

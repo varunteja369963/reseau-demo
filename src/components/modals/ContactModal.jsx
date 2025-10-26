@@ -3,20 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { cn } from "@/lib/utils";
 
-interface ContactModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  type: "call" | "email" | null;
-  lead: {
-    name: string;
-    email: string;
-    phone: string;
-  } | null;
-}
-
-export const ContactModal = ({ isOpen, onClose, type, lead }: ContactModalProps) => {
+export const ContactModal = ({ isOpen, onClose, type, lead }) => {
   if (!lead || !type) return null;
 
   const isEmail = type === "email";
@@ -31,14 +19,14 @@ export const ContactModal = ({ isOpen, onClose, type, lead }: ContactModalProps)
                 <div className="w-10 h-10 rounded-2xl bg-[hsl(var(--teal-light))] flex items-center justify-center">
                   <Mail className="w-5 h-5 text-[hsl(var(--teal))]" />
                 </div>
-                Send Email to {lead.name}
+                Send Email to {lead.fullName}
               </>
             ) : (
               <>
                 <div className="w-10 h-10 rounded-2xl bg-[hsl(var(--blue-light))] flex items-center justify-center">
                   <Phone className="w-5 h-5 text-[hsl(var(--blue))]" />
                 </div>
-                Call {lead.name}
+                Call {lead.fullName}
               </>
             )}
           </DialogTitle>
@@ -76,7 +64,7 @@ export const ContactModal = ({ isOpen, onClose, type, lead }: ContactModalProps)
           ) : (
             <>
               <div className="bg-muted rounded-2xl p-6 text-center space-y-4">
-                <div className="text-3xl font-bold text-foreground">{lead.phone}</div>
+                <div className="text-3xl font-bold text-foreground">{lead.phoneNumber}</div>
                 <p className="text-sm text-muted-foreground">Click a button below to initiate contact</p>
               </div>
               <div className="grid grid-cols-2 gap-3">
