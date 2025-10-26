@@ -110,6 +110,43 @@ export const CRMTable = ({
   const endIndex = startIndex + itemsPerPage;
   const paginatedLeads = leads.slice(startIndex, endIndex);
 
+  // Column resizing state and handlers
+  const [columnWidths, setColumnWidths] = React.useState<Record<string, number>>({});
+  const resizingColRef = React.useRef<string | null>(null);
+  const startXRef = React.useRef<number>(0);
+  const startWidthRef = React.useRef<number>(0);
+
+  const onResizeMouseMove = React.useCallback((e: MouseEvent) => {
+    const col = resizingColRef.current;
+    if (!col) return;
+    const delta = e.clientX - startXRef.current;
+    const newWidth = Math.max(100, Math.min(600, startWidthRef.current + delta));
+    setColumnWidths((prev) => ({ ...prev, [col]: newWidth }));
+  }, []);
+
+  const onResizeMouseUp = React.useCallback(() => {
+    resizingColRef.current = null;
+    window.removeEventListener('mousemove', onResizeMouseMove);
+    window.removeEventListener('mouseup', onResizeMouseUp);
+  }, [onResizeMouseMove]);
+
+  const onResizeMouseDown = (col: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    resizingColRef.current = col;
+    startXRef.current = e.clientX;
+    const th = (e.currentTarget as HTMLElement).parentElement as HTMLElement | null;
+    startWidthRef.current = th?.offsetWidth || (columnWidths[col] ?? 150);
+    window.addEventListener('mousemove', onResizeMouseMove);
+    window.addEventListener('mouseup', onResizeMouseUp);
+  };
+
+  React.useEffect(() => {
+    return () => {
+      window.removeEventListener('mousemove', onResizeMouseMove);
+      window.removeEventListener('mouseup', onResizeMouseUp);
+    };
+  }, [onResizeMouseMove, onResizeMouseUp]);
+
   const renderCellContent = (lead: Lead, col: string) => {
     if (col === 'fullName') {
       return (
@@ -264,15 +301,23 @@ export const CRMTable = ({
       {/* Table */}
       <div className="overflow-auto max-h-[700px]">
         <Table className="min-w-max">
-          <TableHeader className="sticky top-0 bg-muted/50 z-10 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+          <TableHeader className="bg-muted/50 z-10">
             <TableRow className="bg-muted/50 hover:bg-muted/50">
               {columns.map((col) => (
-                <TableHead 
-                  key={col} 
-                  className="font-semibold text-foreground whitespace-nowrap resize-x overflow-auto min-w-[120px]"
-                  style={{ maxWidth: '400px' }}
+                <TableHead
+                  key={col}
+                  className="sticky top-0 bg-card z-20 font-semibold text-foreground whitespace-nowrap relative shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+                  style={{
+                    width: columnWidths[col] ? `${columnWidths[col]}px` : undefined,
+                    minWidth: 120,
+                    maxWidth: 400,
+                  }}
                 >
                   {COLUMN_LABELS[col] || col}
+                  <span
+                    className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize select-none"
+                    onMouseDown={(e) => onResizeMouseDown(col, e)}
+                  />
                 </TableHead>
               ))}
             </TableRow>
@@ -305,59 +350,61 @@ export const CRMTable = ({
               <SelectItem value="100">100</SelectItem>
             </SelectContent>
           </Select>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-muted-foreground whitespace-nowrap">
             {startIndex + 1}-{Math.min(endIndex, leads.length)} of {leads.length}
           </span>
         </div>
 
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
-                className={cn(
-                  "cursor-pointer",
-                  currentPage === 1 && "pointer-events-none opacity-50"
-                )}
-              />
-            </PaginationItem>
-            
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              let pageNum;
-              if (totalPages <= 5) {
-                pageNum = i + 1;
-              } else if (currentPage <= 3) {
-                pageNum = i + 1;
-              } else if (currentPage >= totalPages - 2) {
-                pageNum = totalPages - 4 + i;
-              } else {
-                pageNum = currentPage - 2 + i;
-              }
+        <div className="ml-auto">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+                  className={cn(
+                    "cursor-pointer",
+                    currentPage === 1 && "pointer-events-none opacity-50"
+                  )}
+                />
+              </PaginationItem>
               
-              return (
-                <PaginationItem key={pageNum}>
-                  <PaginationLink
-                    onClick={() => onPageChange(pageNum)}
-                    isActive={currentPage === pageNum}
-                    className="cursor-pointer"
-                  >
-                    {pageNum}
-                  </PaginationLink>
-                </PaginationItem>
-              );
-            })}
-            
-            <PaginationItem>
-              <PaginationNext 
-                onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
-                className={cn(
-                  "cursor-pointer",
-                  currentPage === totalPages && "pointer-events-none opacity-50"
-                )}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+                
+                return (
+                  <PaginationItem key={pageNum}>
+                    <PaginationLink
+                      onClick={() => onPageChange(pageNum)}
+                      isActive={currentPage === pageNum}
+                      className="cursor-pointer"
+                    >
+                      {pageNum}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
+                  className={cn(
+                    "cursor-pointer",
+                    currentPage === totalPages && "pointer-events-none opacity-50"
+                  )}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       </div>
     </div>
   );
