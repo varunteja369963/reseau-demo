@@ -58,12 +58,13 @@ const Index = () => {
               <>
                 <StatsCards />
                 
-                <div className={`grid grid-cols-1 gap-8 ${isFilterPanelOpen ? 'xl:grid-cols-[1fr_280px]' : ''}`}>
-                  <div className="min-w-0 space-y-6">
-                    <CRMTableNavbar 
-                      isFilterOpen={isFilterPanelOpen}
-                      onToggleFilter={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
-                    />
+                <CRMTableNavbar 
+                  isFilterOpen={isFilterPanelOpen}
+                  onToggleFilter={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
+                />
+                
+                <div className={`grid grid-cols-1 gap-8 items-start ${isFilterPanelOpen ? 'xl:grid-cols-[1fr_280px]' : ''}`}>
+                  <div className="min-w-0">
                     <CRMTable 
                       leads={leads} 
                       visibleColumns={visibleColumns}
@@ -80,7 +81,7 @@ const Index = () => {
                   </div>
                   
                   {isFilterPanelOpen && (
-                    <div className="flex-shrink-0 xl:mt-[76px]">
+                    <div className="flex-shrink-0">
                       <FilterPanel onToggle={() => setIsFilterPanelOpen(false)} />
                     </div>
                   )}
