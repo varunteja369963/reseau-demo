@@ -11,6 +11,7 @@ import { AnalyticsView } from "@/components/AnalyticsView";
 import { SettingsView } from "@/components/SettingsView";
 import { generateDemoLeads } from "@/utils/demoData";
 import { Lead } from "@/types/lead";
+import { ChevronDown } from "lucide-react";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<string>("crm");
@@ -27,6 +28,7 @@ const Index = () => {
   const [contactType, setContactType] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
 
   useEffect(() => {
     setLeads(generateDemoLeads());
@@ -56,7 +58,7 @@ const Index = () => {
               <>
                 <StatsCards />
                 
-                <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-8">
+                <div className={`grid grid-cols-1 gap-8 ${isFilterPanelOpen ? 'xl:grid-cols-[1fr_280px]' : ''}`}>
                   <div className="min-w-0">
                     <CRMTableNavbar />
                     <CRMTable 
@@ -74,10 +76,22 @@ const Index = () => {
                     />
                   </div>
                   
-                  <div className="flex-shrink-0">
-                    <FilterPanel />
-                  </div>
+                  {isFilterPanelOpen && (
+                    <div className="flex-shrink-0">
+                      <FilterPanel onToggle={() => setIsFilterPanelOpen(false)} />
+                    </div>
+                  )}
                 </div>
+                
+                {!isFilterPanelOpen && (
+                  <button
+                    onClick={() => setIsFilterPanelOpen(true)}
+                    className="fixed right-8 top-32 bg-card p-3 rounded-2xl shadow-soft hover:shadow-medium transition-smooth z-10"
+                    aria-label="Open filter panel"
+                  >
+                    <ChevronDown className="w-5 h-5 text-muted-foreground -rotate-90" />
+                  </button>
+                )}
               </>
             )}
 

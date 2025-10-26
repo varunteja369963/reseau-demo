@@ -1,4 +1,4 @@
-import { Star, ChevronDown } from "lucide-react";
+import { Star, ChevronDown, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -11,7 +11,11 @@ interface Filters {
   todayOnly: boolean;
 }
 
-export const FilterPanel = () => {
+interface FilterPanelProps {
+  onToggle: () => void;
+}
+
+export const FilterPanel = ({ onToggle }: FilterPanelProps) => {
   const [filters, setFilters] = useState<Filters>({
     qualified: true,
     cold: false,
@@ -25,11 +29,20 @@ export const FilterPanel = () => {
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-semibold text-foreground">Lead Filter</h3>
-          <CollapsibleTrigger asChild>
-            <button className="p-2 hover:bg-muted rounded-lg transition-smooth">
-              <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          <div className="flex items-center gap-2">
+            <CollapsibleTrigger asChild>
+              <button className="p-2 hover:bg-muted rounded-lg transition-smooth">
+                <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+              </button>
+            </CollapsibleTrigger>
+            <button 
+              onClick={onToggle}
+              className="p-2 hover:bg-muted rounded-lg transition-smooth"
+              aria-label="Close filter panel"
+            >
+              <X className="w-5 h-5 text-muted-foreground" />
             </button>
-          </CollapsibleTrigger>
+          </div>
         </div>
         
         <CollapsibleContent>
