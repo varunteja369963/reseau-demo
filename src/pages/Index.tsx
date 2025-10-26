@@ -15,11 +15,13 @@ import { Lead } from "@/types/lead";
 const Index = () => {
   const [activeTab, setActiveTab] = useState<string>("crm");
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(['fullName', 'email', 'phoneNumber', 'leadStatus', 'leadScoring']);
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(['fullName', 'email', 'phoneNumber', 'leadStatus', 'leadSource', 'vehicleMake', 'model', 'year', 'budgetRange', 'dealStage', 'leadScoring']);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [showProfileModal, setShowProfileModal] = useState<boolean>(false);
   const [showContactModal, setShowContactModal] = useState<boolean>(false);
   const [contactType, setContactType] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
 
   useEffect(() => {
     setLeads(generateDemoLeads());
@@ -52,12 +54,19 @@ const Index = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
                   <div>
                     <CRMTableNavbar />
-                    <CRMTable 
-                      leads={leads}
-                      visibleColumns={visibleColumns}
-                      onOpenProfile={handleOpenProfile}
-                      onOpenContact={handleOpenContact}
-                    />
+              <CRMTable 
+                leads={leads} 
+                visibleColumns={visibleColumns}
+                onOpenProfile={handleOpenProfile}
+                onOpenContact={handleOpenContact}
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                onPageChange={setCurrentPage}
+                onItemsPerPageChange={(items) => {
+                  setItemsPerPage(items);
+                  setCurrentPage(1);
+                }}
+              />
                   </div>
                   
                   <div>
