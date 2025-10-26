@@ -113,34 +113,32 @@ export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTabl
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="end">
-            <div className="flex flex-col">
-              <div className="border-b border-border p-3">
-                <div className="text-sm font-medium mb-2 px-2">Quick Select</div>
-                <div className="flex flex-col items-start gap-1 w-fit">
-                  {presets.map((preset) => (
-                    <Button
-                      key={preset.label}
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-sm w-fit whitespace-nowrap"
-                      onClick={() => {
-                        setDate(preset.value());
-                      }}
-                    >
-                      {preset.label}
-                    </Button>
-                  ))}
-                  {date && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-sm text-destructive hover:text-destructive w-fit whitespace-nowrap"
-                      onClick={() => setDate(undefined)}
-                    >
-                      Clear
-                    </Button>
-                  )}
-                </div>
+            <div className="flex">
+              <div className="border-r border-border p-3 space-y-1">
+                <div className="text-sm font-medium mb-2">Quick Select</div>
+                {presets.map((preset) => (
+                  <Button
+                    key={preset.label}
+                    variant="ghost"
+                    size="sm"
+                    className="justify-start text-sm h-8 px-2"
+                    onClick={() => {
+                      setDate(preset.value());
+                    }}
+                  >
+                    {preset.label}
+                  </Button>
+                ))}
+                {date && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="justify-start text-sm text-destructive hover:text-destructive h-8 px-2"
+                    onClick={() => setDate(undefined)}
+                  >
+                    Clear
+                  </Button>
+                )}
               </div>
               <div className="p-3">
                 <CalendarComponent
