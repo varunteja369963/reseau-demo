@@ -23,7 +23,7 @@ export const FilterPanel = ({ onToggle }: FilterPanelProps) => {
   });
 
   return (
-    <div className="bg-card rounded-3xl shadow-soft sticky top-24 max-h-[700px] overflow-auto">
+    <div className="bg-card rounded-3xl shadow-soft max-h-[700px] overflow-auto">
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-semibold text-foreground">Lead Filter</h3>
