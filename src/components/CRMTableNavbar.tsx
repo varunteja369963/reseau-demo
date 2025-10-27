@@ -9,6 +9,7 @@ import { useState } from "react";
 import { format, subDays, startOfMonth, endOfMonth, startOfYear, endOfYear, subMonths, subYears } from "date-fns";
 import { cn } from "@/lib/utils";
 import { DateRange } from "react-day-picker";
+import { AddCustomerModal } from "./modals/AddCustomerModal";
 
 interface CRMTableNavbarProps {
   isFilterOpen?: boolean;
@@ -30,6 +31,7 @@ export const CRMTableNavbar = ({
   const [date, setDate] = useState<DateRange | undefined>();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [isColumnsOpen, setIsColumnsOpen] = useState(false);
+  const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
 
   const allColumns = [
     { key: 'fullName', label: 'Full Name', category: 'Customer Info' },
@@ -295,11 +297,19 @@ export const CRMTableNavbar = ({
           </PopoverContent>
         </Popover>
 
-        <Button className="h-10 rounded-2xl gradient-teal text-white font-medium shadow-soft hover:shadow-medium transition-smooth">
+        <Button 
+          onClick={() => setIsAddCustomerOpen(true)}
+          className="h-10 rounded-2xl gradient-teal text-white font-medium shadow-soft hover:shadow-medium transition-smooth"
+        >
           <UserPlus className="w-4 h-4 mr-2" />
           Add Customer
         </Button>
       </div>
+
+      <AddCustomerModal 
+        isOpen={isAddCustomerOpen} 
+        onClose={() => setIsAddCustomerOpen(false)} 
+      />
     </div>
   );
 };
