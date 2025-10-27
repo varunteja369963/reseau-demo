@@ -51,7 +51,8 @@ const Index = () => {
     maxLeadScore: 5,
     vehicleMake: [],
     newUsed: [],
-    budgetRange: [],
+    budgetMin: 10000,
+    budgetMax: 100000,
     dealStage: [],
     minDealValue: '',
     maxDealValue: '',
@@ -158,9 +159,29 @@ const Index = () => {
         return false;
       }
 
-      // Budget Range
-      if (filters.budgetRange.length > 0 && !filters.budgetRange.includes(lead.budgetRange)) {
-        return false;
+      // Budget Range - parse the lead's budget range string and check if it overlaps with filter range
+      if (lead.budgetRange) {
+        // Parse budget range like "$10,000 - $20,000" or "$50,000+"
+        const budgetMatch = lead.budgetRange.match(/\$?([\d,]+)\s*-\s*\$?([\d,]+)|\$?([\d,]+)\+/);
+        if (budgetMatch) {
+          let leadBudgetMin = 0;
+          let leadBudgetMax = Infinity;
+          
+          if (budgetMatch[3]) {
+            // Format: "$50,000+"
+            leadBudgetMin = parseInt(budgetMatch[3].replace(/,/g, ''));
+            leadBudgetMax = Infinity;
+          } else {
+            // Format: "$10,000 - $20,000"
+            leadBudgetMin = parseInt(budgetMatch[1].replace(/,/g, ''));
+            leadBudgetMax = parseInt(budgetMatch[2].replace(/,/g, ''));
+          }
+          
+          // Check if ranges overlap
+          if (leadBudgetMax < filters.budgetMin || leadBudgetMin > filters.budgetMax) {
+            return false;
+          }
+        }
       }
 
       // Deal Stage

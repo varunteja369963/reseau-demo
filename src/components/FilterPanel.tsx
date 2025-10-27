@@ -4,6 +4,7 @@ import { Input } from "./ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Calendar } from "./ui/calendar";
+import { Slider } from "./ui/slider";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { format } from "date-fns";
@@ -39,7 +40,8 @@ export interface FilterValues {
   // Vehicle filters
   vehicleMake: string[];
   newUsed: string[];
-  budgetRange: string[];
+  budgetMin: number;
+  budgetMax: number;
   
   // Deal filters
   dealStage: string[];
@@ -105,7 +107,8 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
       maxLeadScore: 5,
       vehicleMake: [],
       newUsed: [],
-      budgetRange: [],
+      budgetMin: 10000,
+      budgetMax: 100000,
       dealStage: [],
       minDealValue: '',
       maxDealValue: '',
@@ -157,22 +160,22 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
                 {/* Lead Status */}
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-2 block">Status</label>
-                  <div className="flex flex-wrap gap-2">
-                    {['Qualified', 'New', 'Working', 'Lost', 'Sold'].map((status) => (
-                      <button
-                        key={status}
-                        onClick={() => toggleArrayFilter('leadStatus', status)}
-                        className={cn(
-                          "px-3 py-1.5 text-xs font-medium rounded-full transition-smooth",
-                          filters.leadStatus.includes(status)
-                            ? "bg-[hsl(var(--teal))] text-white"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
-                        )}
-                      >
-                        {status}
-                      </button>
-                    ))}
-                  </div>
+                  <Select
+                    value={filters.leadStatus[0] || "all"}
+                    onValueChange={(val) => updateFilters({ leadStatus: val === "all" ? [] : [val] })}
+                  >
+                    <SelectTrigger className="h-9 rounded-xl">
+                      <SelectValue placeholder="All Status" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[300px]">
+                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="Qualified">Qualified</SelectItem>
+                      <SelectItem value="New">New</SelectItem>
+                      <SelectItem value="Working">Working</SelectItem>
+                      <SelectItem value="Lost">Lost</SelectItem>
+                      <SelectItem value="Sold">Sold</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Lead Source */}
@@ -240,12 +243,12 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
                   <label className="text-xs font-medium text-muted-foreground mb-2 block">
                     Lead Score: {filters.minLeadScore}-{filters.maxLeadScore}
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     {[1, 2, 3, 4, 5].map((score) => (
                       <button
                         key={score}
                         onClick={() => updateFilters({ minLeadScore: score })}
-                        className="p-2 hover:scale-110 transition-smooth"
+                        className="p-1.5 hover:scale-110 transition-smooth flex-shrink-0"
                       >
                         <Star className={cn(
                           "w-5 h-5",
@@ -321,22 +324,19 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
 
                 {/* Budget Range */}
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Budget Range</label>
-                  <Select
-                    value={filters.budgetRange[0] || "all"}
-                    onValueChange={(val) => updateFilters({ budgetRange: val === "all" ? [] : [val] })}
-                  >
-                    <SelectTrigger className="h-9 rounded-xl">
-                      <SelectValue placeholder="All Budgets" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Budgets</SelectItem>
-                      <SelectItem value="$10,000 - $20,000">$10k - $20k</SelectItem>
-                      <SelectItem value="$20,000 - $35,000">$20k - $35k</SelectItem>
-                      <SelectItem value="$35,000 - $50,000">$35k - $50k</SelectItem>
-                      <SelectItem value="$50,000+">$50k+</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <label className="text-xs font-medium text-muted-foreground mb-2 block">
+                    Budget Range: ${(filters.budgetMin / 1000).toFixed(0)}k - ${(filters.budgetMax / 1000).toFixed(0)}k
+                  </label>
+                  <div className="px-2 py-4">
+                    <Slider
+                      min={10000}
+                      max={100000}
+                      step={5000}
+                      value={[filters.budgetMin, filters.budgetMax]}
+                      onValueChange={([min, max]) => updateFilters({ budgetMin: min, budgetMax: max })}
+                      className="w-full"
+                    />
+                  </div>
                 </div>
 
                 {/* Trade-In */}
@@ -537,7 +537,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
               <div className="p-4 pt-0 space-y-4">
                 {/* Customer Name */}
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-foreground">Name Filter</label>
+                  <label className="text-xs font-medium text-muted-foreground">Name</label>
                   <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
                     <Select
                       value={filters.customerNameFilterType}
@@ -564,7 +564,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
 
                 {/* Customer Email */}
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-foreground">Email Filter</label>
+                  <label className="text-xs font-medium text-muted-foreground">Email</label>
                   <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
                     <Select
                       value={filters.customerEmailFilterType}
@@ -591,7 +591,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
 
                 {/* Customer Phone */}
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-foreground">Phone Filter</label>
+                  <label className="text-xs font-medium text-muted-foreground">Phone</label>
                   <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
                     <Select
                       value={filters.customerPhoneFilterType}
