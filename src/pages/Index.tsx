@@ -34,8 +34,11 @@ const Index = () => {
   const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
   const [filters, setFilters] = useState<FilterValues>({
     customerName: '',
+    customerNameFilterType: 'contains',
     customerEmail: '',
+    customerEmailFilterType: 'contains',
     customerPhone: '',
+    customerPhoneFilterType: 'contains',
     leadStatus: [],
     leadSource: [],
     leadChannel: [],
@@ -62,21 +65,41 @@ const Index = () => {
     setLeads(generateDemoLeads());
   }, []);
 
+  // Helper function for string filtering
+  const matchesStringFilter = (value: string, filterValue: string, filterType: 'contains' | 'startsWith' | 'endsWith' | 'exact'): boolean => {
+    if (!filterValue) return true;
+    const lowerValue = value.toLowerCase();
+    const lowerFilter = filterValue.toLowerCase();
+    
+    switch (filterType) {
+      case 'contains':
+        return lowerValue.includes(lowerFilter);
+      case 'startsWith':
+        return lowerValue.startsWith(lowerFilter);
+      case 'endsWith':
+        return lowerValue.endsWith(lowerFilter);
+      case 'exact':
+        return lowerValue === lowerFilter;
+      default:
+        return true;
+    }
+  };
+
   // Filter leads based on current filter values
   const filteredLeads = useMemo(() => {
     return leads.filter(lead => {
       // Customer Name
-      if (filters.customerName && !lead.fullName.toLowerCase().includes(filters.customerName.toLowerCase())) {
+      if (!matchesStringFilter(lead.fullName, filters.customerName, filters.customerNameFilterType)) {
         return false;
       }
 
       // Customer Email
-      if (filters.customerEmail && !lead.email.toLowerCase().includes(filters.customerEmail.toLowerCase())) {
+      if (!matchesStringFilter(lead.email, filters.customerEmail, filters.customerEmailFilterType)) {
         return false;
       }
 
       // Customer Phone
-      if (filters.customerPhone && !lead.phoneNumber.includes(filters.customerPhone)) {
+      if (!matchesStringFilter(lead.phoneNumber, filters.customerPhone, filters.customerPhoneFilterType)) {
         return false;
       }
 

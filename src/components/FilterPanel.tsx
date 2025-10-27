@@ -12,8 +12,11 @@ import { DateRange } from "react-day-picker";
 export interface FilterValues {
   // String filters
   customerName: string;
+  customerNameFilterType: 'contains' | 'startsWith' | 'endsWith' | 'exact';
   customerEmail: string;
+  customerEmailFilterType: 'contains' | 'startsWith' | 'endsWith' | 'exact';
   customerPhone: string;
+  customerPhoneFilterType: 'contains' | 'startsWith' | 'endsWith' | 'exact';
   
   // Lead Status
   leadStatus: string[];
@@ -85,8 +88,11 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
   const clearFilters = () => {
     onFiltersChange({
       customerName: '',
+      customerNameFilterType: 'contains',
       customerEmail: '',
+      customerEmailFilterType: 'contains',
       customerPhone: '',
+      customerPhoneFilterType: 'contains',
       leadStatus: [],
       leadSource: [],
       leadChannel: [],
@@ -151,34 +157,82 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
                 {/* Customer Name */}
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-2 block">Name</label>
-                  <Input
-                    placeholder="Filter by name..."
-                    value={filters.customerName}
-                    onChange={(e) => updateFilters({ customerName: e.target.value })}
-                    className="h-9 rounded-xl"
-                  />
+                  <div className="flex gap-2">
+                    <Select
+                      value={filters.customerNameFilterType}
+                      onValueChange={(val: any) => updateFilters({ customerNameFilterType: val })}
+                    >
+                      <SelectTrigger className="h-9 w-32 rounded-xl">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="contains">Contains</SelectItem>
+                        <SelectItem value="startsWith">Starts with</SelectItem>
+                        <SelectItem value="endsWith">Ends with</SelectItem>
+                        <SelectItem value="exact">Exact match</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      placeholder="Value..."
+                      value={filters.customerName}
+                      onChange={(e) => updateFilters({ customerName: e.target.value })}
+                      className="h-9 rounded-xl flex-1"
+                    />
+                  </div>
                 </div>
 
                 {/* Customer Email */}
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-2 block">Email</label>
-                  <Input
-                    placeholder="Filter by email..."
-                    value={filters.customerEmail}
-                    onChange={(e) => updateFilters({ customerEmail: e.target.value })}
-                    className="h-9 rounded-xl"
-                  />
+                  <div className="flex gap-2">
+                    <Select
+                      value={filters.customerEmailFilterType}
+                      onValueChange={(val: any) => updateFilters({ customerEmailFilterType: val })}
+                    >
+                      <SelectTrigger className="h-9 w-32 rounded-xl">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="contains">Contains</SelectItem>
+                        <SelectItem value="startsWith">Starts with</SelectItem>
+                        <SelectItem value="endsWith">Ends with</SelectItem>
+                        <SelectItem value="exact">Exact match</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      placeholder="Value..."
+                      value={filters.customerEmail}
+                      onChange={(e) => updateFilters({ customerEmail: e.target.value })}
+                      className="h-9 rounded-xl flex-1"
+                    />
+                  </div>
                 </div>
 
                 {/* Customer Phone */}
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-2 block">Phone</label>
-                  <Input
-                    placeholder="Filter by phone..."
-                    value={filters.customerPhone}
-                    onChange={(e) => updateFilters({ customerPhone: e.target.value })}
-                    className="h-9 rounded-xl"
-                  />
+                  <div className="flex gap-2">
+                    <Select
+                      value={filters.customerPhoneFilterType}
+                      onValueChange={(val: any) => updateFilters({ customerPhoneFilterType: val })}
+                    >
+                      <SelectTrigger className="h-9 w-32 rounded-xl">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="contains">Contains</SelectItem>
+                        <SelectItem value="startsWith">Starts with</SelectItem>
+                        <SelectItem value="endsWith">Ends with</SelectItem>
+                        <SelectItem value="exact">Exact match</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      placeholder="Value..."
+                      value={filters.customerPhone}
+                      onChange={(e) => updateFilters({ customerPhone: e.target.value })}
+                      className="h-9 rounded-xl flex-1"
+                    />
+                  </div>
                 </div>
               </div>
             )}
