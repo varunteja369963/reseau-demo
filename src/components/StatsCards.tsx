@@ -51,7 +51,7 @@ export const StatsCards = () => {
       <CollapsibleTrigger asChild>
         <button className="w-full flex items-center justify-end gap-1.5 mb-3 py-1.5 hover:bg-muted/30 rounded-lg transition-smooth group">
           <span className="text-xs font-medium text-muted-foreground/70 group-hover:text-muted-foreground transition-smooth">
-            {isOpen ? 'Hide Overview' : 'Show Overview'}
+            {isOpen ? 'Hide' : 'Show Overview'}
           </span>
           <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground/70 group-hover:text-muted-foreground transition-all ${isOpen ? 'rotate-180' : ''}`} />
         </button>
