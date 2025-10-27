@@ -153,84 +153,84 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
             </button>
             
             {expandedSections.customerInfo && (
-              <div className="p-4 pt-0 space-y-3">
+              <div className="p-4 pt-0 space-y-4">
                 {/* Customer Name */}
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Name</label>
-                  <div className="relative">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-foreground">Name Filter</label>
+                  <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
                     <Select
                       value={filters.customerNameFilterType}
                       onValueChange={(val: any) => updateFilters({ customerNameFilterType: val })}
                     >
-                      <SelectTrigger className="absolute left-0 top-0 h-9 w-[110px] rounded-r-none border-r-0 rounded-xl z-10 bg-muted/50">
+                      <SelectTrigger className="h-10 rounded-lg bg-background">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="contains">Contains</SelectItem>
                         <SelectItem value="startsWith">Starts with</SelectItem>
                         <SelectItem value="endsWith">Ends with</SelectItem>
-                        <SelectItem value="exact">Exact</SelectItem>
+                        <SelectItem value="exact">Exact match</SelectItem>
                       </SelectContent>
                     </Select>
                     <Input
-                      placeholder="Value..."
+                      placeholder="Enter value..."
                       value={filters.customerName}
                       onChange={(e) => updateFilters({ customerName: e.target.value })}
-                      className="h-9 rounded-xl pl-[118px]"
+                      className="h-10 rounded-lg bg-background"
                     />
                   </div>
                 </div>
 
                 {/* Customer Email */}
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Email</label>
-                  <div className="relative">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-foreground">Email Filter</label>
+                  <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
                     <Select
                       value={filters.customerEmailFilterType}
                       onValueChange={(val: any) => updateFilters({ customerEmailFilterType: val })}
                     >
-                      <SelectTrigger className="absolute left-0 top-0 h-9 w-[110px] rounded-r-none border-r-0 rounded-xl z-10 bg-muted/50">
+                      <SelectTrigger className="h-10 rounded-lg bg-background">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="contains">Contains</SelectItem>
                         <SelectItem value="startsWith">Starts with</SelectItem>
                         <SelectItem value="endsWith">Ends with</SelectItem>
-                        <SelectItem value="exact">Exact</SelectItem>
+                        <SelectItem value="exact">Exact match</SelectItem>
                       </SelectContent>
                     </Select>
                     <Input
-                      placeholder="Value..."
+                      placeholder="Enter value..."
                       value={filters.customerEmail}
                       onChange={(e) => updateFilters({ customerEmail: e.target.value })}
-                      className="h-9 rounded-xl pl-[118px]"
+                      className="h-10 rounded-lg bg-background"
                     />
                   </div>
                 </div>
 
                 {/* Customer Phone */}
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Phone</label>
-                  <div className="relative">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-foreground">Phone Filter</label>
+                  <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
                     <Select
                       value={filters.customerPhoneFilterType}
                       onValueChange={(val: any) => updateFilters({ customerPhoneFilterType: val })}
                     >
-                      <SelectTrigger className="absolute left-0 top-0 h-9 w-[110px] rounded-r-none border-r-0 rounded-xl z-10 bg-muted/50">
+                      <SelectTrigger className="h-10 rounded-lg bg-background">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="contains">Contains</SelectItem>
                         <SelectItem value="startsWith">Starts with</SelectItem>
                         <SelectItem value="endsWith">Ends with</SelectItem>
-                        <SelectItem value="exact">Exact</SelectItem>
+                        <SelectItem value="exact">Exact match</SelectItem>
                       </SelectContent>
                     </Select>
                     <Input
-                      placeholder="Value..."
+                      placeholder="Enter value..."
                       value={filters.customerPhone}
                       onChange={(e) => updateFilters({ customerPhone: e.target.value })}
-                      className="h-9 rounded-xl pl-[118px]"
+                      className="h-10 rounded-lg bg-background"
                     />
                   </div>
                 </div>
