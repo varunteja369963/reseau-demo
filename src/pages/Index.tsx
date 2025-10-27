@@ -14,7 +14,7 @@ import { Lead } from "@/types/lead";
 import { ChevronDown } from "lucide-react";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<string>("my-radar");
+  const [activeTab, setActiveTab] = useState<string>("crm");
   const [leads, setLeads] = useState<Lead[]>([]);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
     'fullName', 'email', 'phoneNumber', 'dealership', 'leadStatus', 'leadScoring', 
@@ -54,13 +54,6 @@ const Index = () => {
         
         <main className="flex-1 p-8 overflow-x-hidden">
           <div className="max-w-full mx-auto">
-            {activeTab === "my-radar" && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold mb-2">My Radar</h2>
-                <p className="text-muted-foreground">Coming soon...</p>
-              </div>
-            )}
-
             {activeTab === "crm" && (
               <>
                 <StatsCards />
@@ -94,62 +87,6 @@ const Index = () => {
                   )}
                 </div>
               </>
-            )}
-
-            {activeTab === "email" && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold mb-2">Email</h2>
-                <p className="text-muted-foreground">Coming soon...</p>
-              </div>
-            )}
-
-            {activeTab === "sms" && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold mb-2">SMS</h2>
-                <p className="text-muted-foreground">Coming soon...</p>
-              </div>
-            )}
-
-            {activeTab === "calls" && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold mb-2">Calls</h2>
-                <p className="text-muted-foreground">Coming soon...</p>
-              </div>
-            )}
-
-            {activeTab === "chatbot" && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold mb-2">Chatbot</h2>
-                <p className="text-muted-foreground">Coming soon...</p>
-              </div>
-            )}
-
-            {activeTab === "inventory" && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold mb-2">Inventory</h2>
-                <p className="text-muted-foreground">Coming soon...</p>
-              </div>
-            )}
-
-            {activeTab === "ads" && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold mb-2">Ads</h2>
-                <p className="text-muted-foreground">Coming soon...</p>
-              </div>
-            )}
-
-            {activeTab === "automation" && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold mb-2">Automation</h2>
-                <p className="text-muted-foreground">Coming soon...</p>
-              </div>
-            )}
-
-            {activeTab === "integration" && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold mb-2">Integration</h2>
-                <p className="text-muted-foreground">Coming soon...</p>
-              </div>
             )}
 
             {activeTab === "analytics" && <AnalyticsView />}

@@ -24,22 +24,11 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
       <div className="flex items-center justify-between px-6 py-4">
         {/* Left: Toggle */}
         <div className="flex items-center gap-8">
-          <div className="flex bg-muted rounded-full p-1 gap-1">
-            <button
-              onClick={() => setActiveTab("my-radar")}
-              className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth whitespace-nowrap",
-                activeTab === "my-radar"
-                  ? "bg-white shadow-soft text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              My Radar
-            </button>
+          <div className="flex bg-muted rounded-full p-1">
             <button
               onClick={() => setActiveTab("crm")}
               className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth",
+                "px-6 py-2 rounded-full text-sm font-medium transition-smooth",
                 activeTab === "crm"
                   ? "bg-white shadow-soft text-foreground"
                   : "text-muted-foreground hover:text-foreground"
@@ -48,92 +37,26 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
               CRM
             </button>
             <button
-              onClick={() => setActiveTab("email")}
+              onClick={() => setActiveTab("analytics")}
               className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth",
-                activeTab === "email"
+                "px-6 py-2 rounded-full text-sm font-medium transition-smooth",
+                activeTab === "analytics"
                   ? "bg-white shadow-soft text-foreground"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              Email
+              Analytics
             </button>
             <button
-              onClick={() => setActiveTab("sms")}
+              onClick={() => setActiveTab("settings")}
               className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth",
-                activeTab === "sms"
+                "px-6 py-2 rounded-full text-sm font-medium transition-smooth",
+                activeTab === "settings"
                   ? "bg-white shadow-soft text-foreground"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              SMS
-            </button>
-            <button
-              onClick={() => setActiveTab("calls")}
-              className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth",
-                activeTab === "calls"
-                  ? "bg-white shadow-soft text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Calls
-            </button>
-            <button
-              onClick={() => setActiveTab("chatbot")}
-              className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth",
-                activeTab === "chatbot"
-                  ? "bg-white shadow-soft text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Chatbot
-            </button>
-            <button
-              onClick={() => setActiveTab("inventory")}
-              className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth",
-                activeTab === "inventory"
-                  ? "bg-white shadow-soft text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Inventory
-            </button>
-            <button
-              onClick={() => setActiveTab("ads")}
-              className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth",
-                activeTab === "ads"
-                  ? "bg-white shadow-soft text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Ads
-            </button>
-            <button
-              onClick={() => setActiveTab("automation")}
-              className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth",
-                activeTab === "automation"
-                  ? "bg-white shadow-soft text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Automation
-            </button>
-            <button
-              onClick={() => setActiveTab("integration")}
-              className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth",
-                activeTab === "integration"
-                  ? "bg-white shadow-soft text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Integration
+              Settings
             </button>
           </div>
         </div>
