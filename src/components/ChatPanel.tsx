@@ -53,7 +53,7 @@ export const ChatPanel = ({ onToggle }: ChatPanelProps) => {
   };
 
   return (
-    <div className="bg-card rounded-3xl shadow-soft h-[500px] flex flex-col">
+    <div className="bg-card rounded-3xl shadow-soft h-[510px] flex flex-col">
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

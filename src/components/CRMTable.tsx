@@ -419,7 +419,7 @@ export const CRMTable = ({
       </div>
 
       {/* Pagination Footer */}
-      <div className="p-6 border-t border-border flex items-center justify-between">
+      <div className="p-4 border-t border-border flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Select value={String(itemsPerPage)} onValueChange={(val) => onItemsPerPageChange(Number(val))}>
             <SelectTrigger className="w-[80px] h-9">
