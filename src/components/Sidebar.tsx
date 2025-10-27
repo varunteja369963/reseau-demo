@@ -1,6 +1,7 @@
 import { Radar, Users, Mail, Megaphone, Headset, Bot, Package, Plug, Zap, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 interface NavItem {
   icon: React.ComponentType<{ className?: string }>;
@@ -11,7 +12,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { icon: Radar, label: "My Radar", path: "/" },
-  { icon: Users, label: "CRM", path: "/crm", active: true },
+  { icon: Users, label: "CRM", path: "/crm" },
   { icon: Mail, label: "Email", path: "/email" },
   { icon: MessageSquare, label: "SMS", path: "/sms" },
   { icon: Headset, label: "Calls", path: "/calls" },
@@ -24,6 +25,7 @@ const navItems: NavItem[] = [
 
 export const Sidebar = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const location = useLocation();
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-24 gradient-sidebar text-white z-50 flex flex-col items-center py-6 shadow-strong">
@@ -36,32 +38,37 @@ export const Sidebar = () => {
 
       {/* Navigation Items */}
       <nav className="flex-1 flex flex-col gap-2 w-full px-3 overflow-y-auto overflow-x-hidden">
-        {navItems.map((item, index) => (
-          <button
-            key={item.label}
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
-            className={cn(
-              "flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-2xl transition-smooth relative group flex-shrink-0",
-              item.active
-                ? "bg-white/20 backdrop-blur-sm"
-                : "hover:bg-white/10"
-            )}
-          >
-            <item.icon className="w-5 h-5" />
-            <span className="text-[10px] font-medium text-center leading-tight whitespace-nowrap">
-              {item.label}
-            </span>
-            
-            {/* Hover tooltip for desktop */}
-            {hoveredIndex === index && (
-              <div className="hidden lg:block absolute left-full ml-4 bg-white text-[hsl(var(--foreground))] px-3 py-2 rounded-lg shadow-medium whitespace-nowrap text-sm font-medium z-[100]">
+        {navItems.map((item, index) => {
+          const isActive = location.pathname === item.path;
+          
+          return (
+            <Link
+              key={item.label}
+              to={item.path}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              className={cn(
+                "flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-2xl transition-smooth relative group flex-shrink-0",
+                isActive
+                  ? "bg-white/20 backdrop-blur-sm"
+                  : "hover:bg-white/10"
+              )}
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="text-[10px] font-medium text-center leading-tight whitespace-nowrap">
                 {item.label}
-                <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-white" />
-              </div>
-            )}
-          </button>
-        ))}
+              </span>
+              
+              {/* Hover tooltip for desktop */}
+              {hoveredIndex === index && (
+                <div className="hidden lg:block absolute left-full ml-4 bg-white text-[hsl(var(--foreground))] px-3 py-2 rounded-lg shadow-medium whitespace-nowrap text-sm font-medium z-[100]">
+                  {item.label}
+                  <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-white" />
+                </div>
+              )}
+            </Link>
+          );
+        })}
       </nav>
     </aside>
   );
