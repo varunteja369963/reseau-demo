@@ -71,13 +71,13 @@ export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTabl
   return (
     <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
       <div className={cn(
-        "relative transition-all duration-300",
-        isSearchFocused ? "flex-1 max-w-md" : "w-48"
+        "relative transition-all duration-300 ease-in-out",
+        isSearchFocused ? "w-full max-w-md" : "w-48"
       )}>
-        <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
         <Input
           placeholder="Search Leads..."
-          className="rounded-2xl border-border bg-background h-10 pl-11 transition-all duration-300"
+          className="rounded-2xl border-border bg-background h-10 pl-11 w-full"
           onFocus={() => setIsSearchFocused(true)}
           onBlur={() => setIsSearchFocused(false)}
         />
