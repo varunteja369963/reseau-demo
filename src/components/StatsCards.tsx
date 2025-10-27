@@ -48,14 +48,14 @@ export const StatsCards = () => {
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-foreground">Statistics Overview</h2>
-        <CollapsibleTrigger asChild>
-          <button className="p-2 hover:bg-muted rounded-lg transition-smooth">
-            <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-          </button>
-        </CollapsibleTrigger>
-      </div>
+      <CollapsibleTrigger asChild>
+        <button className="w-full flex items-center justify-center gap-2 mb-4 p-3 hover:bg-muted/50 rounded-xl transition-smooth group">
+          <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-smooth">
+            {isOpen ? 'Hide Statistics' : 'Show Statistics'}
+          </span>
+          <ChevronDown className={`w-4 h-4 text-muted-foreground group-hover:text-foreground transition-all ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
+      </CollapsibleTrigger>
       
       <CollapsibleContent>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
