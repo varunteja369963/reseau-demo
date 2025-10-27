@@ -61,11 +61,11 @@ interface FilterPanelProps {
 
 export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelProps) => {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    customerInfo: true,
-    leadInfo: false,
-    dateFilters: false,
+    leadInfo: true,
     vehicleInfo: false,
     dealInfo: false,
+    dateFilters: false,
+    customerInfo: false,
     otherFilters: false,
   });
 
@@ -139,105 +139,6 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
         </div>
         
         <div className="space-y-4">
-          {/* Customer Info Section */}
-          <div className="border border-border rounded-2xl overflow-hidden">
-            <button
-              onClick={() => toggleSection('customerInfo')}
-              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-smooth"
-            >
-              <h4 className="text-sm font-semibold text-foreground">Customer Info</h4>
-              <ChevronDown className={cn(
-                "w-4 h-4 transition-transform",
-                expandedSections.customerInfo && "rotate-180"
-              )} />
-            </button>
-            
-            {expandedSections.customerInfo && (
-              <div className="p-4 pt-0 space-y-4">
-                {/* Customer Name */}
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-foreground">Name Filter</label>
-                  <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
-                    <Select
-                      value={filters.customerNameFilterType}
-                      onValueChange={(val: any) => updateFilters({ customerNameFilterType: val })}
-                    >
-                      <SelectTrigger className="h-10 rounded-lg bg-background">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="contains">Contains</SelectItem>
-                        <SelectItem value="startsWith">Starts with</SelectItem>
-                        <SelectItem value="endsWith">Ends with</SelectItem>
-                        <SelectItem value="exact">Exact match</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      placeholder="Enter value..."
-                      value={filters.customerName}
-                      onChange={(e) => updateFilters({ customerName: e.target.value })}
-                      className="h-10 rounded-lg bg-background"
-                    />
-                  </div>
-                </div>
-
-                {/* Customer Email */}
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-foreground">Email Filter</label>
-                  <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
-                    <Select
-                      value={filters.customerEmailFilterType}
-                      onValueChange={(val: any) => updateFilters({ customerEmailFilterType: val })}
-                    >
-                      <SelectTrigger className="h-10 rounded-lg bg-background">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="contains">Contains</SelectItem>
-                        <SelectItem value="startsWith">Starts with</SelectItem>
-                        <SelectItem value="endsWith">Ends with</SelectItem>
-                        <SelectItem value="exact">Exact match</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      placeholder="Enter value..."
-                      value={filters.customerEmail}
-                      onChange={(e) => updateFilters({ customerEmail: e.target.value })}
-                      className="h-10 rounded-lg bg-background"
-                    />
-                  </div>
-                </div>
-
-                {/* Customer Phone */}
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-foreground">Phone Filter</label>
-                  <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
-                    <Select
-                      value={filters.customerPhoneFilterType}
-                      onValueChange={(val: any) => updateFilters({ customerPhoneFilterType: val })}
-                    >
-                      <SelectTrigger className="h-10 rounded-lg bg-background">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="contains">Contains</SelectItem>
-                        <SelectItem value="startsWith">Starts with</SelectItem>
-                        <SelectItem value="endsWith">Ends with</SelectItem>
-                        <SelectItem value="exact">Exact match</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      placeholder="Enter value..."
-                      value={filters.customerPhone}
-                      onChange={(e) => updateFilters({ customerPhone: e.target.value })}
-                      className="h-10 rounded-lg bg-background"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
           {/* Lead Info Section */}
           <div className="border border-border rounded-2xl overflow-hidden">
             <button
@@ -355,82 +256,6 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
                       </button>
                     ))}
                   </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Date Filters Section */}
-          <div className="border border-border rounded-2xl overflow-hidden">
-            <button
-              onClick={() => toggleSection('dateFilters')}
-              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-smooth"
-            >
-              <h4 className="text-sm font-semibold text-foreground">Date Filters</h4>
-              <ChevronDown className={cn(
-                "w-4 h-4 transition-transform",
-                expandedSections.dateFilters && "rotate-180"
-              )} />
-            </button>
-            
-            {expandedSections.dateFilters && (
-              <div className="p-4 pt-0 space-y-4">
-                {/* Inquiry Date */}
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Inquiry Date</label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full h-9 rounded-xl justify-start text-left font-normal">
-                        {filters.inquiryDateRange?.from ? (
-                          filters.inquiryDateRange.to ? (
-                            `${format(filters.inquiryDateRange.from, "MMM dd")} - ${format(filters.inquiryDateRange.to, "MMM dd")}`
-                          ) : (
-                            format(filters.inquiryDateRange.from, "MMM dd, yyyy")
-                          )
-                        ) : (
-                          <span className="text-muted-foreground">Pick a date range</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="range"
-                        selected={filters.inquiryDateRange}
-                        onSelect={(range) => updateFilters({ inquiryDateRange: range })}
-                        numberOfMonths={2}
-                        className="pointer-events-auto"
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-
-                {/* Expected Close Date */}
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Expected Close Date</label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full h-9 rounded-xl justify-start text-left font-normal">
-                        {filters.expectedCloseDateRange?.from ? (
-                          filters.expectedCloseDateRange.to ? (
-                            `${format(filters.expectedCloseDateRange.from, "MMM dd")} - ${format(filters.expectedCloseDateRange.to, "MMM dd")}`
-                          ) : (
-                            format(filters.expectedCloseDateRange.from, "MMM dd, yyyy")
-                          )
-                        ) : (
-                          <span className="text-muted-foreground">Pick a date range</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="range"
-                        selected={filters.expectedCloseDateRange}
-                        onSelect={(range) => updateFilters({ expectedCloseDateRange: range })}
-                        numberOfMonths={2}
-                        className="pointer-events-auto"
-                      />
-                    </PopoverContent>
-                  </Popover>
                 </div>
               </div>
             )}
@@ -612,6 +437,181 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
                       className="h-9 rounded-xl"
                       min="0"
                       max="100"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Date Filters Section */}
+          <div className="border border-border rounded-2xl overflow-hidden">
+            <button
+              onClick={() => toggleSection('dateFilters')}
+              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-smooth"
+            >
+              <h4 className="text-sm font-semibold text-foreground">Date Filters</h4>
+              <ChevronDown className={cn(
+                "w-4 h-4 transition-transform",
+                expandedSections.dateFilters && "rotate-180"
+              )} />
+            </button>
+            
+            {expandedSections.dateFilters && (
+              <div className="p-4 pt-0 space-y-4">
+                {/* Inquiry Date */}
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Inquiry Date</label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full h-9 rounded-xl justify-start text-left font-normal">
+                        {filters.inquiryDateRange?.from ? (
+                          filters.inquiryDateRange.to ? (
+                            `${format(filters.inquiryDateRange.from, "MMM dd")} - ${format(filters.inquiryDateRange.to, "MMM dd")}`
+                          ) : (
+                            format(filters.inquiryDateRange.from, "MMM dd, yyyy")
+                          )
+                        ) : (
+                          <span className="text-muted-foreground">Pick a date range</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="range"
+                        selected={filters.inquiryDateRange}
+                        onSelect={(range) => updateFilters({ inquiryDateRange: range })}
+                        numberOfMonths={2}
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                {/* Expected Close Date */}
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Expected Close Date</label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full h-9 rounded-xl justify-start text-left font-normal">
+                        {filters.expectedCloseDateRange?.from ? (
+                          filters.expectedCloseDateRange.to ? (
+                            `${format(filters.expectedCloseDateRange.from, "MMM dd")} - ${format(filters.expectedCloseDateRange.to, "MMM dd")}`
+                          ) : (
+                            format(filters.expectedCloseDateRange.from, "MMM dd, yyyy")
+                          )
+                        ) : (
+                          <span className="text-muted-foreground">Pick a date range</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="range"
+                        selected={filters.expectedCloseDateRange}
+                        onSelect={(range) => updateFilters({ expectedCloseDateRange: range })}
+                        numberOfMonths={2}
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Customer Info Section */}
+          <div className="border border-border rounded-2xl overflow-hidden">
+            <button
+              onClick={() => toggleSection('customerInfo')}
+              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-smooth"
+            >
+              <h4 className="text-sm font-semibold text-foreground">Customer Info</h4>
+              <ChevronDown className={cn(
+                "w-4 h-4 transition-transform",
+                expandedSections.customerInfo && "rotate-180"
+              )} />
+            </button>
+            
+            {expandedSections.customerInfo && (
+              <div className="p-4 pt-0 space-y-4">
+                {/* Customer Name */}
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-foreground">Name Filter</label>
+                  <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
+                    <Select
+                      value={filters.customerNameFilterType}
+                      onValueChange={(val: any) => updateFilters({ customerNameFilterType: val })}
+                    >
+                      <SelectTrigger className="h-10 rounded-lg bg-background">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="contains">Contains</SelectItem>
+                        <SelectItem value="startsWith">Starts with</SelectItem>
+                        <SelectItem value="endsWith">Ends with</SelectItem>
+                        <SelectItem value="exact">Exact match</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      placeholder="Enter value..."
+                      value={filters.customerName}
+                      onChange={(e) => updateFilters({ customerName: e.target.value })}
+                      className="h-10 rounded-lg bg-background"
+                    />
+                  </div>
+                </div>
+
+                {/* Customer Email */}
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-foreground">Email Filter</label>
+                  <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
+                    <Select
+                      value={filters.customerEmailFilterType}
+                      onValueChange={(val: any) => updateFilters({ customerEmailFilterType: val })}
+                    >
+                      <SelectTrigger className="h-10 rounded-lg bg-background">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="contains">Contains</SelectItem>
+                        <SelectItem value="startsWith">Starts with</SelectItem>
+                        <SelectItem value="endsWith">Ends with</SelectItem>
+                        <SelectItem value="exact">Exact match</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      placeholder="Enter value..."
+                      value={filters.customerEmail}
+                      onChange={(e) => updateFilters({ customerEmail: e.target.value })}
+                      className="h-10 rounded-lg bg-background"
+                    />
+                  </div>
+                </div>
+
+                {/* Customer Phone */}
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-foreground">Phone Filter</label>
+                  <div className="bg-muted/30 p-3 rounded-xl space-y-2 border border-border/50">
+                    <Select
+                      value={filters.customerPhoneFilterType}
+                      onValueChange={(val: any) => updateFilters({ customerPhoneFilterType: val })}
+                    >
+                      <SelectTrigger className="h-10 rounded-lg bg-background">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="contains">Contains</SelectItem>
+                        <SelectItem value="startsWith">Starts with</SelectItem>
+                        <SelectItem value="endsWith">Ends with</SelectItem>
+                        <SelectItem value="exact">Exact match</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      placeholder="Enter value..."
+                      value={filters.customerPhone}
+                      onChange={(e) => updateFilters({ customerPhone: e.target.value })}
+                      className="h-10 rounded-lg bg-background"
                     />
                   </div>
                 </div>
