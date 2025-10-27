@@ -32,30 +32,38 @@ export const CRMTableNavbar = ({
   const [isColumnsOpen, setIsColumnsOpen] = useState(false);
 
   const allColumns = [
-    { key: 'fullName', label: 'Full Name' },
-    { key: 'email', label: 'Email' },
-    { key: 'phoneNumber', label: 'Phone' },
-    { key: 'dealership', label: 'Dealership' },
-    { key: 'leadStatus', label: 'Status' },
-    { key: 'leadScoring', label: 'Score' },
-    { key: 'leadSource', label: 'Lead Source' },
-    { key: 'leadChannel', label: 'Channel' },
-    { key: 'campaignName', label: 'Campaign' },
-    { key: 'dateOfInquiry', label: 'Inquiry Date' },
-    { key: 'assignedSalesperson', label: 'Salesperson' },
-    { key: 'vehicleMake', label: 'Make' },
-    { key: 'model', label: 'Model' },
-    { key: 'year', label: 'Year' },
-    { key: 'trim', label: 'Trim' },
-    { key: 'colorPreference', label: 'Color' },
-    { key: 'newUsed', label: 'New/Used' },
-    { key: 'budgetRange', label: 'Budget' },
-    { key: 'tradeIn', label: 'Trade-In' },
-    { key: 'dealStage', label: 'Deal Stage' },
-    { key: 'dealValue', label: 'Deal Value' },
-    { key: 'closeProbability', label: 'Close Prob %' },
-    { key: 'expectedCloseDate', label: 'Expected Close' },
+    { key: 'fullName', label: 'Full Name', category: 'Customer Info' },
+    { key: 'email', label: 'Email', category: 'Customer Info' },
+    { key: 'phoneNumber', label: 'Phone', category: 'Customer Info' },
+    { key: 'dealership', label: 'Dealership', category: 'Lead Info' },
+    { key: 'leadStatus', label: 'Status', category: 'Lead Info' },
+    { key: 'leadScoring', label: 'Score', category: 'Lead Info' },
+    { key: 'leadSource', label: 'Lead Source', category: 'Lead Info' },
+    { key: 'leadChannel', label: 'Channel', category: 'Lead Info' },
+    { key: 'campaignName', label: 'Campaign', category: 'Marketing' },
+    { key: 'dateOfInquiry', label: 'Inquiry Date', category: 'Lead Info' },
+    { key: 'assignedSalesperson', label: 'Salesperson', category: 'Lead Info' },
+    { key: 'vehicleMake', label: 'Make', category: 'Vehicle' },
+    { key: 'model', label: 'Model', category: 'Vehicle' },
+    { key: 'year', label: 'Year', category: 'Vehicle' },
+    { key: 'trim', label: 'Trim', category: 'Vehicle' },
+    { key: 'colorPreference', label: 'Color', category: 'Vehicle' },
+    { key: 'newUsed', label: 'New/Used', category: 'Vehicle' },
+    { key: 'budgetRange', label: 'Budget', category: 'Deal Info' },
+    { key: 'tradeIn', label: 'Trade-In', category: 'Deal Info' },
+    { key: 'dealStage', label: 'Deal Stage', category: 'Deal Info' },
+    { key: 'dealValue', label: 'Deal Value', category: 'Deal Info' },
+    { key: 'closeProbability', label: 'Close Prob %', category: 'Deal Info' },
+    { key: 'expectedCloseDate', label: 'Expected Close', category: 'Deal Info' },
   ];
+
+  const columnsByCategory = allColumns.reduce((acc, column) => {
+    if (!acc[column.category]) {
+      acc[column.category] = [];
+    }
+    acc[column.category].push(column);
+    return acc;
+  }, {} as Record<string, typeof allColumns>);
 
   const toggleColumn = (columnKey: string) => {
     if (!onColumnChange) return;
@@ -150,30 +158,47 @@ export const CRMTableNavbar = ({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-80 p-0" align="end">
-            <div className="p-4 border-b border-border bg-muted/30">
-              <h4 className="font-semibold text-foreground">Customize Columns</h4>
-              <p className="text-xs text-muted-foreground mt-1">Select columns to display in the table</p>
+            <div className="p-4 border-b border-border bg-gradient-to-b from-muted/30 to-transparent">
+              <h4 className="font-semibold text-foreground text-base">Customize Columns</h4>
+              <p className="text-xs text-muted-foreground mt-1">Select which columns to display</p>
             </div>
-            <ScrollArea className="h-[400px]">
-              <div className="p-3 space-y-1">
-                {allColumns.map((column) => (
-                  <div 
-                    key={column.key} 
-                    className="flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-muted/50 transition-smooth cursor-pointer group"
-                    onClick={() => toggleColumn(column.key)}
-                  >
-                    <Checkbox
-                      id={column.key}
-                      checked={visibleColumns.includes(column.key)}
-                      onCheckedChange={() => toggleColumn(column.key)}
-                      className="pointer-events-none"
-                    />
-                    <label
-                      htmlFor={column.key}
-                      className="text-sm font-medium leading-none cursor-pointer flex-1 group-hover:text-foreground transition-smooth"
-                    >
-                      {column.label}
-                    </label>
+            <ScrollArea className="h-[420px]">
+              <div className="p-3 space-y-4">
+                {Object.entries(columnsByCategory).map(([category, columns]) => (
+                  <div key={category} className="space-y-1">
+                    <div className="px-3 py-1.5">
+                      <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                        {category}
+                      </h5>
+                    </div>
+                    <div className="space-y-0.5">
+                      {columns.map((column) => (
+                        <div 
+                          key={column.key} 
+                          className={cn(
+                            "flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 cursor-pointer group",
+                            visibleColumns.includes(column.key) && "bg-primary/5 hover:bg-primary/10"
+                          )}
+                          onClick={() => toggleColumn(column.key)}
+                        >
+                          <Checkbox
+                            id={column.key}
+                            checked={visibleColumns.includes(column.key)}
+                            onCheckedChange={() => toggleColumn(column.key)}
+                            className="pointer-events-none data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-[hsl(var(--teal))] data-[state=checked]:to-[hsl(var(--blue))] data-[state=checked]:border-0"
+                          />
+                          <label
+                            htmlFor={column.key}
+                            className={cn(
+                              "text-sm font-medium leading-none cursor-pointer flex-1 transition-colors",
+                              visibleColumns.includes(column.key) ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
+                            )}
+                          >
+                            {column.label}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
