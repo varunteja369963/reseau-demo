@@ -101,15 +101,36 @@ export const AddCustomerModal = ({ isOpen, onClose }: AddCustomerModalProps) => 
   };
 
   const handleImport = () => {
+    // Simulate import process
+    const hasRequiredMappings = fieldMappings.fullName && fieldMappings.email && fieldMappings.phoneNumber;
+    
+    if (!hasRequiredMappings) {
+      toast({
+        title: "Import Failed",
+        description: "Please map all required fields (Name, Email, Phone Number)",
+        variant: "destructive",
+      });
+      return;
+    }
+
     toast({
-      title: "Import Started",
-      description: `Importing customers from ${selectedFile?.name}`,
+      title: "Import Successful",
+      description: `Successfully imported customers from ${selectedFile?.name}`,
     });
     onClose();
     // Reset state
     setSelectedFile(null);
     setUploadStep("select");
     setFieldMappings({});
+  };
+
+  const handleManualAdd = () => {
+    // In production, you would validate all required fields here
+    toast({
+      title: "Customer Added",
+      description: "New customer has been successfully added to the CRM",
+    });
+    onClose();
   };
 
   const resetUpload = () => {
@@ -232,9 +253,9 @@ export const AddCustomerModal = ({ isOpen, onClose }: AddCustomerModalProps) => 
           </TabsContent>
 
           {/* Manual Entry Tab */}
-          <TabsContent value="manual">
+          <TabsContent value="manual" className="px-1">
             <ScrollArea className="h-[500px] pr-4">
-              <div className="space-y-6">
+              <div className="space-y-6 px-2">
                 {/* Customer Information */}
                 <div className="space-y-4">
                   <h3 className="font-semibold text-base border-b border-border pb-2">
@@ -413,7 +434,7 @@ export const AddCustomerModal = ({ isOpen, onClose }: AddCustomerModalProps) => 
                   <Button variant="outline" onClick={onClose} className="rounded-2xl">
                     Cancel
                   </Button>
-                  <Button className="rounded-2xl gradient-teal text-white">
+                  <Button onClick={handleManualAdd} className="rounded-2xl gradient-teal text-white">
                     Add Customer
                   </Button>
                 </div>
