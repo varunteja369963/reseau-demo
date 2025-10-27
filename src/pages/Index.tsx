@@ -33,7 +33,9 @@ const Index = () => {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
   const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
   const [filters, setFilters] = useState<FilterValues>({
-    searchText: '',
+    customerName: '',
+    customerEmail: '',
+    customerPhone: '',
     leadStatus: [],
     leadSource: [],
     leadChannel: [],
@@ -63,14 +65,19 @@ const Index = () => {
   // Filter leads based on current filter values
   const filteredLeads = useMemo(() => {
     return leads.filter(lead => {
-      // Text search
-      if (filters.searchText) {
-        const searchLower = filters.searchText.toLowerCase();
-        const matchesSearch = 
-          lead.fullName.toLowerCase().includes(searchLower) ||
-          lead.email.toLowerCase().includes(searchLower) ||
-          lead.phoneNumber.includes(searchLower);
-        if (!matchesSearch) return false;
+      // Customer Name
+      if (filters.customerName && !lead.fullName.toLowerCase().includes(filters.customerName.toLowerCase())) {
+        return false;
+      }
+
+      // Customer Email
+      if (filters.customerEmail && !lead.email.toLowerCase().includes(filters.customerEmail.toLowerCase())) {
+        return false;
+      }
+
+      // Customer Phone
+      if (filters.customerPhone && !lead.phoneNumber.includes(filters.customerPhone)) {
+        return false;
       }
 
       // Lead Status

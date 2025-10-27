@@ -10,8 +10,10 @@ import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 
 export interface FilterValues {
-  // Text search
-  searchText: string;
+  // String filters
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
   
   // Lead Status
   leadStatus: string[];
@@ -56,7 +58,8 @@ interface FilterPanelProps {
 
 export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelProps) => {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    leadInfo: true,
+    customerInfo: true,
+    leadInfo: false,
     dateFilters: false,
     vehicleInfo: false,
     dealInfo: false,
@@ -81,7 +84,9 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
 
   const clearFilters = () => {
     onFiltersChange({
-      searchText: '',
+      customerName: '',
+      customerEmail: '',
+      customerPhone: '',
       leadStatus: [],
       leadSource: [],
       leadChannel: [],
@@ -128,14 +133,55 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
         </div>
         
         <div className="space-y-4">
-          {/* Search */}
-          <div>
-            <Input
-              placeholder="Search by name, email..."
-              value={filters.searchText}
-              onChange={(e) => updateFilters({ searchText: e.target.value })}
-              className="h-10 rounded-xl"
-            />
+          {/* Customer Info Section */}
+          <div className="border border-border rounded-2xl overflow-hidden">
+            <button
+              onClick={() => toggleSection('customerInfo')}
+              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-smooth"
+            >
+              <h4 className="text-sm font-semibold text-foreground">Customer Info</h4>
+              <ChevronDown className={cn(
+                "w-4 h-4 transition-transform",
+                expandedSections.customerInfo && "rotate-180"
+              )} />
+            </button>
+            
+            {expandedSections.customerInfo && (
+              <div className="p-4 pt-0 space-y-3">
+                {/* Customer Name */}
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Name</label>
+                  <Input
+                    placeholder="Filter by name..."
+                    value={filters.customerName}
+                    onChange={(e) => updateFilters({ customerName: e.target.value })}
+                    className="h-9 rounded-xl"
+                  />
+                </div>
+
+                {/* Customer Email */}
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Email</label>
+                  <Input
+                    placeholder="Filter by email..."
+                    value={filters.customerEmail}
+                    onChange={(e) => updateFilters({ customerEmail: e.target.value })}
+                    className="h-9 rounded-xl"
+                  />
+                </div>
+
+                {/* Customer Phone */}
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Phone</label>
+                  <Input
+                    placeholder="Filter by phone..."
+                    value={filters.customerPhone}
+                    onChange={(e) => updateFilters({ customerPhone: e.target.value })}
+                    className="h-9 rounded-xl"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Lead Info Section */}
