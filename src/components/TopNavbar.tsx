@@ -1,5 +1,5 @@
-import { ChevronDown, Building2 } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, Building2, Building } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface TopNavbarProps {
@@ -11,13 +11,30 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [showDealershipDropdown, setShowDealershipDropdown] = useState<boolean>(false);
   const [selectedDealership, setSelectedDealership] = useState<string>('Reseau (Org)');
+  
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
+  const dealershipDropdownRef = useRef<HTMLDivElement>(null);
 
+  const organization = 'Reseau (Org)';
   const dealerships: string[] = [
-    'Reseau (Org)',
     'Reseau Chev Kelowna',
     'Reseau Kia Penticton',
     'Reseau Honda Vernon'
   ];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+      if (dealershipDropdownRef.current && !dealershipDropdownRef.current.contains(event.target as Node)) {
+        setShowDealershipDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <nav className="bg-card border-b border-border shadow-soft sticky top-0 z-40">
@@ -64,7 +81,7 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
         {/* Right: Profile */}
         <div className="flex items-center gap-3">
           {/* Dealership Dropdown */}
-          <div className="relative">
+          <div className="relative" ref={dealershipDropdownRef}>
             <button
               onClick={() => setShowDealershipDropdown(!showDealershipDropdown)}
               className="flex items-center gap-2 hover:bg-muted px-4 py-2 rounded-2xl transition-smooth"
@@ -75,26 +92,49 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
             </button>
 
             {showDealershipDropdown && (
-              <div className="absolute right-0 mt-2 w-64 bg-card rounded-2xl shadow-strong border border-border overflow-hidden z-50">
+              <div className="absolute right-0 mt-2 w-72 bg-card rounded-2xl shadow-strong border border-border overflow-hidden z-50">
                 <div className="p-2">
-                  {dealerships.map((dealer) => (
-                    <button
-                      key={dealer}
-                      onClick={() => {
-                        setSelectedDealership(dealer);
-                        setShowDealershipDropdown(false);
-                      }}
-                      className={cn(
-                        "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-smooth text-left",
-                        selectedDealership === dealer
-                          ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]"
-                          : "hover:bg-muted"
-                      )}
-                    >
-                      <Building2 className="w-4 h-4" />
-                      <div className="text-sm font-medium">{dealer}</div>
-                    </button>
-                  ))}
+                  {/* Organization */}
+                  <button
+                    onClick={() => {
+                      setSelectedDealership(organization);
+                      setShowDealershipDropdown(false);
+                    }}
+                    className={cn(
+                      "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-smooth text-left",
+                      selectedDealership === organization
+                        ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]"
+                        : "hover:bg-muted"
+                    )}
+                  >
+                    <Building2 className="w-5 h-5" />
+                    <div className="text-sm font-semibold">{organization}</div>
+                  </button>
+
+                  {/* Divider */}
+                  <div className="my-1 mx-4 border-t border-border/50" />
+
+                  {/* Dealerships */}
+                  <div className="pl-2">
+                    {dealerships.map((dealer) => (
+                      <button
+                        key={dealer}
+                        onClick={() => {
+                          setSelectedDealership(dealer);
+                          setShowDealershipDropdown(false);
+                        }}
+                        className={cn(
+                          "w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-smooth text-left",
+                          selectedDealership === dealer
+                            ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]"
+                            : "hover:bg-muted"
+                        )}
+                      >
+                        <Building className="w-4 h-4 opacity-70" />
+                        <div className="text-sm font-medium">{dealer}</div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -103,7 +143,7 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
           <div className="w-px h-6 bg-border" />
 
           {/* Profile Dropdown */}
-          <div className="relative">
+          <div className="relative" ref={profileDropdownRef}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
               className="flex items-center gap-2 hover:bg-muted px-4 py-2 rounded-2xl transition-smooth"
