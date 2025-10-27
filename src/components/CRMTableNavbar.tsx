@@ -127,14 +127,26 @@ export const CRMTableNavbar = ({
         />
       </div>
       <div className="flex items-center gap-3">
+        <Button 
+          onClick={onToggleChat}
+          variant={isChatOpen ? "default" : "outline"}
+          className={`h-10 rounded-2xl transition-smooth ${
+            isChatOpen 
+              ? "shadow-medium" 
+              : "border-border hover:bg-muted"
+          }`}
+        >
+          <MessageSquare className="w-4 h-4 mr-2" />
+          Chat
+        </Button>
+
         <Popover open={isColumnsOpen} onOpenChange={setIsColumnsOpen}>
           <PopoverTrigger asChild>
             <Button 
               variant="outline" 
-              className="h-10 rounded-2xl border-border hover:bg-muted transition-smooth"
+              className="h-10 w-10 rounded-2xl border-border hover:bg-muted transition-smooth p-0"
             >
-              <Columns3 className="w-4 h-4 mr-2" />
-              Customize Columns
+              <Columns3 className="w-4 h-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-80 p-0" align="end">
@@ -184,19 +196,6 @@ export const CRMTableNavbar = ({
               Show Filters
             </>
           )}
-        </Button>
-
-        <Button 
-          onClick={onToggleChat}
-          variant={isChatOpen ? "default" : "outline"}
-          className={`h-10 rounded-2xl transition-smooth ${
-            isChatOpen 
-              ? "shadow-medium" 
-              : "border-border hover:bg-muted"
-          }`}
-        >
-          <MessageSquare className="w-4 h-4 mr-2" />
-          Chat
         </Button>
         
         <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>

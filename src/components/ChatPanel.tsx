@@ -1,8 +1,8 @@
-import { X, Send, MessageSquare } from "lucide-react";
+import { X, Send, MessageSquare, Paperclip } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 interface ChatPanelProps {
   onToggle: () => void;
@@ -25,6 +25,7 @@ export const ChatPanel = ({ onToggle }: ChatPanelProps) => {
     }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = () => {
     if (!inputValue.trim()) return;
@@ -53,7 +54,7 @@ export const ChatPanel = ({ onToggle }: ChatPanelProps) => {
 
   return (
     <div className="bg-card rounded-3xl shadow-soft h-[700px] flex flex-col">
-      <div className="p-6 border-b border-border">
+      <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[hsl(var(--teal))] to-[hsl(var(--blue))] flex items-center justify-center">
@@ -71,7 +72,7 @@ export const ChatPanel = ({ onToggle }: ChatPanelProps) => {
         </div>
       </div>
       
-      <ScrollArea className="flex-1 p-6">
+      <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
           {messages.map((message) => (
             <div
@@ -95,8 +96,27 @@ export const ChatPanel = ({ onToggle }: ChatPanelProps) => {
         </div>
       </ScrollArea>
 
-      <div className="p-6 border-t border-border">
+      <div className="p-4 border-t border-border">
         <div className="flex gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              const files = e.target.files;
+              if (files && files.length > 0) {
+                console.log('Files selected:', Array.from(files).map(f => f.name));
+              }
+            }}
+          />
+          <Button
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            className="h-11 w-11 rounded-2xl border-border hover:bg-muted transition-smooth flex-shrink-0 p-0"
+          >
+            <Paperclip className="w-5 h-5" />
+          </Button>
           <Input
             placeholder="Type your message..."
             value={inputValue}
@@ -106,7 +126,7 @@ export const ChatPanel = ({ onToggle }: ChatPanelProps) => {
           />
           <Button 
             onClick={handleSend}
-            className="h-11 w-11 rounded-2xl gradient-teal text-white shadow-soft hover:shadow-medium transition-smooth flex-shrink-0"
+            className="h-11 w-11 rounded-2xl gradient-teal text-white shadow-soft hover:shadow-medium transition-smooth flex-shrink-0 p-0"
           >
             <Send className="w-5 h-5" />
           </Button>
