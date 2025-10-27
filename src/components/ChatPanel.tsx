@@ -111,20 +111,20 @@ export const ChatPanel = ({ onToggle }: ChatPanelProps) => {
             }}
           />
           <div className="relative flex-1">
+            <Button
+              variant="ghost"
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-lg hover:bg-muted transition-smooth p-0"
+            >
+              <Paperclip className="w-4 h-4 text-muted-foreground" />
+            </Button>
             <Input
               placeholder="Type your message..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-              className="rounded-2xl border-border bg-background h-11 pr-12"
+              className="rounded-2xl border-border bg-background h-11 pl-12"
             />
-            <Button
-              variant="ghost"
-              onClick={() => fileInputRef.current?.click()}
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-lg hover:bg-muted transition-smooth p-0"
-            >
-              <Paperclip className="w-4 h-4 text-muted-foreground" />
-            </Button>
           </div>
           <Button 
             onClick={handleSend}
