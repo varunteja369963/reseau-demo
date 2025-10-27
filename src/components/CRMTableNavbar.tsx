@@ -317,15 +317,9 @@ export const CRMTableNavbar = ({
                           />
                           <label
                             htmlFor={column.key}
-                            className={cn(
-                              "text-sm font-medium leading-none cursor-move flex-1 text-foreground",
-                              column.key === 'fullName' && "opacity-70"
-                            )}
+                            className="text-sm font-medium leading-none cursor-move flex-1 text-foreground"
                           >
                             {column.label}
-                            {column.key === 'fullName' && (
-                              <span className="text-xs text-muted-foreground ml-2">(Required)</span>
-                            )}
                           </label>
                         </div>
                       ))}
