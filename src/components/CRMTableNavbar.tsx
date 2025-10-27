@@ -16,6 +16,7 @@ interface CRMTableNavbarProps {
 export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTableNavbarProps) => {
   const [date, setDate] = useState<DateRange | undefined>();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const presets = [
     {
@@ -69,11 +70,16 @@ export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTabl
 
   return (
     <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
-      <div className="relative flex-1 max-w-md">
+      <div className={cn(
+        "relative transition-all duration-300",
+        isSearchFocused ? "flex-1 max-w-md" : "w-48"
+      )}>
         <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Search Leads..."
-          className="rounded-2xl border-border bg-background h-10 pl-11"
+          className="rounded-2xl border-border bg-background h-10 pl-11 transition-all duration-300"
+          onFocus={() => setIsSearchFocused(true)}
+          onBlur={() => setIsSearchFocused(false)}
         />
       </div>
       <div className="flex items-center gap-3">
