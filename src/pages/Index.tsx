@@ -259,6 +259,7 @@ const Index = () => {
                   onToggleChat={handleToggleChat}
                   visibleColumns={visibleColumns}
                   onColumnChange={setVisibleColumns}
+                  leads={filteredLeads}
                 />
                 
                 <div className={`grid grid-cols-1 gap-4 items-start ${(isFilterPanelOpen || isChatPanelOpen) ? 'xl:grid-cols-[1fr_280px]' : ''}`}>

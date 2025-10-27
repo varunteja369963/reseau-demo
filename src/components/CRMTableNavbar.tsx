@@ -1,4 +1,4 @@
-import { Filter, UserPlus, Calendar, Search, SlidersHorizontal, Columns3, MessageSquare } from "lucide-react";
+import { Filter, UserPlus, Calendar, Search, SlidersHorizontal, Columns3, MessageSquare, Download } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -18,6 +18,7 @@ interface CRMTableNavbarProps {
   onToggleChat?: () => void;
   visibleColumns?: string[];
   onColumnChange?: (columns: string[]) => void;
+  leads?: any[];
 }
 
 export const CRMTableNavbar = ({ 
@@ -26,7 +27,8 @@ export const CRMTableNavbar = ({
   isChatOpen = false,
   onToggleChat,
   visibleColumns = [],
-  onColumnChange
+  onColumnChange,
+  leads = []
 }: CRMTableNavbarProps) => {
   const [date, setDate] = useState<DateRange | undefined>();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
@@ -126,6 +128,46 @@ export const CRMTableNavbar = ({
     return `${format(date.from, "MMM dd")} - ${format(date.to, "MMM dd, yyyy")}`;
   };
 
+  const handleDownloadLeads = () => {
+    if (leads.length === 0) return;
+
+    // Get column labels for headers
+    const headers = allColumns
+      .filter(col => visibleColumns.includes(col.key))
+      .map(col => col.label);
+
+    // Prepare CSV data
+    const csvData = [
+      headers.join(','),
+      ...leads.map(lead => 
+        allColumns
+          .filter(col => visibleColumns.includes(col.key))
+          .map(col => {
+            const value = lead[col.key as keyof typeof lead];
+            // Handle values with commas or quotes
+            if (value === null || value === undefined) return '';
+            const stringValue = String(value);
+            if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+              return `"${stringValue.replace(/"/g, '""')}"`;
+            }
+            return stringValue;
+          })
+          .join(',')
+      )
+    ].join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `leads_${format(new Date(), 'yyyy-MM-dd_HH-mm')}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
       {/* Compact search expands on focus via CSS (focus-within) */}
@@ -148,6 +190,15 @@ export const CRMTableNavbar = ({
         >
           <MessageSquare className="w-4 h-4 mr-2" />
           Chat
+        </Button>
+
+        <Button 
+          onClick={handleDownloadLeads}
+          variant="outline"
+          className="h-10 w-10 rounded-2xl border-border hover:bg-muted transition-smooth p-0"
+          title="Download Leads"
+        >
+          <Download className="w-4 h-4" />
         </Button>
 
         <Popover open={isColumnsOpen} onOpenChange={setIsColumnsOpen}>
