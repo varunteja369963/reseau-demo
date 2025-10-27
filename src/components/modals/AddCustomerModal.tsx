@@ -175,7 +175,7 @@ export const AddCustomerModal = ({ isOpen, onClose }: AddCustomerModalProps) => 
                     className="hidden"
                     id="file-upload"
                   />
-                  <label htmlFor="file-upload">
+                  <label htmlFor="file-upload" className="cursor-pointer">
                     <Button asChild className="rounded-2xl gradient-teal text-white">
                       <span>
                         <Upload className="w-4 h-4 mr-2" />
