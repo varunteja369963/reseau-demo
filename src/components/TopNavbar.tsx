@@ -1,4 +1,4 @@
-import { ChevronDown, Building2, Building } from "lucide-react";
+import { ChevronDown, Building2, Building, Settings, History } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
@@ -65,15 +65,28 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
               Analytics
             </button>
             <button
+              onClick={() => setActiveTab("history")}
+              className={cn(
+                "px-4 py-2 rounded-full text-sm font-medium transition-smooth flex items-center justify-center",
+                activeTab === "history"
+                  ? "bg-white shadow-soft text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+              title="History"
+            >
+              <History className="w-5 h-5" />
+            </button>
+            <button
               onClick={() => setActiveTab("settings")}
               className={cn(
-                "px-6 py-2 rounded-full text-sm font-medium transition-smooth",
+                "px-4 py-2 rounded-full text-sm font-medium transition-smooth flex items-center justify-center",
                 activeTab === "settings"
                   ? "bg-white shadow-soft text-foreground"
                   : "text-muted-foreground hover:text-foreground"
               )}
+              title="Settings"
             >
-              Settings
+              <Settings className="w-5 h-5" />
             </button>
           </div>
         </div>
