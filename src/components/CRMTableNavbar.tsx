@@ -74,6 +74,9 @@ export const CRMTableNavbar = ({
   const toggleColumn = (columnKey: string) => {
     if (!onColumnChange) return;
     
+    // Prevent toggling Full Name - it's always visible
+    if (columnKey === 'fullName') return;
+    
     if (visibleColumns.includes(columnKey)) {
       onColumnChange(visibleColumns.filter(col => col !== columnKey));
     } else {
@@ -307,15 +310,22 @@ export const CRMTableNavbar = ({
                           <Checkbox
                             id={column.key}
                             checked={true}
+                            disabled={column.key === 'fullName'}
                             onCheckedChange={() => toggleColumn(column.key)}
                             onClick={(e) => e.stopPropagation()}
-                            className="data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-[hsl(var(--teal))] data-[state=checked]:to-[hsl(var(--blue))] data-[state=checked]:border-0"
+                            className="data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-[hsl(var(--teal))] data-[state=checked]:to-[hsl(var(--blue))] data-[state=checked]:border-0 disabled:opacity-50 disabled:cursor-not-allowed"
                           />
                           <label
                             htmlFor={column.key}
-                            className="text-sm font-medium leading-none cursor-move flex-1 text-foreground"
+                            className={cn(
+                              "text-sm font-medium leading-none cursor-move flex-1 text-foreground",
+                              column.key === 'fullName' && "opacity-70"
+                            )}
                           >
                             {column.label}
+                            {column.key === 'fullName' && (
+                              <span className="text-xs text-muted-foreground ml-2">(Required)</span>
+                            )}
                           </label>
                         </div>
                       ))}
