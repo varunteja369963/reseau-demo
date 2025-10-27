@@ -63,7 +63,7 @@ const Index = () => {
                   onToggleFilter={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
                 />
                 
-                <div className={`grid grid-cols-1 gap-8 items-start ${isFilterPanelOpen ? 'xl:grid-cols-[1fr_280px]' : ''}`}>
+                <div className={`grid grid-cols-1 gap-4 items-start ${isFilterPanelOpen ? 'xl:grid-cols-[1fr_280px]' : ''}`}>
                   <div className="min-w-0">
                     <CRMTable 
                       leads={leads} 
