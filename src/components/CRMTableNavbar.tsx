@@ -1,4 +1,4 @@
-import { Filter, UserPlus, Calendar, Search, SlidersHorizontal, Columns3, MessageSquare, Download } from "lucide-react";
+import { Filter, UserPlus, Calendar, Search, SlidersHorizontal, Columns3, MessageSquare, Download, GripVertical } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -34,6 +34,8 @@ export const CRMTableNavbar = ({
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [isColumnsOpen, setIsColumnsOpen] = useState(false);
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
+  const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
+  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
 
   const allColumns = [
     { key: 'fullName', label: 'Full Name', category: 'Customer Info' },
@@ -78,6 +80,65 @@ export const CRMTableNavbar = ({
       onColumnChange([...visibleColumns, columnKey]);
     }
   };
+
+  const handleDragStart = (e: React.DragEvent, columnKey: string) => {
+    setDraggedColumn(columnKey);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent, columnKey: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDragOverColumn(columnKey);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverColumn(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetColumnKey: string) => {
+    e.preventDefault();
+    if (!onColumnChange || !draggedColumn || draggedColumn === targetColumnKey) {
+      setDraggedColumn(null);
+      setDragOverColumn(null);
+      return;
+    }
+
+    const draggedIndex = visibleColumns.indexOf(draggedColumn);
+    const targetIndex = visibleColumns.indexOf(targetColumnKey);
+
+    if (draggedIndex === -1 || targetIndex === -1) {
+      setDraggedColumn(null);
+      setDragOverColumn(null);
+      return;
+    }
+
+    const newColumns = [...visibleColumns];
+    newColumns.splice(draggedIndex, 1);
+    newColumns.splice(targetIndex, 0, draggedColumn);
+
+    onColumnChange(newColumns);
+    setDraggedColumn(null);
+    setDragOverColumn(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedColumn(null);
+    setDragOverColumn(null);
+  };
+
+  // Separate visible and hidden columns
+  const visibleColumnItems = visibleColumns
+    .map(key => allColumns.find(col => col.key === key))
+    .filter(Boolean) as typeof allColumns;
+
+  const hiddenColumnsByCategory = Object.entries(columnsByCategory).reduce((acc, [category, columns]) => {
+    const hiddenCols = columns.filter(col => !visibleColumns.includes(col.key));
+    if (hiddenCols.length > 0) {
+      acc[category] = hiddenCols;
+    }
+    return acc;
+  }, {} as Record<string, typeof allColumns>);
   const presets = [
     {
       label: "Today",
@@ -213,11 +274,57 @@ export const CRMTableNavbar = ({
           <PopoverContent className="w-80 p-0" align="end">
             <div className="p-4 border-b border-border bg-gradient-to-b from-muted/30 to-transparent">
               <h4 className="font-semibold text-foreground text-base">Customize Columns</h4>
-              <p className="text-xs text-muted-foreground mt-1">Select which columns to display</p>
+              <p className="text-xs text-muted-foreground mt-1">Drag to reorder, check to show/hide</p>
             </div>
             <ScrollArea className="h-[420px]">
               <div className="p-3 space-y-4">
-                {Object.entries(columnsByCategory).map(([category, columns]) => (
+                {/* Visible Columns - Draggable */}
+                {visibleColumnItems.length > 0 && (
+                  <div className="space-y-1">
+                    <div className="px-3 py-1.5">
+                      <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                        Visible Columns
+                      </h5>
+                    </div>
+                    <div className="space-y-0.5">
+                      {visibleColumnItems.map((column) => (
+                        <div 
+                          key={column.key}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, column.key)}
+                          onDragOver={(e) => handleDragOver(e, column.key)}
+                          onDragLeave={handleDragLeave}
+                          onDrop={(e) => handleDrop(e, column.key)}
+                          onDragEnd={handleDragEnd}
+                          className={cn(
+                            "flex items-center space-x-2 px-3 py-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 cursor-move group",
+                            "bg-primary/5 hover:bg-primary/10",
+                            draggedColumn === column.key && "opacity-50",
+                            dragOverColumn === column.key && "border-2 border-primary border-dashed"
+                          )}
+                        >
+                          <GripVertical className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                          <Checkbox
+                            id={column.key}
+                            checked={true}
+                            onCheckedChange={() => toggleColumn(column.key)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-[hsl(var(--teal))] data-[state=checked]:to-[hsl(var(--blue))] data-[state=checked]:border-0"
+                          />
+                          <label
+                            htmlFor={column.key}
+                            className="text-sm font-medium leading-none cursor-move flex-1 text-foreground"
+                          >
+                            {column.label}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Hidden Columns by Category */}
+                {Object.entries(hiddenColumnsByCategory).map(([category, columns]) => (
                   <div key={category} className="space-y-1">
                     <div className="px-3 py-1.5">
                       <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -229,22 +336,20 @@ export const CRMTableNavbar = ({
                         <div 
                           key={column.key} 
                           className={cn(
-                            "flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 cursor-pointer group",
-                            visibleColumns.includes(column.key) && "bg-primary/5 hover:bg-primary/10"
+                            "flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 cursor-pointer group"
                           )}
                           onClick={() => toggleColumn(column.key)}
                         >
                           <Checkbox
                             id={column.key}
-                            checked={visibleColumns.includes(column.key)}
+                            checked={false}
                             onCheckedChange={() => toggleColumn(column.key)}
-                            className="pointer-events-none data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-[hsl(var(--teal))] data-[state=checked]:to-[hsl(var(--blue))] data-[state=checked]:border-0"
+                            className="pointer-events-none"
                           />
                           <label
                             htmlFor={column.key}
                             className={cn(
-                              "text-sm font-medium leading-none cursor-pointer flex-1 transition-colors",
-                              visibleColumns.includes(column.key) ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
+                              "text-sm font-medium leading-none cursor-pointer flex-1 transition-colors text-muted-foreground group-hover:text-foreground"
                             )}
                           >
                             {column.label}
