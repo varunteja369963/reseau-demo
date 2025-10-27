@@ -14,12 +14,12 @@ const navItems: NavItem[] = [
   { icon: Mail, label: "CRM", path: "/crm", active: true },
   { icon: MessageSquare, label: "Email", path: "/email" },
   { icon: MessageSquare, label: "SMS", path: "/sms" },
-  { icon: Megaphone, label: "Ads", path: "/ads" },
   { icon: Phone, label: "Calls", path: "/calls" },
   { icon: Bot, label: "Chatbot", path: "/chatbot" },
   { icon: Package, label: "Inventory", path: "/inventory" },
+  { icon: Megaphone, label: "Ads", path: "/ads" },
+  { icon: Zap, label: "Automation", path: "/automation" },
   { icon: Plug, label: "Integration", path: "/integration" },
-  { icon: Zap, label: "Automations", path: "/automations" },
 ];
 
 export const Sidebar = () => {
