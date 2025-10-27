@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Mail, Phone, Star, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Mail, Phone, Star, ArrowUpDown, ArrowUp, ArrowDown, ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Lead } from "@/types/lead";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
@@ -22,6 +22,7 @@ interface CRMTableProps {
   itemsPerPage: number;
   onPageChange: (page: number) => void;
   onItemsPerPageChange: (items: number) => void;
+  groupBy?: string | null;
 }
 
 const COLUMN_LABELS: Record<string, string> = {
@@ -103,13 +104,55 @@ export const CRMTable = ({
   currentPage,
   itemsPerPage,
   onPageChange,
-  onItemsPerPageChange
+  onItemsPerPageChange,
+  groupBy = null
 }: CRMTableProps) => {
   const columns = visibleColumns || DEFAULT_COLUMNS;
   
   // Sorting state
   const [sortColumn, setSortColumn] = React.useState<string | null>(null);
   const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('asc');
+  
+  // Expanded groups state
+  const [expandedGroups, setExpandedGroups] = React.useState<Set<string>>(new Set());
+
+  const toggleGroup = (groupValue: string) => {
+    setExpandedGroups(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(groupValue)) {
+        newSet.delete(groupValue);
+      } else {
+        newSet.add(groupValue);
+      }
+      return newSet;
+    });
+  };
+
+  // Group leads if groupBy is specified
+  const groupedLeads = React.useMemo(() => {
+    if (!groupBy) return null;
+    
+    const groups: Record<string, Lead[]> = {};
+    leads.forEach(lead => {
+      const value = lead[groupBy as keyof Lead];
+      const groupKey = value != null ? String(value) : '(Empty)';
+      if (!groups[groupKey]) {
+        groups[groupKey] = [];
+      }
+      groups[groupKey].push(lead);
+    });
+    
+    return groups;
+  }, [leads, groupBy]);
+
+  // Auto-expand all groups when groupBy changes
+  React.useEffect(() => {
+    if (groupBy && groupedLeads) {
+      setExpandedGroups(new Set(Object.keys(groupedLeads)));
+    } else {
+      setExpandedGroups(new Set());
+    }
+  }, [groupBy, groupedLeads]);
 
   // Sort leads based on current sort column and direction
   const sortedLeads = React.useMemo(() => {
@@ -378,6 +421,7 @@ export const CRMTable = ({
         <Table className="min-w-max">
           <TableHeader className="sticky top-0 z-20 bg-card shadow-sm">
             <TableRow className="hover:bg-transparent border-b">
+              {groupBy && <TableHead className="bg-card w-12"></TableHead>}
               {columns.map((col) => (
                 <TableHead
                   key={col}
@@ -405,21 +449,93 @@ export const CRMTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedLeads.map((lead) => (
-              <TableRow key={lead.leadId}>
-                {columns.map((col) => (
-                  <React.Fragment key={col}>
-                    {renderCellContent(lead, col)}
+            {groupBy && groupedLeads ? (
+              // Render grouped data
+              Object.entries(groupedLeads).map(([groupValue, groupLeads]) => {
+                const isExpanded = expandedGroups.has(groupValue);
+                const sortedGroupLeads = sortColumn 
+                  ? [...groupLeads].sort((a, b) => {
+                      const aValue = a[sortColumn as keyof Lead];
+                      const bValue = b[sortColumn as keyof Lead];
+                      if (aValue == null && bValue == null) return 0;
+                      if (aValue == null) return sortDirection === 'asc' ? 1 : -1;
+                      if (bValue == null) return sortDirection === 'asc' ? -1 : 1;
+                      
+                      if (sortColumn === 'dateOfInquiry' || sortColumn === 'expectedCloseDate') {
+                        const aTime = new Date(aValue as Date).getTime();
+                        const bTime = new Date(bValue as Date).getTime();
+                        return sortDirection === 'asc' ? aTime - bTime : bTime - aTime;
+                      }
+                      
+                      if (typeof aValue === 'number' && typeof bValue === 'number') {
+                        return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+                      }
+                      
+                      const aStr = String(aValue).toLowerCase();
+                      const bStr = String(bValue).toLowerCase();
+                      if (aStr < bStr) return sortDirection === 'asc' ? -1 : 1;
+                      if (aStr > bStr) return sortDirection === 'asc' ? 1 : -1;
+                      return 0;
+                    })
+                  : groupLeads;
+                
+                return (
+                  <React.Fragment key={groupValue}>
+                    {/* Group Header Row */}
+                    <TableRow 
+                      className="bg-muted/50 hover:bg-muted cursor-pointer border-y"
+                      onClick={() => toggleGroup(groupValue)}
+                    >
+                      <TableCell colSpan={columns.length + 1} className="font-semibold">
+                        <div className="flex items-center gap-2">
+                          {isExpanded ? (
+                            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                          ) : (
+                            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                          )}
+                          <span className="text-foreground">
+                            {COLUMN_LABELS[groupBy] || groupBy}: {groupValue}
+                          </span>
+                          <span className="text-xs text-muted-foreground ml-2">
+                            ({sortedGroupLeads.length} {sortedGroupLeads.length === 1 ? 'lead' : 'leads'})
+                          </span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                    
+                    {/* Group Leads Rows */}
+                    {isExpanded && sortedGroupLeads.map((lead) => (
+                      <TableRow key={lead.leadId}>
+                        <TableCell className="w-12"></TableCell>
+                        {columns.map((col) => (
+                          <React.Fragment key={col}>
+                            {renderCellContent(lead, col)}
+                          </React.Fragment>
+                        ))}
+                      </TableRow>
+                    ))}
                   </React.Fragment>
-                ))}
-              </TableRow>
-            ))}
+                );
+              })
+            ) : (
+              // Render normal ungrouped data
+              paginatedLeads.map((lead) => (
+                <TableRow key={lead.leadId}>
+                  {columns.map((col) => (
+                    <React.Fragment key={col}>
+                      {renderCellContent(lead, col)}
+                    </React.Fragment>
+                  ))}
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
 
-      {/* Pagination Footer */}
-      <div className="p-4 border-t border-border flex items-center justify-between">
+      {/* Pagination Footer - Only show when not grouping */}
+      {!groupBy && (
+        <div className="p-4 border-t border-border flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Select value={String(itemsPerPage)} onValueChange={(val) => onItemsPerPageChange(Number(val))}>
             <SelectTrigger className="w-[80px] h-9">
@@ -488,6 +604,16 @@ export const CRMTable = ({
           </Pagination>
         </div>
       </div>
+      )}
+      
+      {/* Grouped View Footer */}
+      {groupBy && (
+        <div className="p-4 border-t border-border">
+          <span className="text-sm text-muted-foreground">
+            Showing {leads.length} leads grouped by {COLUMN_LABELS[groupBy] || groupBy}
+          </span>
+        </div>
+      )}
     </div>
   );
 };

@@ -32,6 +32,7 @@ const CRM = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
   const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
+  const [groupBy, setGroupBy] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterValues>({
     customerName: '',
     customerNameFilterType: 'contains',
@@ -260,6 +261,8 @@ const CRM = () => {
                   visibleColumns={visibleColumns}
                   onColumnChange={setVisibleColumns}
                   leads={filteredLeads}
+                  groupBy={groupBy}
+                  onGroupByChange={setGroupBy}
                 />
                 
                 <div className={`grid grid-cols-1 gap-4 items-start ${(isFilterPanelOpen || isChatPanelOpen) ? 'xl:grid-cols-[1fr_280px]' : ''}`}>
@@ -276,6 +279,7 @@ const CRM = () => {
                         setItemsPerPage(items);
                         setCurrentPage(1);
                       }}
+                      groupBy={groupBy}
                     />
                   </div>
                   

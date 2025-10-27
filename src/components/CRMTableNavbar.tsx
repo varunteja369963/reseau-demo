@@ -1,4 +1,4 @@
-import { Filter, UserPlus, Calendar, Search, SlidersHorizontal, Columns3, MessageSquare, Download, GripVertical } from "lucide-react";
+import { Filter, UserPlus, Calendar, Search, SlidersHorizontal, Columns3, MessageSquare, Download, GripVertical, FolderTree } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -19,6 +19,8 @@ interface CRMTableNavbarProps {
   visibleColumns?: string[];
   onColumnChange?: (columns: string[]) => void;
   leads?: any[];
+  groupBy?: string | null;
+  onGroupByChange?: (column: string | null) => void;
 }
 
 export const CRMTableNavbar = ({ 
@@ -28,12 +30,15 @@ export const CRMTableNavbar = ({
   onToggleChat,
   visibleColumns = [],
   onColumnChange,
-  leads = []
+  leads = [],
+  groupBy = null,
+  onGroupByChange
 }: CRMTableNavbarProps) => {
   const [date, setDate] = useState<DateRange | undefined>();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [isColumnsOpen, setIsColumnsOpen] = useState(false);
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
+  const [isGroupingOpen, setIsGroupingOpen] = useState(false);
   const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
 
@@ -264,6 +269,62 @@ export const CRMTableNavbar = ({
         >
           <Download className="w-4 h-4" />
         </Button>
+
+        <Popover open={isGroupingOpen} onOpenChange={setIsGroupingOpen}>
+          <PopoverTrigger asChild>
+            <Button 
+              variant={groupBy ? "default" : "outline"}
+              className={`h-10 w-10 rounded-2xl transition-smooth p-0 ${
+                groupBy 
+                  ? "shadow-medium" 
+                  : "border-border hover:bg-muted"
+              }`}
+              title="Group By"
+            >
+              <FolderTree className="w-4 h-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-72 p-0" align="end">
+            <div className="p-4 border-b border-border bg-gradient-to-b from-muted/30 to-transparent">
+              <h4 className="font-semibold text-foreground text-base">Group By</h4>
+              <p className="text-xs text-muted-foreground mt-1">Select a column to group the data</p>
+            </div>
+            <ScrollArea className="h-[320px]">
+              <div className="p-3 space-y-1">
+                {groupBy && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-sm h-9 mb-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                    onClick={() => {
+                      onGroupByChange?.(null);
+                      setIsGroupingOpen(false);
+                    }}
+                  >
+                    Clear Grouping
+                  </Button>
+                )}
+                {allColumns.map((column) => (
+                  <Button
+                    key={column.key}
+                    variant={groupBy === column.key ? "default" : "ghost"}
+                    size="sm"
+                    className={cn(
+                      "w-full justify-start text-sm h-9 font-normal",
+                      groupBy === column.key && "shadow-soft"
+                    )}
+                    onClick={() => {
+                      onGroupByChange?.(column.key);
+                      setIsGroupingOpen(false);
+                    }}
+                  >
+                    {column.label}
+                  </Button>
+                ))}
+              </div>
+            </ScrollArea>
+          </PopoverContent>
+        </Popover>
 
         <Popover open={isColumnsOpen} onOpenChange={setIsColumnsOpen}>
           <PopoverTrigger asChild>
