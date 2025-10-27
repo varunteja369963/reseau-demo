@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Calendar as CalendarComponent } from "./ui/calendar";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { format, subDays, startOfMonth, endOfMonth, startOfYear, endOfYear, subMonths, subYears } from "date-fns";
 import { cn } from "@/lib/utils";
 import { DateRange } from "react-day-picker";
@@ -16,19 +16,6 @@ interface CRMTableNavbarProps {
 export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTableNavbarProps) => {
   const [date, setDate] = useState<DateRange | undefined>();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const searchRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handlePointerDown = (e: PointerEvent) => {
-      if (isSearchFocused && searchRef.current && !searchRef.current.contains(e.target as Node)) {
-        setIsSearchFocused(false);
-      }
-    };
-    document.addEventListener('pointerdown', handlePointerDown, true);
-    return () => document.removeEventListener('pointerdown', handlePointerDown, true);
-  }, [isSearchFocused]);
-
   const presets = [
     {
       label: "Today",
@@ -81,16 +68,12 @@ export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTabl
 
   return (
     <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
-      {/* Compact search expands on focus; closes on outside click without flicker */}
-      <div ref={searchRef} className={cn(
-        "relative transition-all duration-300 ease-in-out",
-        isSearchFocused ? "w-full max-w-md" : "w-48"
-      )}>
+      {/* Compact search expands on focus via CSS (focus-within) */}
+      <div className="relative transition-[width] duration-300 ease-in-out w-48 md:w-64 focus-within:w-80 md:focus-within:w-96">
         <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
         <Input
           placeholder="Search Leads..."
           className="rounded-2xl border-border bg-background h-10 pl-11 w-full"
-          onFocus={() => setIsSearchFocused(true)}
         />
       </div>
       <div className="flex items-center gap-3">
