@@ -1,8 +1,10 @@
-import { Filter, UserPlus, Calendar, Search, SlidersHorizontal } from "lucide-react";
+import { Filter, UserPlus, Calendar, Search, SlidersHorizontal, Columns3, MessageSquare } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Calendar as CalendarComponent } from "./ui/calendar";
+import { Checkbox } from "./ui/checkbox";
+import { ScrollArea } from "./ui/scroll-area";
 import { useState } from "react";
 import { format, subDays, startOfMonth, endOfMonth, startOfYear, endOfYear, subMonths, subYears } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -11,11 +13,59 @@ import { DateRange } from "react-day-picker";
 interface CRMTableNavbarProps {
   isFilterOpen?: boolean;
   onToggleFilter?: () => void;
+  isChatOpen?: boolean;
+  onToggleChat?: () => void;
+  visibleColumns?: string[];
+  onColumnChange?: (columns: string[]) => void;
 }
 
-export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTableNavbarProps) => {
+export const CRMTableNavbar = ({ 
+  isFilterOpen = false, 
+  onToggleFilter,
+  isChatOpen = false,
+  onToggleChat,
+  visibleColumns = [],
+  onColumnChange
+}: CRMTableNavbarProps) => {
   const [date, setDate] = useState<DateRange | undefined>();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [isColumnsOpen, setIsColumnsOpen] = useState(false);
+
+  const allColumns = [
+    { key: 'fullName', label: 'Full Name' },
+    { key: 'email', label: 'Email' },
+    { key: 'phoneNumber', label: 'Phone' },
+    { key: 'dealership', label: 'Dealership' },
+    { key: 'leadStatus', label: 'Status' },
+    { key: 'leadScoring', label: 'Score' },
+    { key: 'leadSource', label: 'Lead Source' },
+    { key: 'leadChannel', label: 'Channel' },
+    { key: 'campaignName', label: 'Campaign' },
+    { key: 'dateOfInquiry', label: 'Inquiry Date' },
+    { key: 'assignedSalesperson', label: 'Salesperson' },
+    { key: 'vehicleMake', label: 'Make' },
+    { key: 'model', label: 'Model' },
+    { key: 'year', label: 'Year' },
+    { key: 'trim', label: 'Trim' },
+    { key: 'colorPreference', label: 'Color' },
+    { key: 'newUsed', label: 'New/Used' },
+    { key: 'budgetRange', label: 'Budget' },
+    { key: 'tradeIn', label: 'Trade-In' },
+    { key: 'dealStage', label: 'Deal Stage' },
+    { key: 'dealValue', label: 'Deal Value' },
+    { key: 'closeProbability', label: 'Close Prob %' },
+    { key: 'expectedCloseDate', label: 'Expected Close' },
+  ];
+
+  const toggleColumn = (columnKey: string) => {
+    if (!onColumnChange) return;
+    
+    if (visibleColumns.includes(columnKey)) {
+      onColumnChange(visibleColumns.filter(col => col !== columnKey));
+    } else {
+      onColumnChange([...visibleColumns, columnKey]);
+    }
+  };
   const presets = [
     {
       label: "Today",
@@ -77,6 +127,43 @@ export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTabl
         />
       </div>
       <div className="flex items-center gap-3">
+        <Popover open={isColumnsOpen} onOpenChange={setIsColumnsOpen}>
+          <PopoverTrigger asChild>
+            <Button 
+              variant="outline" 
+              className="h-10 rounded-2xl border-border hover:bg-muted transition-smooth"
+            >
+              <Columns3 className="w-4 h-4 mr-2" />
+              Customize Columns
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80 p-0" align="end">
+            <div className="p-4 border-b border-border">
+              <h4 className="font-semibold text-foreground">Customize Columns</h4>
+              <p className="text-xs text-muted-foreground mt-1">Select columns to display in the table</p>
+            </div>
+            <ScrollArea className="h-[400px]">
+              <div className="p-4 space-y-3">
+                {allColumns.map((column) => (
+                  <div key={column.key} className="flex items-center space-x-3">
+                    <Checkbox
+                      id={column.key}
+                      checked={visibleColumns.includes(column.key)}
+                      onCheckedChange={() => toggleColumn(column.key)}
+                    />
+                    <label
+                      htmlFor={column.key}
+                      className="text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      {column.label}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </PopoverContent>
+        </Popover>
+
         <Button 
           onClick={onToggleFilter}
           variant={isFilterOpen ? "default" : "outline"}
@@ -97,6 +184,19 @@ export const CRMTableNavbar = ({ isFilterOpen = false, onToggleFilter }: CRMTabl
               Show Filters
             </>
           )}
+        </Button>
+
+        <Button 
+          onClick={onToggleChat}
+          variant={isChatOpen ? "default" : "outline"}
+          className={`h-10 rounded-2xl transition-smooth ${
+            isChatOpen 
+              ? "shadow-medium" 
+              : "border-border hover:bg-muted"
+          }`}
+        >
+          <MessageSquare className="w-4 h-4 mr-2" />
+          Chat
         </Button>
         
         <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>

@@ -9,6 +9,7 @@ import { CustomerProfileModal } from "@/components/modals/CustomerProfileModal";
 import { ContactModal } from "@/components/modals/ContactModal";
 import { AnalyticsView } from "@/components/AnalyticsView";
 import { SettingsView } from "@/components/SettingsView";
+import { ChatPanel } from "@/components/ChatPanel";
 import { generateDemoLeads } from "@/utils/demoData";
 import { Lead } from "@/types/lead";
 import { ChevronDown } from "lucide-react";
@@ -29,6 +30,7 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
+  const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
 
   useEffect(() => {
     setLeads(generateDemoLeads());
@@ -43,6 +45,20 @@ const Index = () => {
     setSelectedLead(lead);
     setContactType(type);
     setShowContactModal(true);
+  };
+
+  const handleToggleChat = () => {
+    setIsChatPanelOpen(!isChatPanelOpen);
+    if (!isChatPanelOpen) {
+      setIsFilterPanelOpen(false);
+    }
+  };
+
+  const handleToggleFilter = () => {
+    setIsFilterPanelOpen(!isFilterPanelOpen);
+    if (!isFilterPanelOpen) {
+      setIsChatPanelOpen(false);
+    }
   };
 
   return (
@@ -60,10 +76,14 @@ const Index = () => {
                 
                 <CRMTableNavbar 
                   isFilterOpen={isFilterPanelOpen}
-                  onToggleFilter={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
+                  onToggleFilter={handleToggleFilter}
+                  isChatOpen={isChatPanelOpen}
+                  onToggleChat={handleToggleChat}
+                  visibleColumns={visibleColumns}
+                  onColumnChange={setVisibleColumns}
                 />
                 
-                <div className={`grid grid-cols-1 gap-4 items-start ${isFilterPanelOpen ? 'xl:grid-cols-[1fr_280px]' : ''}`}>
+                <div className={`grid grid-cols-1 gap-4 items-start ${(isFilterPanelOpen || isChatPanelOpen) ? 'xl:grid-cols-[1fr_280px]' : ''}`}>
                   <div className="min-w-0">
                     <CRMTable 
                       leads={leads} 
@@ -82,7 +102,13 @@ const Index = () => {
                   
                   {isFilterPanelOpen && (
                     <div className="flex-shrink-0">
-                      <FilterPanel onToggle={() => setIsFilterPanelOpen(false)} />
+                      <FilterPanel onToggle={handleToggleFilter} />
+                    </div>
+                  )}
+
+                  {isChatPanelOpen && (
+                    <div className="flex-shrink-0">
+                      <ChatPanel onToggle={handleToggleChat} />
                     </div>
                   )}
                 </div>
