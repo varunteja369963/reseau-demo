@@ -47,13 +47,13 @@ export const StatsCards = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="mb-8">
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="mb-6">
       <CollapsibleTrigger asChild>
-        <button className="w-full flex items-center justify-center gap-2 mb-4 p-3 hover:bg-muted/50 rounded-xl transition-smooth group">
-          <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-smooth">
-            {isOpen ? 'Hide Statistics' : 'Show Statistics'}
+        <button className="w-full flex items-center justify-center gap-1.5 mb-3 py-1.5 hover:bg-muted/30 rounded-lg transition-smooth group">
+          <span className="text-xs font-medium text-muted-foreground/70 group-hover:text-muted-foreground transition-smooth">
+            {isOpen ? 'Hide' : 'Show'}
           </span>
-          <ChevronDown className={`w-4 h-4 text-muted-foreground group-hover:text-foreground transition-all ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground/70 group-hover:text-muted-foreground transition-all ${isOpen ? 'rotate-180' : ''}`} />
         </button>
       </CollapsibleTrigger>
       
