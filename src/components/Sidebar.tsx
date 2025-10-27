@@ -1,6 +1,7 @@
 import { Radar, Users, Mail, Megaphone, Headset, Bot, Package, Plug, Zap, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 interface NavItem {
   icon: React.ComponentType<{ className?: string }>;
@@ -11,7 +12,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { icon: Radar, label: "My Radar", path: "/" },
-  { icon: Users, label: "CRM", path: "/crm", active: true },
+  { icon: Users, label: "CRM", path: "/crm" },
   { icon: Mail, label: "Email", path: "/email" },
   { icon: MessageSquare, label: "SMS", path: "/sms" },
   { icon: Headset, label: "Calls", path: "/calls" },
@@ -24,6 +25,7 @@ const navItems: NavItem[] = [
 
 export const Sidebar = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const location = useLocation();
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-24 gradient-sidebar text-white z-50 flex flex-col items-center py-6 shadow-strong">
@@ -37,13 +39,14 @@ export const Sidebar = () => {
       {/* Navigation Items */}
       <nav className="flex-1 flex flex-col gap-2 w-full px-3 overflow-y-auto overflow-x-hidden">
         {navItems.map((item, index) => (
-          <button
+          <Link
             key={item.label}
+            to={item.path}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
             className={cn(
               "flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-2xl transition-smooth relative group flex-shrink-0",
-              item.active
+              location.pathname === item.path
                 ? "bg-white/20 backdrop-blur-sm"
                 : "hover:bg-white/10"
             )}
@@ -60,7 +63,7 @@ export const Sidebar = () => {
                 <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-white" />
               </div>
             )}
-          </button>
+          </Link>
         ))}
       </nav>
     </aside>
