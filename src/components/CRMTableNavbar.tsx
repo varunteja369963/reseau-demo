@@ -284,42 +284,75 @@ export const CRMTableNavbar = ({
               <FolderTree className="w-4 h-4" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-72 p-0" align="end">
-            <div className="p-4 border-b border-border bg-gradient-to-b from-muted/30 to-transparent">
-              <h4 className="font-semibold text-foreground text-base">Group By</h4>
-              <p className="text-xs text-muted-foreground mt-1">Select a column to group the data</p>
-            </div>
-            <ScrollArea className="h-[320px]">
-              <div className="p-3 space-y-1">
+          <PopoverContent className="w-80 p-0" align="end">
+            <div className="p-4 border-b border-border bg-gradient-to-br from-[hsl(var(--teal))]/5 via-[hsl(var(--blue))]/5 to-transparent">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h4 className="font-semibold text-foreground text-base flex items-center gap-2">
+                    <FolderTree className="w-4 h-4 text-[hsl(var(--teal))]" />
+                    Group By Column
+                  </h4>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Organize your leads by any field
+                  </p>
+                </div>
                 {groupBy && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start text-sm h-9 mb-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                    className="h-7 px-2 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg"
                     onClick={() => {
                       onGroupByChange?.(null);
                       setIsGroupingOpen(false);
                     }}
                   >
-                    Clear Grouping
+                    Clear
                   </Button>
                 )}
-                {allColumns.map((column) => (
-                  <Button
-                    key={column.key}
-                    variant={groupBy === column.key ? "default" : "ghost"}
-                    size="sm"
-                    className={cn(
-                      "w-full justify-start text-sm h-9 font-normal",
-                      groupBy === column.key && "shadow-soft"
-                    )}
-                    onClick={() => {
-                      onGroupByChange?.(column.key);
-                      setIsGroupingOpen(false);
-                    }}
-                  >
-                    {column.label}
-                  </Button>
+              </div>
+            </div>
+            <ScrollArea className="h-[420px]">
+              <div className="p-3 space-y-4">
+                {Object.entries(columnsByCategory).map(([category, categoryColumns]) => (
+                  <div key={category} className="space-y-1.5">
+                    <div className="px-3 py-1.5 bg-muted/30 rounded-lg">
+                      <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                        <span className="w-1 h-4 bg-gradient-to-b from-[hsl(var(--teal))] to-[hsl(var(--blue))] rounded-full"></span>
+                        {category}
+                      </h5>
+                    </div>
+                    <div className="space-y-0.5 pl-1">
+                      {categoryColumns.map((column) => (
+                        <button
+                          key={column.key}
+                          className={cn(
+                            "w-full text-left px-3 py-2.5 rounded-xl transition-all duration-200 group",
+                            groupBy === column.key
+                              ? "bg-gradient-to-r from-[hsl(var(--teal))]/10 to-[hsl(var(--blue))]/10 border border-[hsl(var(--teal))]/20 shadow-soft"
+                              : "hover:bg-muted/60 border border-transparent"
+                          )}
+                          onClick={() => {
+                            onGroupByChange?.(column.key);
+                            setIsGroupingOpen(false);
+                          }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className={cn(
+                              "text-sm font-medium transition-colors",
+                              groupBy === column.key
+                                ? "text-[hsl(var(--teal))]"
+                                : "text-foreground group-hover:text-[hsl(var(--teal))]"
+                            )}>
+                              {column.label}
+                            </span>
+                            {groupBy === column.key && (
+                              <div className="w-2 h-2 rounded-full bg-gradient-to-br from-[hsl(var(--teal))] to-[hsl(var(--blue))] shadow-glow"></div>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </ScrollArea>
