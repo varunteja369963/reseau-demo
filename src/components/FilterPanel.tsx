@@ -243,12 +243,12 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
                   <label className="text-xs font-medium text-muted-foreground mb-2 block">
                     Lead Score: {filters.minLeadScore}-{filters.maxLeadScore}
                   </label>
-                  <div className="flex gap-2 flex-wrap">
+                  <div className="flex gap-0.5 flex-wrap">
                     {[1, 2, 3, 4, 5].map((score) => (
                       <button
                         key={score}
                         onClick={() => updateFilters({ minLeadScore: score })}
-                        className="p-1.5 hover:scale-110 transition-smooth flex-shrink-0"
+                        className="p-1 hover:scale-110 transition-smooth flex-shrink-0"
                       >
                         <Star className={cn(
                           "w-5 h-5",
