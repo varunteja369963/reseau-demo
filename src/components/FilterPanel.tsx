@@ -121,8 +121,8 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
 
   return (
     <div className="bg-card rounded-3xl shadow-soft max-h-[700px] overflow-auto">
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-6">
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-foreground">Filters</h3>
           <div className="flex items-center gap-2">
             <button
@@ -146,7 +146,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
           <div className="border border-border rounded-2xl overflow-hidden">
             <button
               onClick={() => toggleSection('leadInfo')}
-              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-smooth"
+              className="w-full p-3 flex items-center justify-between hover:bg-muted/50 transition-smooth"
             >
               <h4 className="text-sm font-semibold text-foreground">Lead Info</h4>
               <ChevronDown className={cn(
@@ -156,7 +156,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
             </button>
             
             {expandedSections.leadInfo && (
-              <div className="p-4 pt-0 space-y-4">
+              <div className="p-3 pt-0 space-y-3">
                 {/* Lead Status */}
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-2 block">Status</label>
@@ -268,7 +268,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
           <div className="border border-border rounded-2xl overflow-hidden">
             <button
               onClick={() => toggleSection('vehicleInfo')}
-              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-smooth"
+              className="w-full p-3 flex items-center justify-between hover:bg-muted/50 transition-smooth"
             >
               <h4 className="text-sm font-semibold text-foreground">Vehicle Info</h4>
               <ChevronDown className={cn(
@@ -278,7 +278,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
             </button>
             
             {expandedSections.vehicleInfo && (
-              <div className="p-4 pt-0 space-y-4">
+              <div className="p-3 pt-0 space-y-3">
                 {/* Vehicle Make */}
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-2 block">Make</label>
@@ -363,7 +363,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
           <div className="border border-border rounded-2xl overflow-hidden">
             <button
               onClick={() => toggleSection('dealInfo')}
-              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-smooth"
+              className="w-full p-3 flex items-center justify-between hover:bg-muted/50 transition-smooth"
             >
               <h4 className="text-sm font-semibold text-foreground">Deal Info</h4>
               <ChevronDown className={cn(
@@ -373,7 +373,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
             </button>
             
             {expandedSections.dealInfo && (
-              <div className="p-4 pt-0 space-y-4">
+              <div className="p-3 pt-0 space-y-3">
                 {/* Deal Stage */}
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-2 block">Deal Stage</label>
@@ -448,7 +448,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
           <div className="border border-border rounded-2xl overflow-hidden">
             <button
               onClick={() => toggleSection('dateFilters')}
-              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-smooth"
+              className="w-full p-3 flex items-center justify-between hover:bg-muted/50 transition-smooth"
             >
               <h4 className="text-sm font-semibold text-foreground">Date Filters</h4>
               <ChevronDown className={cn(
@@ -458,7 +458,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
             </button>
             
             {expandedSections.dateFilters && (
-              <div className="p-4 pt-0 space-y-4">
+              <div className="p-3 pt-0 space-y-3">
                 {/* Inquiry Date */}
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-2 block">Inquiry Date</label>
@@ -524,7 +524,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
           <div className="border border-border rounded-2xl overflow-hidden">
             <button
               onClick={() => toggleSection('customerInfo')}
-              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-smooth"
+              className="w-full p-3 flex items-center justify-between hover:bg-muted/50 transition-smooth"
             >
               <h4 className="text-sm font-semibold text-foreground">Customer Info</h4>
               <ChevronDown className={cn(
@@ -534,7 +534,7 @@ export const FilterPanel = ({ onToggle, filters, onFiltersChange }: FilterPanelP
             </button>
             
             {expandedSections.customerInfo && (
-              <div className="p-4 pt-0 space-y-4">
+              <div className="p-3 pt-0 space-y-3">
                 {/* Customer Name */}
                 <div className="space-y-2">
                   <label className="text-xs font-medium text-muted-foreground">Name</label>
