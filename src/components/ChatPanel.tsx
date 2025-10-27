@@ -53,7 +53,7 @@ export const ChatPanel = ({ onToggle }: ChatPanelProps) => {
   };
 
   return (
-    <div className="bg-card rounded-3xl shadow-soft h-[700px] flex flex-col">
+    <div className="bg-card rounded-3xl shadow-soft h-[500px] flex flex-col">
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -110,20 +110,22 @@ export const ChatPanel = ({ onToggle }: ChatPanelProps) => {
               }
             }}
           />
-          <Button
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-            className="h-11 w-11 rounded-2xl border-border hover:bg-muted transition-smooth flex-shrink-0 p-0"
-          >
-            <Paperclip className="w-5 h-5" />
-          </Button>
-          <Input
-            placeholder="Type your message..."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            className="rounded-2xl border-border bg-background h-11"
-          />
+          <div className="relative flex-1">
+            <Input
+              placeholder="Type your message..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+              className="rounded-2xl border-border bg-background h-11 pr-12"
+            />
+            <Button
+              variant="ghost"
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-lg hover:bg-muted transition-smooth p-0"
+            >
+              <Paperclip className="w-4 h-4 text-muted-foreground" />
+            </Button>
+          </div>
           <Button 
             onClick={handleSend}
             className="h-11 w-11 rounded-2xl gradient-teal text-white shadow-soft hover:shadow-medium transition-smooth flex-shrink-0 p-0"

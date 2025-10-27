@@ -150,22 +150,27 @@ export const CRMTableNavbar = ({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-80 p-0" align="end">
-            <div className="p-4 border-b border-border">
+            <div className="p-4 border-b border-border bg-muted/30">
               <h4 className="font-semibold text-foreground">Customize Columns</h4>
               <p className="text-xs text-muted-foreground mt-1">Select columns to display in the table</p>
             </div>
             <ScrollArea className="h-[400px]">
-              <div className="p-4 space-y-3">
+              <div className="p-3 space-y-1">
                 {allColumns.map((column) => (
-                  <div key={column.key} className="flex items-center space-x-3">
+                  <div 
+                    key={column.key} 
+                    className="flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-muted/50 transition-smooth cursor-pointer group"
+                    onClick={() => toggleColumn(column.key)}
+                  >
                     <Checkbox
                       id={column.key}
                       checked={visibleColumns.includes(column.key)}
                       onCheckedChange={() => toggleColumn(column.key)}
+                      className="pointer-events-none"
                     />
                     <label
                       htmlFor={column.key}
-                      className="text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="text-sm font-medium leading-none cursor-pointer flex-1 group-hover:text-foreground transition-smooth"
                     >
                       {column.label}
                     </label>
