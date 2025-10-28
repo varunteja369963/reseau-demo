@@ -27,6 +27,8 @@ const ForgotPassword = () => {
         title: "Email sent!",
         description: "Check your email for the password reset link.",
       });
+      
+      navigate("/reset");
     } catch (error: any) {
       toast({
         variant: "destructive",
