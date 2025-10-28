@@ -36,36 +36,6 @@ const Auth = () => {
     }
   };
 
-  const handleForgotPassword = async () => {
-    if (!email) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Please enter your email address first.",
-      });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/crm`,
-      });
-      if (error) throw error;
-      toast({
-        title: "Password reset email sent",
-        description: "Check your email for the password reset link.",
-      });
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleOAuthLogin = async (provider: "google" | "azure") => {
     try {
@@ -150,9 +120,8 @@ const Auth = () => {
           <div className="text-center text-sm">
             <button
               type="button"
-              onClick={handleForgotPassword}
+              onClick={() => navigate("/forgot-password")}
               className="text-[hsl(var(--teal))] hover:text-[hsl(var(--teal))]/80 transition-smooth font-medium"
-              disabled={loading}
             >
               Forgot password or first time login?
             </button>
