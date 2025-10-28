@@ -1,6 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { CardSelection } from './settings/CardSelection';
+import { PermissionManagement } from './settings/PermissionManagement';
+import { AccessList } from './settings/AccessList';
 
 interface Column {
   key: string;
@@ -91,6 +95,15 @@ interface SettingsViewProps {
 
 export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewProps) => {
   const columns = visibleColumns || DEFAULT_COLUMNS;
+  const [userId, setUserId] = useState<string | undefined>();
+
+  useEffect(() => {
+    const getUserId = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUserId(user?.id);
+    };
+    getUserId();
+  }, []);
 
   const toggleColumn = (columnKey: string) => {
     if (columns.includes(columnKey)) {
@@ -102,8 +115,36 @@ export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewPro
 
   return (
     <div className="space-y-6">
+      {/* Card Selection */}
       <div className="bg-card rounded-2xl p-6 shadow-soft">
-        <h3 className="text-lg font-semibold text-foreground mb-2">Customize Table View</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-2">Stats Card Display</h3>
+        <p className="text-sm text-muted-foreground mb-6">
+          Select up to 4 stat cards to display above your CRM table.
+        </p>
+        <CardSelection userId={userId} />
+      </div>
+
+      {/* CRM Access Permissions */}
+      <div className="bg-card rounded-2xl p-6 shadow-soft">
+        <h3 className="text-lg font-semibold text-foreground mb-2">CRM Access Management</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          Grant access to your CRM data with customizable permissions.
+        </p>
+        <PermissionManagement userId={userId} />
+      </div>
+
+      {/* Active Access List */}
+      <div className="bg-card rounded-2xl p-6 shadow-soft">
+        <h3 className="text-lg font-semibold text-foreground mb-2">Granted Access</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          View and manage users who have access to your CRM.
+        </p>
+        <AccessList userId={userId} />
+      </div>
+
+      {/* Table Columns Customization */}
+      <div className="bg-card rounded-2xl p-6 shadow-soft">
+        <h3 className="text-lg font-semibold text-foreground mb-2">Customize Table Columns</h3>
         <p className="text-sm text-muted-foreground mb-6">
           Select which columns you want to see in your CRM table. Changes are applied immediately.
         </p>
