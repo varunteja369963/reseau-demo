@@ -355,8 +355,7 @@ export const AccessList = ({ userId }: AccessListProps) => {
               </div>
             </div>
 
-            {permissions.length > 0 && (
-              <div className="flex gap-2">
+            <div className="flex gap-2">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -374,7 +373,6 @@ export const AccessList = ({ userId }: AccessListProps) => {
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
-            )}
           </div>
 
           <div className="text-xs text-muted-foreground">
