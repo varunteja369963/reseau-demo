@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -121,6 +121,18 @@ const ResetPassword = () => {
               Update Password
             </Button>
           </form>
+
+          {/* Back to Login */}
+          <div className="text-center text-sm">
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="text-[hsl(var(--teal))] hover:text-[hsl(var(--teal))]/80 transition-smooth font-medium inline-flex items-center gap-1"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Login
+            </button>
+          </div>
         </div>
       </div>
     </div>
