@@ -198,7 +198,7 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
           Grant CRM Access
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto pb-6">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto pb-0">
         <DialogHeader>
           <DialogTitle>Grant CRM Access</DialogTitle>
           <DialogDescription>
