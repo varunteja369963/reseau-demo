@@ -380,7 +380,7 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
             )}
           </div>
 
-          <div className="flex gap-3 pt-2 pb-0">
+          <div className="flex gap-3 pt-0 pb-0 -mt-2">
             <Button
               type="button"
               variant="outline"
