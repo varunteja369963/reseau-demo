@@ -198,7 +198,7 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
           Grant CRM Access
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto pb-6">
         <DialogHeader>
           <DialogTitle>Grant CRM Access</DialogTitle>
           <DialogDescription>
@@ -206,7 +206,7 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 pb-0">
           {/* Email Input */}
           <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
@@ -380,7 +380,7 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
             )}
           </div>
 
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-3 pt-2 pb-0">
             <Button
               type="button"
               variant="outline"
