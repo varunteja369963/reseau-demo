@@ -130,7 +130,7 @@ const ResetPassword = () => {
               className="text-[hsl(var(--teal))] hover:text-[hsl(var(--teal))]/80 transition-smooth font-medium inline-flex items-center gap-1"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back to Forgot Password
+              Entered Wrong Email?
             </button>
           </div>
         </div>
