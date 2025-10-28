@@ -206,7 +206,8 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 pb-0">
+        <form onSubmit={handleSubmit} className="pb-0">
+          <div className="space-y-6">
           {/* Email Input */}
           <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
@@ -380,7 +381,9 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
             )}
           </div>
 
-          <div className="flex gap-3 pt-0 pb-0 -mt-2">
+          </div>
+
+          <div className="mt-3 flex gap-3">
             <Button
               type="button"
               variant="outline"
