@@ -386,7 +386,7 @@ export const AccessList = ({ userId }: AccessListProps) => {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto pb-3">
           <DialogHeader>
             <DialogTitle>Edit CRM Access</DialogTitle>
             <DialogDescription>
@@ -394,7 +394,8 @@ export const AccessList = ({ userId }: AccessListProps) => {
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={handleUpdateAccess} className="space-y-6">
+          <form onSubmit={handleUpdateAccess} className="pb-0">
+            <div className="space-y-6">
             {/* Email Display (read-only) */}
             <div className="space-y-2">
               <Label>Email Address</Label>
@@ -443,7 +444,7 @@ export const AccessList = ({ userId }: AccessListProps) => {
               </button>
               
               {isFieldsExpanded && (
-                <div className="px-4 pb-4 space-y-3 animate-in slide-in-from-top-2">
+                <div className="px-4 pb-2 space-y-3 animate-in slide-in-from-top-2">
                   <div className="flex items-center justify-between">
                     <p className="text-xs text-muted-foreground">
                       Select which fields the user can access
@@ -496,7 +497,7 @@ export const AccessList = ({ userId }: AccessListProps) => {
               </button>
               
               {isFeaturesExpanded && (
-                <div className="px-4 pb-4 space-y-2 animate-in slide-in-from-top-2">
+                <div className="px-4 pb-2 space-y-2 animate-in slide-in-from-top-2">
                   <div className="flex items-center gap-2">
                     <Checkbox
                       id="edit-add-customer"
@@ -561,7 +562,9 @@ export const AccessList = ({ userId }: AccessListProps) => {
               )}
             </div>
 
-            <div className="flex gap-3 pt-2">
+            </div>
+
+            <div className="mt-3 flex gap-3">
               <Button
                 type="button"
                 variant="outline"
