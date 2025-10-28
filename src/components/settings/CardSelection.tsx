@@ -225,7 +225,7 @@ export const CardSelection = ({ userId }: CardSelectionProps) => {
         <Button
           variant="default"
           className="bg-[hsl(var(--teal))] hover:bg-[hsl(var(--teal))]/90 text-white"
-          disabled={isSaving}
+          disabled={isSaving || selectedCards.length < 4}
         >
           Done
         </Button>
