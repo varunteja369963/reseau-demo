@@ -120,7 +120,7 @@ const Auth = () => {
           <div className="text-center text-sm">
             <button
               type="button"
-              onClick={() => navigate("/forgot-password")}
+              onClick={() => navigate("/forgot")}
               className="text-[hsl(var(--teal))] hover:text-[hsl(var(--teal))]/80 transition-smooth font-medium"
             >
               Forgot password or first time login?
