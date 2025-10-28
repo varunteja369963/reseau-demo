@@ -11,7 +11,6 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -20,28 +19,43 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/crm`,
-          },
-        });
-        if (error) throw error;
-        toast({
-          title: "Account created!",
-          description: "You can now sign in with your credentials.",
-        });
-        setIsSignUp(false);
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        navigate("/crm");
-      }
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+      navigate("/crm");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please enter your email address first.",
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/crm`,
+      });
+      if (error) throw error;
+      toast({
+        title: "Password reset email sent",
+        description: "Check your email for the password reset link.",
+      });
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -94,7 +108,7 @@ const Auth = () => {
             </div>
             <h1 className="text-2xl font-bold text-foreground">Welcome Back</h1>
             <p className="text-muted-foreground">
-              {isSignUp ? "Create your account" : "Sign in to your account"}
+              Sign in to your account
             </p>
           </div>
 
@@ -128,9 +142,21 @@ const Auth = () => {
               disabled={loading}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSignUp ? "Sign Up" : "Sign In"}
+              Sign In
             </Button>
           </form>
+
+          {/* Forgot Password Link */}
+          <div className="text-center text-sm">
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              className="text-[hsl(var(--teal))] hover:text-[hsl(var(--teal))]/80 transition-smooth font-medium"
+              disabled={loading}
+            >
+              Forgot password or first time login?
+            </button>
+          </div>
 
           {/* Divider */}
           <div className="relative">
@@ -186,19 +212,6 @@ const Auth = () => {
               </svg>
               Continue with Microsoft
             </Button>
-          </div>
-
-          {/* Toggle Sign Up/Sign In */}
-          <div className="text-center text-sm">
-            <button
-              type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-muted-foreground hover:text-foreground transition-smooth"
-            >
-              {isSignUp
-                ? "Already have an account? Sign in"
-                : "Don't have an account? Sign up"}
-            </button>
           </div>
         </div>
       </div>
