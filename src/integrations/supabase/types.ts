@@ -14,7 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      crm_access_permissions: {
+        Row: {
+          accessible_fields: string[] | null
+          can_add_customer: boolean | null
+          can_download_data: boolean | null
+          can_use_chat: boolean | null
+          created_at: string
+          granted_to_email: string
+          granted_to_user_id: string | null
+          id: string
+          owner_id: string
+          permission_level: string
+          updated_at: string
+        }
+        Insert: {
+          accessible_fields?: string[] | null
+          can_add_customer?: boolean | null
+          can_download_data?: boolean | null
+          can_use_chat?: boolean | null
+          created_at?: string
+          granted_to_email: string
+          granted_to_user_id?: string | null
+          id?: string
+          owner_id: string
+          permission_level: string
+          updated_at?: string
+        }
+        Update: {
+          accessible_fields?: string[] | null
+          can_add_customer?: boolean | null
+          can_download_data?: boolean | null
+          can_use_chat?: boolean | null
+          created_at?: string
+          granted_to_email?: string
+          granted_to_user_id?: string | null
+          id?: string
+          owner_id?: string
+          permission_level?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      crm_card_settings: {
+        Row: {
+          created_at: string
+          id: string
+          selected_cards: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          selected_cards: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          selected_cards?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
