@@ -126,11 +126,11 @@ const ResetPassword = () => {
           <div className="text-center text-sm">
             <button
               type="button"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/forgot")}
               className="text-[hsl(var(--teal))] hover:text-[hsl(var(--teal))]/80 transition-smooth font-medium inline-flex items-center gap-1"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back to Login
+              Back to Forgot Password
             </button>
           </div>
         </div>
