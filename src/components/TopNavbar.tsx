@@ -38,14 +38,14 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
 
   return (
     <nav className="bg-card border-b border-border shadow-soft sticky top-0 z-40">
-      <div className="flex items-center justify-between px-6 py-4">
+      <div className="flex items-center justify-between px-3 md:px-6 py-3 md:py-4">
         {/* Left: Toggle */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-2 md:gap-8 flex-1 lg:flex-initial overflow-x-auto scrollbar-hide">
           <div className="flex bg-muted rounded-full p-1">
             <button
               onClick={() => setActiveTab("crm")}
               className={cn(
-                "px-6 py-2 rounded-full text-sm font-medium transition-smooth",
+                "px-3 md:px-6 py-2 rounded-full text-xs md:text-sm font-medium transition-smooth whitespace-nowrap",
                 activeTab === "crm"
                   ? "bg-white shadow-soft text-foreground"
                   : "text-muted-foreground hover:text-foreground"
@@ -56,7 +56,7 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
             <button
               onClick={() => setActiveTab("analytics")}
               className={cn(
-                "px-6 py-2 rounded-full text-sm font-medium transition-smooth",
+                "px-3 md:px-6 py-2 rounded-full text-xs md:text-sm font-medium transition-smooth whitespace-nowrap",
                 activeTab === "analytics"
                   ? "bg-white shadow-soft text-foreground"
                   : "text-muted-foreground hover:text-foreground"
@@ -67,32 +67,32 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
             <button
               onClick={() => setActiveTab("history")}
               className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth flex items-center justify-center",
+                "px-2 md:px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-smooth flex items-center justify-center",
                 activeTab === "history"
                   ? "bg-white shadow-soft text-foreground"
                   : "text-muted-foreground hover:text-foreground"
               )}
               title="History"
             >
-              <History className="w-5 h-5" />
+              <History className="w-4 md:w-5 h-4 md:h-5" />
             </button>
             <button
               onClick={() => setActiveTab("settings")}
               className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-smooth flex items-center justify-center",
+                "px-2 md:px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-smooth flex items-center justify-center",
                 activeTab === "settings"
                   ? "bg-white shadow-soft text-foreground"
                   : "text-muted-foreground hover:text-foreground"
               )}
               title="Settings"
             >
-              <Settings className="w-5 h-5" />
+              <Settings className="w-4 md:w-5 h-4 md:h-5" />
             </button>
           </div>
         </div>
 
-        {/* Right: Profile */}
-        <div className="flex items-center gap-3">
+        {/* Right: Profile - Hidden on mobile */}
+        <div className="hidden md:flex items-center gap-3">
           {/* Dealership Dropdown */}
           <div className="relative" ref={dealershipDropdownRef}>
             <button

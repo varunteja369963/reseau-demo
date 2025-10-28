@@ -238,33 +238,35 @@ export const CRMTableNavbar = ({
   };
 
   return (
-    <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
-      {/* Compact search expands on focus via CSS (focus-within) */}
-      <div className="relative transition-[width] duration-300 ease-in-out w-48 md:w-64 focus-within:w-80 md:focus-within:w-96">
+    <div className="flex flex-col gap-3 md:gap-0 md:flex-row md:items-center md:justify-between md:flex-wrap mb-6">
+      {/* Search - Full width on mobile */}
+      <div className="relative w-full md:w-48 lg:w-64 md:focus-within:w-80 lg:focus-within:w-96 transition-[width] duration-300">
         <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
         <Input
           placeholder="Search Leads..."
           className="rounded-2xl border-border bg-background h-10 pl-11 w-full"
         />
       </div>
-      <div className="flex items-center gap-3">
+      
+      {/* Action buttons - Wrapped on mobile */}
+      <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-2 md:pb-0">
         <Button 
           onClick={onToggleChat}
           variant={isChatOpen ? "default" : "outline"}
-          className={`h-10 rounded-2xl transition-smooth ${
+          className={`h-10 rounded-2xl transition-smooth whitespace-nowrap flex-shrink-0 ${
             isChatOpen 
               ? "shadow-medium" 
               : "border-border hover:bg-muted"
           }`}
         >
-          <MessageSquare className="w-4 h-4 mr-2" />
-          Chat
+          <MessageSquare className="w-4 h-4 md:mr-2" />
+          <span className="hidden md:inline">Chat</span>
         </Button>
 
         <Button 
           onClick={handleDownloadLeads}
           variant="outline"
-          className="h-10 w-10 rounded-2xl border-border hover:bg-muted transition-smooth p-0"
+          className="h-10 w-10 rounded-2xl border-border hover:bg-muted transition-smooth p-0 flex-shrink-0"
           title="Download Leads"
         >
           <Download className="w-4 h-4" />
@@ -274,7 +276,7 @@ export const CRMTableNavbar = ({
           <PopoverTrigger asChild>
             <Button 
               variant={groupBy ? "default" : "outline"}
-              className={`h-10 w-10 rounded-2xl transition-smooth p-0 ${
+              className={`h-10 w-10 rounded-2xl transition-smooth p-0 flex-shrink-0 ${
                 groupBy 
                   ? "shadow-medium" 
                   : "border-border hover:bg-muted"

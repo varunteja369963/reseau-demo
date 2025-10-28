@@ -58,24 +58,24 @@ export const StatsCards = () => {
       </CollapsibleTrigger>
       
       <CollapsibleContent>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {stats.map((stat) => {
             const percentage = (stat.value / maxValue) * 100;
             
             return (
               <button
                 key={stat.title}
-                className="bg-card rounded-3xl p-6 shadow-soft hover:shadow-medium transition-smooth text-left group overflow-hidden relative"
+                className="bg-card rounded-3xl p-4 md:p-6 shadow-soft hover:shadow-medium transition-smooth text-left group overflow-hidden relative"
               >
                 <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3 md:mb-4">
                     <div className={`w-10 h-10 ${stat.gradient} rounded-2xl flex items-center justify-center shadow-soft`}>
                       <stat.icon className="w-5 h-5 text-white" />
                     </div>
-                    <div className="text-muted-foreground text-sm font-medium">{stat.title}</div>
+                    <div className="text-muted-foreground text-xs md:text-sm font-medium">{stat.title}</div>
                   </div>
                   
-                  <div className="text-4xl font-bold text-foreground mb-2">{stat.value}</div>
+                  <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">{stat.value}</div>
                   
                   {/* Progress bar */}
                   <div className="h-2 bg-muted rounded-full overflow-hidden">

@@ -416,8 +416,73 @@ export const CRMTable = ({
 
   return (
     <div className="bg-card rounded-3xl shadow-soft overflow-hidden w-full">
-      {/* Table */}
-      <div className="relative max-h-[700px] overflow-auto">
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-3 p-4 max-h-[700px] overflow-auto">
+        {(groupBy ? Object.values(groupedLeads || {}).flat() : paginatedLeads).map((lead) => (
+          <div key={lead.leadId} className="bg-background rounded-2xl p-4 border border-border shadow-sm">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex-1">
+                <button
+                  onClick={() => onOpenProfile(lead)}
+                  className="text-base font-semibold text-foreground hover:text-[hsl(var(--teal))] transition-smooth"
+                >
+                  {lead.fullName}
+                </button>
+                <p className="text-sm text-muted-foreground mt-1">{lead.dealership}</p>
+              </div>
+              <span className={cn(
+                "px-2 py-1 rounded-full text-xs font-medium",
+                lead.leadStatus === 'Qualified' || lead.leadStatus === 'Sold' ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]" :
+                lead.leadStatus === 'Lost' ? "bg-red-100 text-red-700" :
+                "bg-[hsl(var(--blue))]/10 text-[hsl(var(--blue))]"
+              )}>
+                {lead.leadStatus}
+              </span>
+            </div>
+            
+            <div className="space-y-2">
+              <button
+                onClick={() => onOpenContact(lead, "email")}
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-[hsl(var(--teal))] transition-smooth"
+              >
+                <Mail className="w-4 h-4" />
+                {lead.email}
+              </button>
+              <button
+                onClick={() => onOpenContact(lead, "call")}
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-[hsl(var(--blue))] transition-smooth"
+              >
+                <Phone className="w-4 h-4" />
+                {lead.phoneNumber}
+              </button>
+            </div>
+            
+            <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    className={cn(
+                      "w-3 h-3",
+                      star <= lead.leadScoring
+                        ? "fill-[hsl(var(--teal))] text-[hsl(var(--teal))]"
+                        : "text-muted-foreground/30"
+                    )}
+                  />
+                ))}
+              </div>
+              {lead.vehicleMake && (
+                <span className="text-xs text-muted-foreground">
+                  {lead.vehicleMake} {lead.model}
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block relative max-h-[700px] overflow-auto">
         <Table className="min-w-max">
           <TableHeader className="sticky top-0 z-20 bg-card shadow-sm">
             <TableRow className="hover:bg-transparent border-b">
@@ -535,7 +600,7 @@ export const CRMTable = ({
 
       {/* Pagination Footer - Only show when not grouping */}
       {!groupBy && (
-        <div className="p-4 border-t border-border flex items-center justify-between">
+        <div className="p-3 md:p-4 border-t border-border flex flex-col md:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-4">
           <Select value={String(itemsPerPage)} onValueChange={(val) => onItemsPerPageChange(Number(val))}>
             <SelectTrigger className="w-[80px] h-9">

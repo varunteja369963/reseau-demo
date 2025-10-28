@@ -10,6 +10,7 @@ import { ContactModal } from "@/components/modals/ContactModal";
 import { AnalyticsView } from "@/components/AnalyticsView";
 import { SettingsView } from "@/components/SettingsView";
 import { ChatPanel } from "@/components/ChatPanel";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { generateDemoLeads } from "@/utils/demoData";
 import { Lead } from "@/types/lead";
 import { ChevronDown } from "lucide-react";
@@ -244,10 +245,10 @@ const CRM = () => {
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Sidebar />
       
-      <div className="ml-24 min-h-screen flex flex-col max-w-[100vw]">
+      <div className="lg:ml-24 min-h-screen flex flex-col max-w-[100vw]">
         <TopNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
         
-        <main className="flex-1 p-8 overflow-x-hidden">
+        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-x-hidden pt-16 lg:pt-8">
           <div className="max-w-full mx-auto">
             {activeTab === "crm" && (
               <>
@@ -265,8 +266,8 @@ const CRM = () => {
                   onGroupByChange={setGroupBy}
                 />
                 
-                <div className={`grid grid-cols-1 gap-4 items-start ${(isFilterPanelOpen || isChatPanelOpen) ? 'xl:grid-cols-[1fr_280px]' : ''}`}>
-                  <div className="min-w-0">
+                <div className="flex flex-col lg:flex-row gap-4 items-start">
+                  <div className="flex-1 min-w-0 overflow-x-auto">
                     <CRMTable 
                       leads={filteredLeads} 
                       visibleColumns={visibleColumns}
@@ -283,8 +284,9 @@ const CRM = () => {
                     />
                   </div>
                   
+                  {/* Desktop side panels */}
                   {isFilterPanelOpen && (
-                    <div className="flex-shrink-0">
+                    <div className="hidden lg:block w-[280px] flex-shrink-0">
                       <FilterPanel 
                         onToggle={handleToggleFilter}
                         filters={filters}
@@ -294,11 +296,28 @@ const CRM = () => {
                   )}
 
                   {isChatPanelOpen && (
-                    <div className="flex-shrink-0">
+                    <div className="hidden lg:block w-[280px] flex-shrink-0">
                       <ChatPanel onToggle={handleToggleChat} />
                     </div>
                   )}
                 </div>
+
+                {/* Mobile sheets for filter and chat */}
+                <Sheet open={isFilterPanelOpen && window.innerWidth < 1024} onOpenChange={handleToggleFilter}>
+                  <SheetContent side="right" className="w-[85vw] sm:w-[400px] p-0 overflow-auto">
+                    <FilterPanel 
+                      onToggle={handleToggleFilter}
+                      filters={filters}
+                      onFiltersChange={setFilters}
+                    />
+                  </SheetContent>
+                </Sheet>
+
+                <Sheet open={isChatPanelOpen && window.innerWidth < 1024} onOpenChange={handleToggleChat}>
+                  <SheetContent side="right" className="w-[85vw] sm:w-[400px] p-0">
+                    <ChatPanel onToggle={handleToggleChat} />
+                  </SheetContent>
+                </Sheet>
               </>
             )}
 

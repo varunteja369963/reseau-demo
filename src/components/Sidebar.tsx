@@ -25,10 +25,36 @@ const navItems: NavItem[] = [
 
 export const Sidebar = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-24 gradient-sidebar text-white z-50 flex flex-col items-center py-6 shadow-strong">
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed left-4 top-4 z-[60] lg:hidden bg-gradient-to-br from-[hsl(var(--teal))] to-[hsl(var(--blue))] text-white p-2 rounded-xl shadow-medium"
+        aria-label="Toggle menu"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      {/* Backdrop for mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={cn(
+        "fixed left-0 top-0 h-screen w-24 gradient-sidebar text-white z-50 flex flex-col items-center py-6 shadow-strong transition-transform duration-300",
+        "lg:translate-x-0",
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
       {/* Logo */}
       <div className="mb-8 w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm">
         <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center">
@@ -67,5 +93,6 @@ export const Sidebar = () => {
         ))}
       </nav>
     </aside>
+    </>
   );
 };
