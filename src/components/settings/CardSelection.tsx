@@ -220,6 +220,16 @@ export const CardSelection = ({ userId }: CardSelectionProps) => {
           </Button>
         </div>
       )}
+
+      <div className="flex justify-end pt-2">
+        <Button
+          variant="default"
+          className="bg-[hsl(var(--teal))] hover:bg-[hsl(var(--teal))]/90 text-white"
+          disabled={isSaving}
+        >
+          Done
+        </Button>
+      </div>
     </div>
   );
 };

@@ -225,10 +225,13 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
             <Label htmlFor="permission">Permission Level</Label>
           <Select value={permissionLevel} onValueChange={(value: any) => {
               setPermissionLevel(value);
-              // Uncheck History and Download Data for viewer role
+              // Uncheck (but don't disable) History and Download Data for viewer role
               if (value === 'viewer') {
                 setCanAccessHistory(false);
                 setCanDownloadData(false);
+              } else {
+                setCanAccessHistory(true);
+                setCanDownloadData(true);
               }
             }}>
               <SelectTrigger>
@@ -338,9 +341,8 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
                     id="download-data"
                     checked={canDownloadData}
                     onCheckedChange={(checked) => setCanDownloadData(checked as boolean)}
-                    disabled={permissionLevel === 'viewer'}
                   />
-                  <label htmlFor="download-data" className={cn("text-sm cursor-pointer", permissionLevel === 'viewer' && "opacity-50")}>
+                  <label htmlFor="download-data" className="text-sm cursor-pointer">
                     Can download CRM data
                   </label>
                 </div>
@@ -369,9 +371,8 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
                     id="access-history"
                     checked={canAccessHistory}
                     onCheckedChange={(checked) => setCanAccessHistory(checked as boolean)}
-                    disabled={permissionLevel === 'viewer'}
                   />
-                  <label htmlFor="access-history" className={cn("text-sm cursor-pointer", permissionLevel === 'viewer' && "opacity-50")}>
+                  <label htmlFor="access-history" className="text-sm cursor-pointer">
                     Can access History
                   </label>
                 </div>
@@ -379,7 +380,7 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
             )}
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 pt-2">
             <Button
               type="button"
               variant="outline"

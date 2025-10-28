@@ -406,9 +406,13 @@ export const AccessList = ({ userId }: AccessListProps) => {
               <Label htmlFor="edit-permission">Permission Level</Label>
               <Select value={editPermissionLevel} onValueChange={(value: any) => {
                 setEditPermissionLevel(value);
+                // Uncheck (but don't disable) History and Download Data for viewer role
                 if (value === 'viewer') {
                   setEditCanAccessHistory(false);
                   setEditCanDownloadData(false);
+                } else {
+                  setEditCanAccessHistory(true);
+                  setEditCanDownloadData(true);
                 }
               }}>
                 <SelectTrigger>
@@ -518,9 +522,8 @@ export const AccessList = ({ userId }: AccessListProps) => {
                       id="edit-download-data"
                       checked={editCanDownloadData}
                       onCheckedChange={(checked) => setEditCanDownloadData(checked as boolean)}
-                      disabled={editPermissionLevel === 'viewer'}
                     />
-                    <label htmlFor="edit-download-data" className={cn("text-sm cursor-pointer", editPermissionLevel === 'viewer' && "opacity-50")}>
+                    <label htmlFor="edit-download-data" className="text-sm cursor-pointer">
                       Can download CRM data
                     </label>
                   </div>
@@ -549,9 +552,8 @@ export const AccessList = ({ userId }: AccessListProps) => {
                       id="edit-access-history"
                       checked={editCanAccessHistory}
                       onCheckedChange={(checked) => setEditCanAccessHistory(checked as boolean)}
-                      disabled={editPermissionLevel === 'viewer'}
                     />
-                    <label htmlFor="edit-access-history" className={cn("text-sm cursor-pointer", editPermissionLevel === 'viewer' && "opacity-50")}>
+                    <label htmlFor="edit-access-history" className="text-sm cursor-pointer">
                       Can access History
                     </label>
                   </div>
@@ -559,7 +561,7 @@ export const AccessList = ({ userId }: AccessListProps) => {
               )}
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 pt-2">
               <Button
                 type="button"
                 variant="outline"
