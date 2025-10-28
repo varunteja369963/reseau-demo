@@ -415,7 +415,7 @@ export const CRMTable = ({
   };
 
   return (
-    <div className="bg-card rounded-3xl shadow-soft overflow-hidden w-full">
+    <div className="bg-card rounded-3xl shadow-soft overflow-hidden w-full max-w-full">
       {/* Mobile Card View */}
       <div className="md:hidden space-y-3 p-4 max-h-[700px] overflow-auto">
         {(groupBy ? Object.values(groupedLeads || {}).flat() : paginatedLeads).map((lead) => (

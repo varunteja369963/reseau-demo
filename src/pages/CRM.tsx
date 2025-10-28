@@ -248,7 +248,7 @@ const CRM = () => {
       <div className="lg:ml-24 min-h-screen flex flex-col max-w-[100vw]">
         <TopNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
         
-        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-x-hidden pt-16 lg:pt-8">
+        <main className="flex-1 p-4 md:p-6 lg:p-6 overflow-x-hidden pt-16 lg:pt-8">
           <div className="max-w-full mx-auto">
             {activeTab === "crm" && (
               <>
@@ -266,9 +266,9 @@ const CRM = () => {
                   onGroupByChange={setGroupBy}
                 />
                 
-                <div className="flex flex-col lg:flex-row gap-4 items-start">
-                  <div className="flex-1 min-w-0 overflow-x-auto">
-                    <CRMTable 
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4 items-start">
+                  <div className="w-full min-w-0 overflow-hidden">
+                    <CRMTable
                       leads={filteredLeads} 
                       visibleColumns={visibleColumns}
                       onOpenProfile={handleOpenProfile}
@@ -285,19 +285,18 @@ const CRM = () => {
                   </div>
                   
                   {/* Desktop side panels */}
-                  {isFilterPanelOpen && (
+                  {(isFilterPanelOpen || isChatPanelOpen) && (
                     <div className="hidden lg:block w-[280px] flex-shrink-0">
-                      <FilterPanel 
-                        onToggle={handleToggleFilter}
-                        filters={filters}
-                        onFiltersChange={setFilters}
-                      />
-                    </div>
-                  )}
-
-                  {isChatPanelOpen && (
-                    <div className="hidden lg:block w-[280px] flex-shrink-0">
-                      <ChatPanel onToggle={handleToggleChat} />
+                      {isFilterPanelOpen && (
+                        <FilterPanel 
+                          onToggle={handleToggleFilter}
+                          filters={filters}
+                          onFiltersChange={setFilters}
+                        />
+                      )}
+                      {isChatPanelOpen && (
+                        <ChatPanel onToggle={handleToggleChat} />
+                      )}
                     </div>
                   )}
                 </div>

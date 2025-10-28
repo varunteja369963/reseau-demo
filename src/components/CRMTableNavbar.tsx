@@ -238,9 +238,9 @@ export const CRMTableNavbar = ({
   };
 
   return (
-    <div className="flex flex-col gap-3 md:gap-0 md:flex-row md:items-center md:justify-between md:flex-wrap mb-6">
+    <div className="flex flex-col gap-3 md:gap-3 md:flex-row md:items-center md:justify-between md:flex-wrap mb-6 max-w-full">
       {/* Search - Full width on mobile */}
-      <div className="relative w-full md:w-48 lg:w-64 md:focus-within:w-80 lg:focus-within:w-96 transition-[width] duration-300">
+      <div className="relative w-full md:w-48 lg:w-64 md:focus-within:w-80 lg:focus-within:w-96 transition-[width] duration-300 flex-shrink-0">
         <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
         <Input
           placeholder="Search Leads..."
@@ -249,7 +249,7 @@ export const CRMTableNavbar = ({
       </div>
       
       {/* Action buttons - Wrapped on mobile */}
-      <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-2 md:pb-0">
+      <div className="flex items-center gap-2 flex-wrap max-w-full">
         <Button 
           onClick={onToggleChat}
           variant={isChatOpen ? "default" : "outline"}

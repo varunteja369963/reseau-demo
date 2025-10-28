@@ -37,8 +37,8 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
   }, []);
 
   return (
-    <nav className="bg-card border-b border-border shadow-soft sticky top-0 z-40">
-      <div className="flex items-center justify-between px-3 md:px-6 py-3 md:py-4">
+    <nav className="bg-card border-b border-border shadow-soft sticky top-0 z-40 max-w-full overflow-x-hidden">
+      <div className="flex items-center justify-between px-3 md:px-6 py-3 md:py-4 max-w-[calc(100vw-6rem)]">
         {/* Left: Toggle */}
         <div className="flex items-center gap-2 md:gap-8 flex-1 lg:flex-initial overflow-x-auto scrollbar-hide">
           <div className="flex bg-muted rounded-full p-1">
