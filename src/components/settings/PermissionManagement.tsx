@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, X } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -24,16 +24,73 @@ import {
 } from '@/components/ui/dialog';
 
 const AVAILABLE_FIELDS = [
+  // Lead Information
+  { key: 'leadId', label: 'Lead ID' },
+  { key: 'leadSource', label: 'Lead Source' },
+  { key: 'leadChannel', label: 'Lead Channel' },
+  { key: 'campaignName', label: 'Campaign Name' },
+  { key: 'dateOfInquiry', label: 'Inquiry Date' },
+  { key: 'leadStatus', label: 'Lead Status' },
+  { key: 'assignedSalesperson', label: 'Salesperson' },
+  { key: 'leadOwner', label: 'Lead Owner' },
+  { key: 'leadNotes', label: 'Notes' },
+  
+  // Customer Information
+  { key: 'customerId', label: 'Customer ID' },
   { key: 'fullName', label: 'Full Name' },
   { key: 'email', label: 'Email' },
   { key: 'phoneNumber', label: 'Phone Number' },
-  { key: 'leadStatus', label: 'Lead Status' },
-  { key: 'leadScoring', label: 'Lead Scoring' },
-  { key: 'leadSource', label: 'Lead Source' },
+  { key: 'address', label: 'Address' },
+  { key: 'city', label: 'City' },
+  { key: 'province', label: 'Province' },
+  { key: 'postalCode', label: 'Postal Code' },
+  { key: 'preferredContactMethod', label: 'Contact Method' },
+  { key: 'customerType', label: 'Customer Type' },
+  { key: 'communicationConsent', label: 'Communication Consent' },
+  { key: 'tags', label: 'Tags' },
+  
+  // Vehicle Interest
   { key: 'vehicleMake', label: 'Vehicle Make' },
   { key: 'model', label: 'Model' },
+  { key: 'vehicleModel', label: 'Vehicle Model' },
+  { key: 'year', label: 'Year' },
+  { key: 'trim', label: 'Trim' },
+  { key: 'colorPreference', label: 'Color Preference' },
+  { key: 'newUsed', label: 'New/Used' },
+  { key: 'vin', label: 'VIN' },
+  { key: 'stockNumber', label: 'Stock Number' },
+  { key: 'budgetRange', label: 'Budget Range' },
+  { key: 'tradeIn', label: 'Trade-In' },
+  { key: 'tradeInDetails', label: 'Trade-In Details' },
+  
+  // Deal & Sales Pipeline
   { key: 'dealStage', label: 'Deal Stage' },
   { key: 'dealValue', label: 'Deal Value' },
+  { key: 'paymentType', label: 'Payment Type' },
+  { key: 'depositAmount', label: 'Deposit Amount' },
+  { key: 'financingInstitution', label: 'Financing Institution' },
+  { key: 'closeProbability', label: 'Close Probability' },
+  { key: 'expectedCloseDate', label: 'Expected Close Date' },
+  { key: 'dealStatus', label: 'Deal Status' },
+  { key: 'lostReason', label: 'Lost Reason' },
+  
+  // Marketing & Attribution
+  { key: 'utmSource', label: 'UTM Source' },
+  { key: 'utmMedium', label: 'UTM Medium' },
+  { key: 'landingPageUrl', label: 'Landing Page' },
+  { key: 'conversionEvent', label: 'Conversion Event' },
+  { key: 'timeToFirstContact', label: 'Time to First Contact' },
+  { key: 'responseTime', label: 'Response Time' },
+  { key: 'leadScoring', label: 'Lead Scoring' },
+  
+  // Operational Metadata
+  { key: 'recordCreatedBy', label: 'Created By' },
+  { key: 'recordCreatedDate', label: 'Created Date' },
+  { key: 'lastModifiedBy', label: 'Modified By' },
+  { key: 'lastModifiedDate', label: 'Modified Date' },
+  { key: 'dataSource', label: 'Data Source' },
+  { key: 'crmSyncStatus', label: 'CRM Sync Status' },
+  { key: 'duplicateFlag', label: 'Duplicate Flag' },
 ];
 
 interface PermissionManagementProps {
@@ -44,11 +101,13 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [permissionLevel, setPermissionLevel] = useState<'viewer' | 'editor' | 'admin'>('viewer');
-  const [selectedFields, setSelectedFields] = useState<string[]>([]);
+  const [selectedFields, setSelectedFields] = useState<string[]>(AVAILABLE_FIELDS.map(f => f.key));
   const [canAddCustomer, setCanAddCustomer] = useState(false);
   const [canUseChat, setCanUseChat] = useState(false);
   const [canDownloadData, setCanDownloadData] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFieldsExpanded, setIsFieldsExpanded] = useState(false);
+  const [isFeaturesExpanded, setIsFeaturesExpanded] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,10 +149,12 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
       // Reset form
       setEmail('');
       setPermissionLevel('viewer');
-      setSelectedFields([]);
+      setSelectedFields(AVAILABLE_FIELDS.map(f => f.key));
       setCanAddCustomer(false);
       setCanUseChat(false);
       setCanDownloadData(false);
+      setIsFieldsExpanded(false);
+      setIsFeaturesExpanded(false);
       setIsOpen(false);
     } catch (error: any) {
       console.error('Error granting access:', error);
@@ -112,6 +173,14 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
       setSelectedFields(selectedFields.filter(f => f !== fieldKey));
     } else {
       setSelectedFields([...selectedFields, fieldKey]);
+    }
+  };
+
+  const toggleAllFields = () => {
+    if (selectedFields.length === AVAILABLE_FIELDS.length) {
+      setSelectedFields([]);
+    } else {
+      setSelectedFields(AVAILABLE_FIELDS.map(f => f.key));
     }
   };
 
@@ -162,64 +231,105 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
 
           {/* Field Access */}
           <div className="space-y-3">
-            <Label>Accessible Fields (optional)</Label>
-            <p className="text-xs text-muted-foreground">
-              Leave empty to grant access to all fields
-            </p>
-            <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-3 rounded-lg bg-muted/30">
-              {AVAILABLE_FIELDS.map((field) => (
-                <div key={field.key} className="flex items-center gap-2">
-                  <Checkbox
-                    id={field.key}
-                    checked={selectedFields.includes(field.key)}
-                    onCheckedChange={() => toggleField(field.key)}
-                  />
-                  <label
-                    htmlFor={field.key}
-                    className="text-sm cursor-pointer select-none"
+            <button
+              type="button"
+              onClick={() => setIsFieldsExpanded(!isFieldsExpanded)}
+              className="w-full flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-smooth"
+            >
+              <div className="flex items-center gap-2">
+                <Label className="cursor-pointer">Accessible Fields</Label>
+                <span className="text-xs text-muted-foreground">
+                  ({selectedFields.length} selected)
+                </span>
+              </div>
+              {isFieldsExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+            
+            {isFieldsExpanded && (
+              <div className="space-y-3 animate-in slide-in-from-top-2">
+                <div className="flex items-center justify-between px-3">
+                  <p className="text-xs text-muted-foreground">
+                    Select which fields the user can access
+                  </p>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleAllFields}
+                    className="h-7 text-xs"
                   >
-                    {field.label}
-                  </label>
+                    {selectedFields.length === AVAILABLE_FIELDS.length ? 'Uncheck All' : 'Check All'}
+                  </Button>
                 </div>
-              ))}
-            </div>
+                <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto p-3 rounded-lg bg-muted/30">
+                  {AVAILABLE_FIELDS.map((field) => (
+                    <div key={field.key} className="flex items-center gap-2">
+                      <Checkbox
+                        id={field.key}
+                        checked={selectedFields.includes(field.key)}
+                        onCheckedChange={() => toggleField(field.key)}
+                      />
+                      <label
+                        htmlFor={field.key}
+                        className="text-sm cursor-pointer select-none"
+                      >
+                        {field.label}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Navbar Features */}
           <div className="space-y-3">
-            <Label>Navbar Features Access</Label>
-            <div className="space-y-2">
+            <button
+              type="button"
+              onClick={() => setIsFeaturesExpanded(!isFeaturesExpanded)}
+              className="w-full flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-smooth"
+            >
               <div className="flex items-center gap-2">
-                <Checkbox
-                  id="add-customer"
-                  checked={canAddCustomer}
-                  onCheckedChange={(checked) => setCanAddCustomer(checked as boolean)}
-                />
-                <label htmlFor="add-customer" className="text-sm cursor-pointer">
-                  Can add new customers
-                </label>
+                <Label className="cursor-pointer">Navbar Features Access</Label>
+                <span className="text-xs text-muted-foreground">(Optional)</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="use-chat"
-                  checked={canUseChat}
-                  onCheckedChange={(checked) => setCanUseChat(checked as boolean)}
-                />
-                <label htmlFor="use-chat" className="text-sm cursor-pointer">
-                  Can use chat feature
-                </label>
+              {isFeaturesExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+            
+            {isFeaturesExpanded && (
+              <div className="space-y-2 p-3 rounded-lg bg-muted/30 animate-in slide-in-from-top-2">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="add-customer"
+                    checked={canAddCustomer}
+                    onCheckedChange={(checked) => setCanAddCustomer(checked as boolean)}
+                  />
+                  <label htmlFor="add-customer" className="text-sm cursor-pointer">
+                    Can add new customers
+                  </label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="use-chat"
+                    checked={canUseChat}
+                    onCheckedChange={(checked) => setCanUseChat(checked as boolean)}
+                  />
+                  <label htmlFor="use-chat" className="text-sm cursor-pointer">
+                    Can use chat feature
+                  </label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="download-data"
+                    checked={canDownloadData}
+                    onCheckedChange={(checked) => setCanDownloadData(checked as boolean)}
+                  />
+                  <label htmlFor="download-data" className="text-sm cursor-pointer">
+                    Can download CRM data
+                  </label>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="download-data"
-                  checked={canDownloadData}
-                  onCheckedChange={(checked) => setCanDownloadData(checked as boolean)}
-                />
-                <label htmlFor="download-data" className="text-sm cursor-pointer">
-                  Can download CRM data
-                </label>
-              </div>
-            </div>
+            )}
           </div>
 
           <div className="flex gap-3 pt-4">

@@ -115,15 +115,6 @@ export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewPro
 
   return (
     <div className="space-y-6">
-      {/* Card Selection */}
-      <div className="bg-card rounded-2xl p-6 shadow-soft">
-        <h3 className="text-lg font-semibold text-foreground mb-2">Stats Card Display</h3>
-        <p className="text-sm text-muted-foreground mb-6">
-          Select up to 4 stat cards to display above your CRM table.
-        </p>
-        <CardSelection userId={userId} />
-      </div>
-
       {/* CRM Access Permissions */}
       <div className="bg-card rounded-2xl p-6 shadow-soft">
         <h3 className="text-lg font-semibold text-foreground mb-2">CRM Access Management</h3>
@@ -142,46 +133,13 @@ export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewPro
         <AccessList userId={userId} />
       </div>
 
-      {/* Table Columns Customization */}
+      {/* Card Selection */}
       <div className="bg-card rounded-2xl p-6 shadow-soft">
-        <h3 className="text-lg font-semibold text-foreground mb-2">Customize Table Columns</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-2">Stats Card Display</h3>
         <p className="text-sm text-muted-foreground mb-6">
-          Select which columns you want to see in your CRM table. Changes are applied immediately.
+          Select up to 4 stat cards to display above your CRM table.
         </p>
-
-        <div className="space-y-3">
-          {AVAILABLE_COLUMNS.map((col) => (
-            <button
-              key={col.key}
-              onClick={() => toggleColumn(col.key)}
-              className={cn(
-                "w-full flex items-center justify-between p-4 rounded-xl transition-smooth border-2",
-                columns.includes(col.key)
-                  ? "bg-[hsl(var(--teal))]/10 border-[hsl(var(--teal))] text-foreground"
-                  : "bg-muted/30 border-transparent hover:border-border text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <span className="font-medium">{col.label}</span>
-              <div className={cn(
-                "w-6 h-6 rounded-full flex items-center justify-center transition-smooth",
-                columns.includes(col.key)
-                  ? "bg-[hsl(var(--teal))] text-white"
-                  : "bg-muted"
-              )}>
-                {columns.includes(col.key) && <Check className="w-4 h-4" />}
-              </div>
-            </button>
-          ))}
-        </div>
-
-        <div className="mt-6 pt-6 border-t border-border">
-          <button
-            onClick={() => onColumnChange(DEFAULT_COLUMNS)}
-            className="w-full px-4 py-3 rounded-xl bg-muted hover:bg-muted/80 transition-smooth text-sm font-medium"
-          >
-            Reset to Default View
-          </button>
-        </div>
+        <CardSelection userId={userId} />
       </div>
 
       <div className="bg-card rounded-2xl p-6 shadow-soft">

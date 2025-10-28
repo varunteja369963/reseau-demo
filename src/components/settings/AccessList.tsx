@@ -107,19 +107,48 @@ export const AccessList = ({ userId }: AccessListProps) => {
     return <div className="text-sm text-muted-foreground">Loading access list...</div>;
   }
 
-  if (permissions.length === 0) {
-    return (
-      <div className="text-center py-8 text-muted-foreground">
-        <Shield className="w-12 h-12 mx-auto mb-3 opacity-50" />
-        <p className="text-sm">No access granted yet</p>
-        <p className="text-xs mt-1">Grant access to others to see them here</p>
-      </div>
-    );
-  }
+  // Show demo data if no real permissions exist
+  const displayPermissions = permissions.length > 0 ? permissions : [
+    {
+      id: 'demo-1',
+      granted_to_email: 'john.doe@example.com',
+      permission_level: 'viewer' as const,
+      accessible_fields: ['fullName', 'email', 'phoneNumber', 'leadStatus'],
+      can_add_customer: false,
+      can_use_chat: true,
+      can_download_data: false,
+      created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'demo-2',
+      granted_to_email: 'jane.smith@example.com',
+      permission_level: 'editor' as const,
+      accessible_fields: null,
+      can_add_customer: true,
+      can_use_chat: true,
+      can_download_data: true,
+      created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'demo-3',
+      granted_to_email: 'admin@example.com',
+      permission_level: 'admin' as const,
+      accessible_fields: null,
+      can_add_customer: true,
+      can_use_chat: true,
+      can_download_data: true,
+      created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+  ];
 
   return (
     <div className="space-y-3">
-      {permissions.map((permission) => (
+      {permissions.length === 0 && (
+        <div className="text-xs text-muted-foreground italic mb-3 p-3 bg-muted/30 rounded-lg">
+          Demo data shown below. Grant access to see real permissions here.
+        </div>
+      )}
+      {displayPermissions.map((permission) => (
         <div
           key={permission.id}
           className="p-4 rounded-xl bg-muted/30 border border-border space-y-3"
@@ -167,14 +196,16 @@ export const AccessList = ({ userId }: AccessListProps) => {
               </div>
             </div>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
-              onClick={() => handleRemoveAccess(permission.id, permission.granted_to_email)}
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
+            {permissions.length > 0 && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                onClick={() => handleRemoveAccess(permission.id, permission.granted_to_email)}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            )}
           </div>
 
           <div className="text-xs text-muted-foreground">

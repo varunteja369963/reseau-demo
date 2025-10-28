@@ -125,7 +125,7 @@ export const CardSelection = ({ userId }: CardSelectionProps) => {
     await saveCardSettings(DEFAULT_CARDS);
   };
 
-  if (isLoading) {
+  if (isLoading && userId) {
     return <div className="text-sm text-muted-foreground">Loading card settings...</div>;
   }
 
