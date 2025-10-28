@@ -198,7 +198,7 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
           Grant CRM Access
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto pb-4">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto pb-3">
         <DialogHeader>
           <DialogTitle>Grant CRM Access</DialogTitle>
           <DialogDescription>
@@ -262,7 +262,7 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
             </button>
             
             {isFieldsExpanded && (
-              <div className="px-4 pb-4 space-y-3 animate-in slide-in-from-top-2">
+              <div className="px-4 pb-2 space-y-3 animate-in slide-in-from-top-2">
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-muted-foreground">
                     Select which fields the user can access
@@ -315,7 +315,7 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
             </button>
             
             {isFeaturesExpanded && (
-              <div className="px-4 pb-4 space-y-2 animate-in slide-in-from-top-2">
+              <div className="px-4 pb-2 space-y-2 animate-in slide-in-from-top-2">
                 <div className="flex items-center gap-2">
                   <Checkbox
                     id="add-customer"
