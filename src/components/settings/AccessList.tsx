@@ -103,9 +103,7 @@ export const AccessList = ({ userId }: AccessListProps) => {
     }
   };
 
-  if (isLoading) {
-    return <div className="text-sm text-muted-foreground">Loading access list...</div>;
-  }
+  // Don't show loading state, show demo data immediately
 
   // Show demo data if no real permissions exist
   const displayPermissions = permissions.length > 0 ? permissions : [

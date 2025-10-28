@@ -3,6 +3,7 @@ import { Check, TrendingUp, Users, Target, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 
 interface CardOption {
   key: string;
@@ -20,6 +21,14 @@ const AVAILABLE_CARDS: CardOption[] = [
   { key: 'warm', label: 'Warm Leads', icon: TrendingUp, description: 'Engaged leads' },
   { key: 'new', label: 'New Leads', icon: Users, description: 'Recently added' },
   { key: 'follow_up', label: 'Follow Up', icon: Target, description: 'Requires follow-up' },
+  { key: 'contacted', label: 'Contacted', icon: Users, description: 'First contact made' },
+  { key: 'negotiating', label: 'Negotiating', icon: TrendingUp, description: 'In negotiation' },
+  { key: 'closed_won', label: 'Closed Won', icon: TrendingUp, description: 'Successfully closed' },
+  { key: 'closed_lost', label: 'Closed Lost', icon: AlertCircle, description: 'Lost opportunities' },
+  { key: 'avg_deal_value', label: 'Avg Deal Value', icon: TrendingUp, description: 'Average deal size' },
+  { key: 'conversion_rate', label: 'Conversion Rate', icon: Target, description: 'Lead to customer %' },
+  { key: 'active_deals', label: 'Active Deals', icon: Users, description: 'Deals in progress' },
+  { key: 'this_month', label: 'This Month', icon: TrendingUp, description: 'Current month leads' },
 ];
 
 const DEFAULT_CARDS = ['total_leads', 'qualified', 'cold', 'dnp'];
@@ -32,6 +41,7 @@ export const CardSelection = ({ userId }: CardSelectionProps) => {
   const [selectedCards, setSelectedCards] = useState<string[]>(DEFAULT_CARDS);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -129,6 +139,8 @@ export const CardSelection = ({ userId }: CardSelectionProps) => {
     return <div className="text-sm text-muted-foreground">Loading card settings...</div>;
   }
 
+  const displayCards = showAll ? AVAILABLE_CARDS : AVAILABLE_CARDS.slice(0, 8);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -145,7 +157,7 @@ export const CardSelection = ({ userId }: CardSelectionProps) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {AVAILABLE_CARDS.map((card) => {
+        {displayCards.map((card) => {
           const isSelected = selectedCards.includes(card.key);
           const Icon = card.icon;
 
@@ -186,6 +198,19 @@ export const CardSelection = ({ userId }: CardSelectionProps) => {
           );
         })}
       </div>
+
+      {AVAILABLE_CARDS.length > 8 && (
+        <div className="flex justify-center">
+          <Button
+            variant="outline"
+            onClick={() => setShowAll(!showAll)}
+            disabled={isSaving}
+            className="w-full md:w-auto"
+          >
+            {showAll ? 'View Less' : `View More (${AVAILABLE_CARDS.length - 8} more)`}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

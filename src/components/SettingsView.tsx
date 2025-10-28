@@ -145,13 +145,22 @@ export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewPro
       <div className="bg-card rounded-2xl p-6 shadow-soft">
         <h3 className="text-lg font-semibold text-foreground mb-2">Display Preferences</h3>
         <p className="text-sm text-muted-foreground mb-4">
-          Additional settings coming soon...
+          Customize your CRM display settings.
         </p>
         <div className="space-y-3">
           <div className="flex items-center justify-between p-4 rounded-xl bg-muted/30">
             <span className="text-sm font-medium">Show stats cards</span>
             <div className="w-12 h-6 bg-[hsl(var(--teal))] rounded-full relative">
               <div className="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5"></div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between p-4 rounded-xl bg-muted/30">
+            <div>
+              <span className="text-sm font-medium">Enable chat in Analytics</span>
+              <p className="text-xs text-muted-foreground mt-1">Coming soon</p>
+            </div>
+            <div className="w-12 h-6 bg-muted rounded-full relative">
+              <div className="w-5 h-5 bg-white rounded-full absolute left-0.5 top-0.5"></div>
             </div>
           </div>
         </div>

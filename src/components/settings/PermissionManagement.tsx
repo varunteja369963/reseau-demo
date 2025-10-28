@@ -102,12 +102,15 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
   const [email, setEmail] = useState('');
   const [permissionLevel, setPermissionLevel] = useState<'viewer' | 'editor' | 'admin'>('viewer');
   const [selectedFields, setSelectedFields] = useState<string[]>(AVAILABLE_FIELDS.map(f => f.key));
-  const [canAddCustomer, setCanAddCustomer] = useState(false);
-  const [canUseChat, setCanUseChat] = useState(false);
-  const [canDownloadData, setCanDownloadData] = useState(false);
+  const [canAddCustomer, setCanAddCustomer] = useState(true);
+  const [canUseChat, setCanUseChat] = useState(true);
+  const [canDownloadData, setCanDownloadData] = useState(true);
+  const [canAccessAnalytics, setCanAccessAnalytics] = useState(true);
+  const [canUseChatInAnalytics, setCanUseChatInAnalytics] = useState(true);
+  const [canAccessHistory, setCanAccessHistory] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isFieldsExpanded, setIsFieldsExpanded] = useState(false);
-  const [isFeaturesExpanded, setIsFeaturesExpanded] = useState(false);
+  const [isFeaturesExpanded, setIsFeaturesExpanded] = useState(true);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -150,11 +153,14 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
       setEmail('');
       setPermissionLevel('viewer');
       setSelectedFields(AVAILABLE_FIELDS.map(f => f.key));
-      setCanAddCustomer(false);
-      setCanUseChat(false);
-      setCanDownloadData(false);
+      setCanAddCustomer(true);
+      setCanUseChat(true);
+      setCanDownloadData(true);
+      setCanAccessAnalytics(true);
+      setCanUseChatInAnalytics(true);
+      setCanAccessHistory(true);
       setIsFieldsExpanded(false);
-      setIsFeaturesExpanded(false);
+      setIsFeaturesExpanded(true);
       setIsOpen(false);
     } catch (error: any) {
       console.error('Error granting access:', error);
@@ -217,7 +223,13 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
           {/* Permission Level */}
           <div className="space-y-2">
             <Label htmlFor="permission">Permission Level</Label>
-            <Select value={permissionLevel} onValueChange={(value: any) => setPermissionLevel(value)}>
+            <Select value={permissionLevel} onValueChange={(value: any) => {
+              setPermissionLevel(value);
+              // Uncheck History for viewer role
+              if (value === 'viewer') {
+                setCanAccessHistory(false);
+              }
+            }}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -230,24 +242,24 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
           </div>
 
           {/* Field Access */}
-          <div className="space-y-3">
+          <div className="rounded-xl bg-muted/30 overflow-hidden">
             <button
               type="button"
               onClick={() => setIsFieldsExpanded(!isFieldsExpanded)}
-              className="w-full flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-smooth"
+              className="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-smooth"
             >
               <div className="flex items-center gap-2">
                 <Label className="cursor-pointer">Accessible Fields</Label>
                 <span className="text-xs text-muted-foreground">
-                  ({selectedFields.length} selected)
+                  ({selectedFields.length} selected) • Optional
                 </span>
               </div>
               {isFieldsExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>
             
             {isFieldsExpanded && (
-              <div className="space-y-3 animate-in slide-in-from-top-2">
-                <div className="flex items-center justify-between px-3">
+              <div className="px-4 pb-4 space-y-3 animate-in slide-in-from-top-2">
+                <div className="flex items-center justify-between">
                   <p className="text-xs text-muted-foreground">
                     Select which fields the user can access
                   </p>
@@ -261,7 +273,7 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
                     {selectedFields.length === AVAILABLE_FIELDS.length ? 'Uncheck All' : 'Check All'}
                   </Button>
                 </div>
-                <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto p-3 rounded-lg bg-muted/30">
+                <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto p-3 rounded-lg bg-background/50 border border-border">
                   {AVAILABLE_FIELDS.map((field) => (
                     <div key={field.key} className="flex items-center gap-2">
                       <Checkbox
@@ -283,21 +295,23 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
           </div>
 
           {/* Navbar Features */}
-          <div className="space-y-3">
+          <div className="rounded-xl bg-muted/30 overflow-hidden">
             <button
               type="button"
               onClick={() => setIsFeaturesExpanded(!isFeaturesExpanded)}
-              className="w-full flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-smooth"
+              className="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-smooth"
             >
               <div className="flex items-center gap-2">
                 <Label className="cursor-pointer">Navbar Features Access</Label>
-                <span className="text-xs text-muted-foreground">(Optional)</span>
+                <span className="text-xs text-muted-foreground">
+                  ({[canAddCustomer, canUseChat, canDownloadData, canAccessAnalytics, canUseChatInAnalytics, canAccessHistory].filter(Boolean).length}/6 selected) • Optional
+                </span>
               </div>
               {isFeaturesExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>
             
             {isFeaturesExpanded && (
-              <div className="space-y-2 p-3 rounded-lg bg-muted/30 animate-in slide-in-from-top-2">
+              <div className="px-4 pb-4 space-y-2 animate-in slide-in-from-top-2">
                 <div className="flex items-center gap-2">
                   <Checkbox
                     id="add-customer"
@@ -328,11 +342,42 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
                     Can download CRM data
                   </label>
                 </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="access-analytics"
+                    checked={canAccessAnalytics}
+                    onCheckedChange={(checked) => setCanAccessAnalytics(checked as boolean)}
+                  />
+                  <label htmlFor="access-analytics" className="text-sm cursor-pointer">
+                    Can access Analytics
+                  </label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="use-chat-analytics"
+                    checked={canUseChatInAnalytics}
+                    onCheckedChange={(checked) => setCanUseChatInAnalytics(checked as boolean)}
+                  />
+                  <label htmlFor="use-chat-analytics" className="text-sm cursor-pointer">
+                    Can use chat in Analytics
+                  </label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="access-history"
+                    checked={canAccessHistory}
+                    onCheckedChange={(checked) => setCanAccessHistory(checked as boolean)}
+                    disabled={permissionLevel === 'viewer'}
+                  />
+                  <label htmlFor="access-history" className={cn("text-sm cursor-pointer", permissionLevel === 'viewer' && "opacity-50")}>
+                    Can access History
+                  </label>
+                </div>
               </div>
             )}
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-3">
             <Button
               type="button"
               variant="outline"
