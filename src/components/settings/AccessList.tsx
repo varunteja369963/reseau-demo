@@ -114,6 +114,7 @@ export const AccessList = ({ userId }: AccessListProps) => {
   const [isFieldsExpanded, setIsFieldsExpanded] = useState(false);
   const [isFeaturesExpanded, setIsFeaturesExpanded] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -297,89 +298,197 @@ export const AccessList = ({ userId }: AccessListProps) => {
       can_download_data: true,
       created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     },
+    {
+      id: 'demo-4',
+      granted_to_email: 'sarah.wilson@example.com',
+      permission_level: 'viewer' as const,
+      accessible_fields: ['fullName', 'email', 'dealStatus'],
+      can_add_customer: false,
+      can_use_chat: false,
+      can_download_data: false,
+      created_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'demo-5',
+      granted_to_email: 'mike.brown@example.com',
+      permission_level: 'editor' as const,
+      accessible_fields: null,
+      can_add_customer: true,
+      can_use_chat: true,
+      can_download_data: false,
+      created_at: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'demo-6',
+      granted_to_email: 'emily.davis@example.com',
+      permission_level: 'viewer' as const,
+      accessible_fields: ['fullName', 'phoneNumber', 'leadSource'],
+      can_add_customer: false,
+      can_use_chat: true,
+      can_download_data: false,
+      created_at: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'demo-7',
+      granted_to_email: 'robert.taylor@example.com',
+      permission_level: 'editor' as const,
+      accessible_fields: null,
+      can_add_customer: true,
+      can_use_chat: true,
+      can_download_data: true,
+      created_at: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'demo-8',
+      granted_to_email: 'lisa.anderson@example.com',
+      permission_level: 'viewer' as const,
+      accessible_fields: ['fullName', 'email', 'city'],
+      can_add_customer: false,
+      can_use_chat: false,
+      can_download_data: false,
+      created_at: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'demo-9',
+      granted_to_email: 'david.martinez@example.com',
+      permission_level: 'editor' as const,
+      accessible_fields: null,
+      can_add_customer: true,
+      can_use_chat: true,
+      can_download_data: true,
+      created_at: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'demo-10',
+      granted_to_email: 'jennifer.garcia@example.com',
+      permission_level: 'viewer' as const,
+      accessible_fields: ['fullName', 'email', 'phoneNumber'],
+      can_add_customer: false,
+      can_use_chat: true,
+      can_download_data: false,
+      created_at: new Date(Date.now() - 22 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'demo-11',
+      granted_to_email: 'william.rodriguez@example.com',
+      permission_level: 'admin' as const,
+      accessible_fields: null,
+      can_add_customer: true,
+      can_use_chat: true,
+      can_download_data: true,
+      created_at: new Date(Date.now() - 24 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'demo-12',
+      granted_to_email: 'maria.lopez@example.com',
+      permission_level: 'editor' as const,
+      accessible_fields: null,
+      can_add_customer: true,
+      can_use_chat: false,
+      can_download_data: true,
+      created_at: new Date(Date.now() - 26 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'demo-13',
+      granted_to_email: 'james.hernandez@example.com',
+      permission_level: 'viewer' as const,
+      accessible_fields: ['fullName', 'leadStatus', 'dealStage'],
+      can_add_customer: false,
+      can_use_chat: true,
+      can_download_data: false,
+      created_at: new Date(Date.now() - 28 * 24 * 60 * 60 * 1000).toISOString(),
+    },
   ];
+
+  const visiblePermissions = showAll ? displayPermissions : displayPermissions.slice(0, 4);
 
   return (
     <>
-      <div className="space-y-3">
+      <div className="space-y-4">
         {permissions.length === 0 && (
-          <div className="text-xs text-muted-foreground italic mb-3 p-3 bg-muted/30 rounded-lg">
+          <div className="text-xs text-muted-foreground italic p-3 bg-muted/30 rounded-lg">
             Demo data shown below. Grant access to see real permissions here.
           </div>
         )}
-        {displayPermissions.map((permission) => (
-        <div
-          key={permission.id}
-          className="p-4 rounded-xl bg-muted/30 border border-border space-y-3"
-        >
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="font-medium text-foreground">
-                  {permission.granted_to_email}
-                </span>
-                <Badge
-                  variant="outline"
-                  className={`${getPermissionColor(permission.permission_level)} capitalize`}
-                >
-                  {getPermissionIcon(permission.permission_level)}
-                  <span className="ml-1">{permission.permission_level}</span>
-                </Badge>
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {visiblePermissions.map((permission) => (
+            <div
+              key={permission.id}
+              className="p-3 rounded-xl bg-muted/30 border border-border space-y-2"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span className="font-medium text-sm text-foreground truncate">
+                      {permission.granted_to_email}
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className={`${getPermissionColor(permission.permission_level)} capitalize text-xs shrink-0`}
+                    >
+                      {getPermissionIcon(permission.permission_level)}
+                      <span className="ml-1">{permission.permission_level}</span>
+                    </Badge>
+                  </div>
 
-              {/* Field Access */}
-              {permission.accessible_fields && permission.accessible_fields.length > 0 && (
-                <div className="text-xs text-muted-foreground mb-2">
-                  <span className="font-medium">Fields: </span>
-                  {permission.accessible_fields.join(', ')}
+                  {/* Feature Access */}
+                  <div className="flex flex-wrap gap-1.5 mb-1.5">
+                    {permission.can_add_customer && (
+                      <Badge variant="secondary" className="text-xs px-2 py-0">
+                        Add Customer
+                      </Badge>
+                    )}
+                    {permission.can_use_chat && (
+                      <Badge variant="secondary" className="text-xs px-2 py-0">
+                        Chat
+                      </Badge>
+                    )}
+                    {permission.can_download_data && (
+                      <Badge variant="secondary" className="text-xs px-2 py-0">
+                        Download
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className="text-xs text-muted-foreground">
+                    {new Date(permission.created_at).toLocaleDateString()}
+                  </div>
                 </div>
-              )}
 
-              {/* Feature Access */}
-              <div className="flex flex-wrap gap-2">
-                {permission.can_add_customer && (
-                  <Badge variant="secondary" className="text-xs">
-                    Add Customer
-                  </Badge>
-                )}
-                {permission.can_use_chat && (
-                  <Badge variant="secondary" className="text-xs">
-                    Chat
-                  </Badge>
-                )}
-                {permission.can_download_data && (
-                  <Badge variant="secondary" className="text-xs">
-                    Download Data
-                  </Badge>
-                )}
+                <div className="flex gap-1 shrink-0">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7 text-[hsl(var(--teal))] hover:text-[hsl(var(--teal))] hover:bg-[hsl(var(--teal))]/10"
+                    onClick={() => handleEditAccess(permission)}
+                  >
+                    <EditIcon className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+                    onClick={() => handleRemoveAccess(permission.id, permission.granted_to_email)}
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
               </div>
             </div>
-
-            <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-[hsl(var(--teal))] hover:text-[hsl(var(--teal))] hover:bg-[hsl(var(--teal))]/10"
-                  onClick={() => handleEditAccess(permission)}
-                >
-                  <EditIcon className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                  onClick={() => handleRemoveAccess(permission.id, permission.granted_to_email)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-          </div>
-
-          <div className="text-xs text-muted-foreground">
-            Granted on {new Date(permission.created_at).toLocaleDateString()}
-          </div>
+          ))}
         </div>
-        ))}
+
+        {displayPermissions.length > 4 && (
+          <div className="flex justify-center pt-2">
+            <Button
+              variant="outline"
+              onClick={() => setShowAll(!showAll)}
+              className="w-full md:w-auto"
+            >
+              {showAll ? 'View Less' : `View More (${displayPermissions.length - 4} more)`}
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Edit Dialog */}
