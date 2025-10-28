@@ -223,11 +223,12 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
           {/* Permission Level */}
           <div className="space-y-2">
             <Label htmlFor="permission">Permission Level</Label>
-            <Select value={permissionLevel} onValueChange={(value: any) => {
+          <Select value={permissionLevel} onValueChange={(value: any) => {
               setPermissionLevel(value);
-              // Uncheck History for viewer role
+              // Uncheck History and Download Data for viewer role
               if (value === 'viewer') {
                 setCanAccessHistory(false);
+                setCanDownloadData(false);
               }
             }}>
               <SelectTrigger>
@@ -337,8 +338,9 @@ export const PermissionManagement = ({ userId }: PermissionManagementProps) => {
                     id="download-data"
                     checked={canDownloadData}
                     onCheckedChange={(checked) => setCanDownloadData(checked as boolean)}
+                    disabled={permissionLevel === 'viewer'}
                   />
-                  <label htmlFor="download-data" className="text-sm cursor-pointer">
+                  <label htmlFor="download-data" className={cn("text-sm cursor-pointer", permissionLevel === 'viewer' && "opacity-50")}>
                     Can download CRM data
                   </label>
                 </div>

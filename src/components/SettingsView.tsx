@@ -96,6 +96,8 @@ interface SettingsViewProps {
 export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewProps) => {
   const columns = visibleColumns || DEFAULT_COLUMNS;
   const [userId, setUserId] = useState<string | undefined>();
+  const [showStatsCards, setShowStatsCards] = useState(true);
+  const [enableChatInAnalytics, setEnableChatInAnalytics] = useState(false);
 
   useEffect(() => {
     const getUserId = async () => {
@@ -134,13 +136,15 @@ export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewPro
       </div>
 
       {/* Card Selection */}
-      <div className="bg-card rounded-2xl p-6 shadow-soft">
-        <h3 className="text-lg font-semibold text-foreground mb-2">Stats Card Display</h3>
-        <p className="text-sm text-muted-foreground mb-6">
-          Select up to 4 stat cards to display above your CRM table.
-        </p>
-        <CardSelection userId={userId} />
-      </div>
+      {showStatsCards && (
+        <div className="bg-card rounded-2xl p-6 shadow-soft">
+          <h3 className="text-lg font-semibold text-foreground mb-2">Stats Card Display</h3>
+          <p className="text-sm text-muted-foreground mb-6">
+            Select up to 4 stat cards to display above your CRM table.
+          </p>
+          <CardSelection userId={userId} />
+        </div>
+      )}
 
       <div className="bg-card rounded-2xl p-6 shadow-soft">
         <h3 className="text-lg font-semibold text-foreground mb-2">Display Preferences</h3>
@@ -148,21 +152,36 @@ export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewPro
           Customize your CRM display settings.
         </p>
         <div className="space-y-3">
-          <div className="flex items-center justify-between p-4 rounded-xl bg-muted/30">
+          <button
+            onClick={() => setShowStatsCards(!showStatsCards)}
+            className="flex items-center justify-between p-4 rounded-xl bg-muted/30 w-full hover:bg-muted/40 transition-smooth"
+          >
             <span className="text-sm font-medium">Show stats cards</span>
-            <div className="w-12 h-6 bg-[hsl(var(--teal))] rounded-full relative">
-              <div className="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5"></div>
+            <div className={cn(
+              "w-12 h-6 rounded-full relative transition-smooth",
+              showStatsCards ? "bg-[hsl(var(--teal))]" : "bg-muted"
+            )}>
+              <div className={cn(
+                "w-5 h-5 bg-white rounded-full absolute top-0.5 transition-smooth",
+                showStatsCards ? "right-0.5" : "left-0.5"
+              )}></div>
             </div>
-          </div>
-          <div className="flex items-center justify-between p-4 rounded-xl bg-muted/30">
-            <div>
-              <span className="text-sm font-medium">Enable chat in Analytics</span>
-              <p className="text-xs text-muted-foreground mt-1">Coming soon</p>
+          </button>
+          <button
+            onClick={() => setEnableChatInAnalytics(!enableChatInAnalytics)}
+            className="flex items-center justify-between p-4 rounded-xl bg-muted/30 w-full hover:bg-muted/40 transition-smooth"
+          >
+            <span className="text-sm font-medium">Enable chat in Analytics</span>
+            <div className={cn(
+              "w-12 h-6 rounded-full relative transition-smooth",
+              enableChatInAnalytics ? "bg-[hsl(var(--teal))]" : "bg-muted"
+            )}>
+              <div className={cn(
+                "w-5 h-5 bg-white rounded-full absolute top-0.5 transition-smooth",
+                enableChatInAnalytics ? "right-0.5" : "left-0.5"
+              )}></div>
             </div>
-            <div className="w-12 h-6 bg-muted rounded-full relative">
-              <div className="w-5 h-5 bg-white rounded-full absolute left-0.5 top-0.5"></div>
-            </div>
-          </div>
+          </button>
         </div>
       </div>
     </div>

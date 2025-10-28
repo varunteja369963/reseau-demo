@@ -139,7 +139,16 @@ export const CardSelection = ({ userId }: CardSelectionProps) => {
     return <div className="text-sm text-muted-foreground">Loading card settings...</div>;
   }
 
-  const displayCards = showAll ? AVAILABLE_CARDS : AVAILABLE_CARDS.slice(0, 8);
+  // Sort cards to show selected ones first
+  const sortedCards = [...AVAILABLE_CARDS].sort((a, b) => {
+    const aSelected = selectedCards.includes(a.key);
+    const bSelected = selectedCards.includes(b.key);
+    if (aSelected && !bSelected) return -1;
+    if (!aSelected && bSelected) return 1;
+    return 0;
+  });
+
+  const displayCards = showAll ? sortedCards : sortedCards.slice(0, 8);
 
   return (
     <div className="space-y-4">
