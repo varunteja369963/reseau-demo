@@ -66,14 +66,26 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
   const allLeads = useMemo(() => propLeads || generateDemoLeads(), [propLeads]);
   const [activeSection, setActiveSection] = useState('executive');
   const [isSticky, setIsSticky] = useState(false);
+  const [headerOffset, setHeaderOffset] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsSticky(window.scrollY > 100);
+      setIsSticky(window.scrollY > 8);
     };
 
+    const computeHeader = () => {
+      const topNav = document.querySelector('nav.sticky') as HTMLElement | null;
+      setHeaderOffset(topNav?.offsetHeight ?? 0);
+    };
+
+    computeHeader();
+    window.addEventListener('resize', computeHeader);
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('resize', computeHeader);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const scrollToSection = (sectionId: string) => {
@@ -356,11 +368,14 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
   return (
     <div className="relative">
       {/* Navigation Bar - Always Sticky, Visual Style Changes on Scroll */}
-      <div className={`sticky top-16 lg:top-8 z-30 -mx-6 px-6 py-4 mb-8 transition-all duration-300 ${
-        isSticky 
-          ? 'bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg' 
-          : 'bg-transparent border-transparent'
-      }`}>
+      <div
+        className={`sticky z-30 -mt-16 lg:-mt-8 -mx-6 px-6 py-4 mb-8 transition-all duration-300 ${
+          isSticky
+            ? 'bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg'
+            : 'bg-transparent border-transparent'
+        }`}
+        style={{ top: headerOffset }}
+      >
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
           {navigationSections.map((section) => {
             const Icon = section.icon;
