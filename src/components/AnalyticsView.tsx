@@ -2,7 +2,7 @@ import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Toolti
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { generateDemoLeads } from '@/utils/demoData';
 import { Lead } from '@/types/lead';
-import { TrendingUp, TrendingDown, DollarSign, Users, Target, Clock, BarChart3, UserCheck, Package, MapPin, Calendar, Star, ChevronRight } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, Users, Target, Clock, BarChart3, UserCheck, Package, MapPin, Calendar, Star, ChevronRight, ChevronLeft } from 'lucide-react';
 
 const COLORS = ['hsl(var(--teal))', 'hsl(var(--blue))', 'hsl(var(--purple))', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#10b981'];
 
@@ -68,6 +68,9 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
   const [activeSection, setActiveSection] = useState('executive');
   const [isScrolled, setIsScrolled] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showLeftScroll, setShowLeftScroll] = useState(false);
+  const [showRightScroll, setShowRightScroll] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,6 +80,41 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const checkScrollButtons = () => {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      setShowLeftScroll(scrollLeft > 0);
+      setShowRightScroll(scrollLeft < scrollWidth - clientWidth - 10);
+    };
+
+    const container = scrollContainerRef.current;
+    if (container) {
+      checkScrollButtons();
+      container.addEventListener('scroll', checkScrollButtons);
+      window.addEventListener('resize', checkScrollButtons);
+      
+      return () => {
+        container.removeEventListener('scroll', checkScrollButtons);
+        window.removeEventListener('resize', checkScrollButtons);
+      };
+    }
+  }, []);
+
+  const handleScrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+    }
+  };
+
+  const handleScrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+    }
+  };
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -368,13 +406,23 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
         }`}
         style={{ top: 0 }}
       >
-        <div className="relative flex items-center">
-          {/* Scroll indicator */}
-          <div className="absolute left-0 z-10 flex items-center justify-center w-8 h-full bg-gradient-to-r from-background via-background to-transparent pointer-events-none">
-            <ChevronRight className="w-4 h-4 text-muted-foreground animate-pulse" />
-          </div>
+        <div className="relative flex items-center gap-2">
+          {/* Left scroll button */}
+          {showLeftScroll && (
+            <button
+              onClick={handleScrollLeft}
+              className="absolute left-0 z-10 flex items-center justify-center w-8 h-10 rounded-lg bg-background/95 border border-border/50 shadow-md hover:bg-muted transition-colors"
+              aria-label="Scroll left"
+            >
+              <ChevronLeft className="w-4 h-4 text-foreground" />
+            </button>
+          )}
           
-          <div className="flex items-center gap-2 overflow-x-auto scroll-smooth scrollbar-none pl-8">
+          {/* Scrollable navigation */}
+          <div 
+            ref={scrollContainerRef}
+            className={`flex items-center gap-2 overflow-x-auto scroll-smooth scrollbar-none ${showLeftScroll ? 'pl-10' : ''} ${showRightScroll ? 'pr-10' : ''}`}
+          >
             {navigationSections.map((section) => {
               const Icon = section.icon;
               const isActive = activeSection === section.id;
@@ -394,6 +442,17 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
               );
             })}
           </div>
+
+          {/* Right scroll button */}
+          {showRightScroll && (
+            <button
+              onClick={handleScrollRight}
+              className="absolute right-0 z-10 flex items-center justify-center w-8 h-10 rounded-lg bg-background/95 border border-border/50 shadow-md hover:bg-muted transition-colors"
+              aria-label="Scroll right"
+            >
+              <ChevronRight className="w-4 h-4 text-foreground" />
+            </button>
+          )}
         </div>
       </div>
 
