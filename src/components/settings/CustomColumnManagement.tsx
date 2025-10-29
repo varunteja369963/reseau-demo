@@ -74,20 +74,38 @@ interface CustomColumnManagementProps {
   userId?: string;
 }
 
+interface ColumnFormData {
+  id: string;
+  columnLabel: string;
+  fieldType: string;
+  numberSubtype: string;
+  options: string[];
+  isOptional: boolean;
+  defaultValue: string;
+  minValue: string;
+  maxValue: string;
+}
+
+const createEmptyForm = (): ColumnFormData => ({
+  id: Math.random().toString(36).substr(2, 9),
+  columnLabel: '',
+  fieldType: 'text',
+  numberSubtype: 'integer',
+  options: [''],
+  isOptional: true,
+  defaultValue: '',
+  minValue: '',
+  maxValue: '',
+});
+
 export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) => {
   const [customColumns, setCustomColumns] = useState<CustomColumn[]>([]);
-  const [columnLabel, setColumnLabel] = useState('');
-  const [fieldType, setFieldType] = useState('text');
-  const [numberSubtype, setNumberSubtype] = useState('integer');
-  const [options, setOptions] = useState<string[]>(['']);
-  const [isOptional, setIsOptional] = useState(true);
-  const [defaultValue, setDefaultValue] = useState('');
-  const [minValue, setMinValue] = useState('');
-  const [maxValue, setMaxValue] = useState('');
+  const [columnForms, setColumnForms] = useState<ColumnFormData[]>([createEmptyForm()]);
   const [isLoading, setIsLoading] = useState(false);
   const [editingColumn, setEditingColumn] = useState<CustomColumn | null>(null);
   const [deleteColumnId, setDeleteColumnId] = useState<string | null>(null);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [editFormData, setEditFormData] = useState<ColumnFormData | null>(null);
   const { toast } = useToast();
 
   // Demo data that appears when no custom columns exist
@@ -151,37 +169,150 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
   };
 
   const resetForm = () => {
-    setColumnLabel('');
-    setFieldType('text');
-    setNumberSubtype('integer');
-    setOptions(['']);
-    setIsOptional(true);
-    setDefaultValue('');
-    setMinValue('');
-    setMaxValue('');
+    setColumnForms([createEmptyForm()]);
     setEditingColumn(null);
     setShowEditDialog(false);
+    setEditFormData(null);
   };
 
-  const isFormValid = () => {
+  const isFormValid = (form: ColumnFormData) => {
     // Must have column name
-    if (!columnLabel.trim()) return false;
+    if (!form.columnLabel.trim()) return false;
     
     // Must have field type
-    if (!fieldType) return false;
+    if (!form.fieldType) return false;
     
     // For dropdown/multiple choice/multiple select, must have at least 1 non-empty option
-    const needsOptions = ['dropdown', 'multiple_choice', 'multiple_select'].includes(fieldType);
+    const needsOptions = ['dropdown', 'multiple_choice', 'multiple_select'].includes(form.fieldType);
     if (needsOptions) {
-      const validOptions = options.filter(opt => opt.trim() !== '');
+      const validOptions = form.options.filter(opt => opt.trim() !== '');
       if (validOptions.length < 1) return false;
     }
     
     return true;
   };
 
-  const handleAddColumn = async () => {
-    if (!userId || !columnLabel.trim()) {
+  const updateFormField = (formId: string, field: keyof ColumnFormData, value: any) => {
+    setColumnForms(forms => 
+      forms.map(form => 
+        form.id === formId ? { ...form, [field]: value } : form
+      )
+    );
+  };
+
+  const addNewForm = () => {
+    if (columnForms.length < 10) {
+      setColumnForms([...columnForms, createEmptyForm()]);
+    }
+  };
+
+  const removeForm = (formId: string) => {
+    if (columnForms.length > 1) {
+      setColumnForms(forms => forms.filter(form => form.id !== formId));
+    }
+  };
+
+  const handleSaveAllColumns = async () => {
+    if (!userId) return;
+
+    const validForms = columnForms.filter(form => isFormValid(form));
+    
+    if (validForms.length === 0) {
+      toast({
+        title: 'Error',
+        description: 'Please fill out at least one column form completely',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      for (const form of validForms) {
+        const columnKey = generateColumnKey(form.columnLabel);
+
+        // Check if column key already exists
+        const exists = customColumns.some(col => col.column_key === columnKey);
+        if (exists) {
+          toast({
+            title: 'Error',
+            description: `Column "${form.columnLabel}" already exists`,
+            variant: 'destructive',
+          });
+          continue;
+        }
+
+        const needsOptions = ['dropdown', 'multiple_choice', 'multiple_select'].includes(form.fieldType);
+        if (needsOptions) {
+          const validOptions = form.options.filter(opt => opt.trim() !== '');
+          if (validOptions.length < 2) {
+            toast({
+              title: 'Error',
+              description: `"${form.columnLabel}" needs at least 2 options`,
+              variant: 'destructive',
+            });
+            continue;
+          }
+        }
+
+        const insertData: any = {
+          user_id: userId,
+          column_key: columnKey,
+          column_label: form.columnLabel.trim(),
+          field_type: form.fieldType,
+          is_optional: form.isOptional,
+          default_value: form.defaultValue.trim() || null,
+        };
+
+        if (form.fieldType === 'number') {
+          insertData.number_subtype = form.numberSubtype;
+          if (form.minValue) insertData.min_value = parseFloat(form.minValue);
+          if (form.maxValue) insertData.max_value = parseFloat(form.maxValue);
+        }
+
+        if (needsOptions) {
+          insertData.options = form.options.filter(opt => opt.trim() !== '');
+        }
+
+        const { error } = await supabase
+          .from('crm_custom_columns')
+          .insert(insertData);
+
+        if (error) {
+          console.error('Error adding custom column:', error);
+          toast({
+            title: 'Error',
+            description: `Failed to add "${form.columnLabel}"`,
+            variant: 'destructive',
+          });
+        }
+      }
+
+      toast({
+        title: 'Success',
+        description: `Added ${validForms.length} custom column${validForms.length > 1 ? 's' : ''}`,
+      });
+      resetForm();
+      fetchCustomColumns();
+    } catch (error) {
+      console.error('Error saving columns:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to save columns',
+        variant: 'destructive',
+      });
+    }
+
+    setIsLoading(false);
+  };
+
+  const handleUpdateColumn = async () => {
+    if (!userId || !editFormData || !editingColumn) return;
+
+    const form = editFormData;
+
+    if (!form.columnLabel.trim()) {
       toast({
         title: 'Error',
         description: 'Please enter a column name',
@@ -190,10 +321,9 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
       return;
     }
 
-    // Validate options for dropdown/multiple choice/multiple select
-    const needsOptions = ['dropdown', 'multiple_choice', 'multiple_select'].includes(fieldType);
+    const needsOptions = ['dropdown', 'multiple_choice', 'multiple_select'].includes(form.fieldType);
     if (needsOptions) {
-      const validOptions = options.filter(opt => opt.trim() !== '');
+      const validOptions = form.options.filter(opt => opt.trim() !== '');
       if (validOptions.length < 2) {
         toast({
           title: 'Error',
@@ -205,11 +335,10 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
     }
 
     setIsLoading(true);
-    const columnKey = generateColumnKey(columnLabel);
+    const columnKey = generateColumnKey(form.columnLabel);
 
-    // Check if column key already exists (excluding current editing column)
     const exists = customColumns.some(col => 
-      col.column_key === columnKey && col.id !== editingColumn?.id
+      col.column_key === columnKey && col.id !== editingColumn.id
     );
     if (exists) {
       toast({
@@ -221,104 +350,102 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
       return;
     }
 
-    const insertData: any = {
+    const updateData: any = {
       user_id: userId,
       column_key: columnKey,
-      column_label: columnLabel.trim(),
-      field_type: fieldType,
-      is_optional: isOptional,
-      default_value: defaultValue.trim() || null,
+      column_label: form.columnLabel.trim(),
+      field_type: form.fieldType,
+      is_optional: form.isOptional,
+      default_value: form.defaultValue.trim() || null,
     };
 
-    // Add number subtype if field type is number
-    if (fieldType === 'number') {
-      insertData.number_subtype = numberSubtype;
-      if (minValue) insertData.min_value = parseFloat(minValue);
-      if (maxValue) insertData.max_value = parseFloat(maxValue);
+    if (form.fieldType === 'number') {
+      updateData.number_subtype = form.numberSubtype;
+      if (form.minValue) updateData.min_value = parseFloat(form.minValue);
+      if (form.maxValue) updateData.max_value = parseFloat(form.maxValue);
     }
 
-    // Add options if field type requires them
     if (needsOptions) {
-      insertData.options = options.filter(opt => opt.trim() !== '');
+      updateData.options = form.options.filter(opt => opt.trim() !== '');
     }
 
-    if (editingColumn) {
-      // Update existing column
-      const { error } = await supabase
-        .from('crm_custom_columns')
-        .update(insertData)
-        .eq('id', editingColumn.id);
+    const { error } = await supabase
+      .from('crm_custom_columns')
+      .update(updateData)
+      .eq('id', editingColumn.id);
 
-      if (error) {
-        console.error('Error updating custom column:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to update custom column',
-          variant: 'destructive',
-        });
-      } else {
-        toast({
-          title: 'Success',
-          description: 'Custom column updated successfully',
-        });
-        resetForm();
-        fetchCustomColumns();
-      }
+    if (error) {
+      console.error('Error updating custom column:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update custom column',
+        variant: 'destructive',
+      });
     } else {
-      // Insert new column
-      const { error } = await supabase
-        .from('crm_custom_columns')
-        .insert(insertData);
-
-      if (error) {
-        console.error('Error adding custom column:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to add custom column',
-          variant: 'destructive',
-        });
-      } else {
-        toast({
-          title: 'Success',
-          description: 'Custom column added successfully',
-        });
-        resetForm();
-        fetchCustomColumns();
-      }
+      toast({
+        title: 'Success',
+        description: 'Custom column updated successfully',
+      });
+      resetForm();
+      fetchCustomColumns();
     }
 
     setIsLoading(false);
   };
 
   const handleEditColumn = (column: CustomColumn) => {
-    // Open dialog with pre-filled values for both demo and real columns
-    // For demo columns, editingColumn will be null so it creates a new column
     setEditingColumn(column.id.startsWith('demo-') ? null : column);
-    setColumnLabel(column.column_label);
-    setFieldType(column.field_type);
-    setNumberSubtype(column.number_subtype || 'integer');
-    setOptions(column.options && column.options.length > 0 ? column.options : ['']);
-    setIsOptional(column.is_optional ?? true);
-    setDefaultValue(column.default_value || '');
-    setMinValue(column.min_value?.toString() || '');
-    setMaxValue(column.max_value?.toString() || '');
+    setEditFormData({
+      id: 'edit',
+      columnLabel: column.column_label,
+      fieldType: column.field_type,
+      numberSubtype: column.number_subtype || 'integer',
+      options: column.options && column.options.length > 0 ? column.options : [''],
+      isOptional: column.is_optional ?? true,
+      defaultValue: column.default_value || '',
+      minValue: column.min_value?.toString() || '',
+      maxValue: column.max_value?.toString() || '',
+    });
     setShowEditDialog(true);
   };
 
-  const handleAddOption = () => {
-    setOptions([...options, '']);
+  const handleAddOption = (formId: string, form: ColumnFormData) => {
+    updateFormField(formId, 'options', [...form.options, '']);
   };
 
-  const handleRemoveOption = (index: number) => {
-    if (options.length > 1) {
-      setOptions(options.filter((_, i) => i !== index));
+  const handleRemoveOption = (formId: string, form: ColumnFormData, index: number) => {
+    if (form.options.length > 1) {
+      updateFormField(formId, 'options', form.options.filter((_, i) => i !== index));
     }
   };
 
-  const handleOptionChange = (index: number, value: string) => {
-    const newOptions = [...options];
+  const handleOptionChange = (formId: string, form: ColumnFormData, index: number, value: string) => {
+    const newOptions = [...form.options];
     newOptions[index] = value;
-    setOptions(newOptions);
+    updateFormField(formId, 'options', newOptions);
+  };
+
+  const handleEditAddOption = () => {
+    if (editFormData) {
+      setEditFormData({ ...editFormData, options: [...editFormData.options, ''] });
+    }
+  };
+
+  const handleEditRemoveOption = (index: number) => {
+    if (editFormData && editFormData.options.length > 1) {
+      setEditFormData({
+        ...editFormData,
+        options: editFormData.options.filter((_, i) => i !== index)
+      });
+    }
+  };
+
+  const handleEditOptionChange = (index: number, value: string) => {
+    if (editFormData) {
+      const newOptions = [...editFormData.options];
+      newOptions[index] = value;
+      setEditFormData({ ...editFormData, options: newOptions });
+    }
   };
 
   const getFieldTypeLabel = (type: string) => {
@@ -388,32 +515,50 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
 
   const displayColumns = customColumns.length > 0 ? customColumns : demoColumns;
 
-  const renderFormFields = () => (
+  const renderFormFields = (form: ColumnFormData, formIndex: number) => (
     <>
+      <div className="flex items-center justify-between mb-3">
+        <h5 className="text-sm font-medium text-foreground">
+          Column {formIndex + 1}
+        </h5>
+        {columnForms.length > 1 && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => removeForm(form.id)}
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="h-4 w-4 mr-1" />
+            Remove
+          </Button>
+        )}
+      </div>
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <div className="space-y-2">
-          <Label htmlFor="columnLabel">Column Name</Label>
+          <Label htmlFor={`columnLabel-${form.id}`}>Column Name</Label>
           <Input
-            id="columnLabel"
+            id={`columnLabel-${form.id}`}
             placeholder="e.g., Customer Rating"
-            value={columnLabel}
-            onChange={(e) => setColumnLabel(e.target.value)}
+            value={form.columnLabel}
+            onChange={(e) => updateFormField(form.id, 'columnLabel', e.target.value)}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="fieldType">Field Type</Label>
-          <Select value={fieldType} onValueChange={(value) => {
-            setFieldType(value);
+          <Label htmlFor={`fieldType-${form.id}`}>Field Type</Label>
+          <Select value={form.fieldType} onValueChange={(value) => {
+            updateFormField(form.id, 'fieldType', value);
             if (value !== 'number') {
-              setNumberSubtype('integer');
-              setMinValue('');
-              setMaxValue('');
+              updateFormField(form.id, 'numberSubtype', 'integer');
+              updateFormField(form.id, 'minValue', '');
+              updateFormField(form.id, 'maxValue', '');
             }
             if (!['dropdown', 'multiple_choice', 'multiple_select'].includes(value)) {
-              setOptions(['']);
+              updateFormField(form.id, 'options', ['']);
             }
           }}>
-            <SelectTrigger id="fieldType">
+            <SelectTrigger id={`fieldType-${form.id}`}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -428,12 +573,12 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
       </div>
 
       {/* Number Subtype and Range */}
-      {fieldType === 'number' && (
+      {form.fieldType === 'number' && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div className="space-y-2">
-            <Label htmlFor="numberSubtype">Number Type</Label>
-            <Select value={numberSubtype} onValueChange={setNumberSubtype}>
-              <SelectTrigger id="numberSubtype">
+            <Label htmlFor={`numberSubtype-${form.id}`}>Number Type</Label>
+            <Select value={form.numberSubtype} onValueChange={(value) => updateFormField(form.id, 'numberSubtype', value)}>
+              <SelectTrigger id={`numberSubtype-${form.id}`}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -446,46 +591,46 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="minValue">Min Value (Optional)</Label>
+            <Label htmlFor={`minValue-${form.id}`}>Min Value (Optional)</Label>
             <Input
-              id="minValue"
+              id={`minValue-${form.id}`}
               type="number"
               placeholder="e.g., 0"
-              value={minValue}
-              onChange={(e) => setMinValue(e.target.value)}
+              value={form.minValue}
+              onChange={(e) => updateFormField(form.id, 'minValue', e.target.value)}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="maxValue">Max Value (Optional)</Label>
+            <Label htmlFor={`maxValue-${form.id}`}>Max Value (Optional)</Label>
             <Input
-              id="maxValue"
+              id={`maxValue-${form.id}`}
               type="number"
               placeholder="e.g., 100"
-              value={maxValue}
-              onChange={(e) => setMaxValue(e.target.value)}
+              value={form.maxValue}
+              onChange={(e) => updateFormField(form.id, 'maxValue', e.target.value)}
             />
           </div>
         </div>
       )}
 
       {/* Options Input for dropdown/multiple choice/multiple select */}
-      {fieldType && ['dropdown', 'multiple_choice', 'multiple_select'].includes(fieldType) && (
+      {form.fieldType && ['dropdown', 'multiple_choice', 'multiple_select'].includes(form.fieldType) && (
         <div className="space-y-2">
           <Label>Options (at least 1 required)</Label>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {options.map((option, index) => (
+            {form.options.map((option, index) => (
               <div key={index} className="flex gap-2">
                 <Input
                   placeholder={`Option ${index + 1}`}
                   value={option}
-                  onChange={(e) => handleOptionChange(index, e.target.value)}
+                  onChange={(e) => handleOptionChange(form.id, form, index, e.target.value)}
                 />
-                {options.length > 1 && (
+                {form.options.length > 1 && (
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleRemoveOption(index)}
+                    onClick={() => handleRemoveOption(form.id, form, index)}
                     className="text-destructive hover:text-destructive hover:bg-destructive/10 flex-shrink-0"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -498,7 +643,7 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
             type="button"
             variant="outline"
             size="sm"
-            onClick={handleAddOption}
+            onClick={() => handleAddOption(form.id, form)}
             className="w-full sm:w-auto"
           >
             <Plus className="mr-2 h-4 w-4" />
@@ -507,11 +652,11 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
         </div>
       )}
 
-      {/* Optional Field Toggle - Only show after field type is selected */}
-      {fieldType && (
+      {/* Optional Field Toggle */}
+      {form.fieldType && (
         <div className="flex items-center justify-between p-4 rounded-lg bg-muted/30 max-w-md">
           <div className="space-y-0.5">
-            <Label htmlFor="isOptional" className="text-sm font-medium">
+            <Label htmlFor={`isOptional-${form.id}`} className="text-sm font-medium">
               Optional Field
             </Label>
             <p className="text-xs text-muted-foreground">
@@ -519,31 +664,31 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
             </p>
           </div>
           <Switch
-            id="isOptional"
-            checked={isOptional}
-            onCheckedChange={setIsOptional}
+            id={`isOptional-${form.id}`}
+            checked={form.isOptional}
+            onCheckedChange={(checked) => updateFormField(form.id, 'isOptional', checked)}
           />
         </div>
       )}
 
-      {/* Default Value - Only show after field type is selected */}
-      {fieldType && (
+      {/* Default Value */}
+      {form.fieldType && (
         <div className="space-y-2 max-w-md">
-          <Label htmlFor="defaultValue">Default Value (Optional)</Label>
-          {fieldType === 'textarea' ? (
+          <Label htmlFor={`defaultValue-${form.id}`}>Default Value (Optional)</Label>
+          {form.fieldType === 'textarea' ? (
             <textarea
-              id="defaultValue"
+              id={`defaultValue-${form.id}`}
               className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="Enter default value"
-              value={defaultValue}
-              onChange={(e) => setDefaultValue(e.target.value)}
+              value={form.defaultValue}
+              onChange={(e) => updateFormField(form.id, 'defaultValue', e.target.value)}
             />
-          ) : fieldType === 'boolean' ? (
+          ) : form.fieldType === 'boolean' ? (
             <select
-              id="defaultValue"
+              id={`defaultValue-${form.id}`}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              value={defaultValue}
-              onChange={(e) => setDefaultValue(e.target.value)}
+              value={form.defaultValue}
+              onChange={(e) => updateFormField(form.id, 'defaultValue', e.target.value)}
             >
               <option value="">None</option>
               <option value="true">Yes</option>
@@ -551,44 +696,66 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
             </select>
           ) : (
             <Input
-              id="defaultValue"
-              type={getInputTypeForFieldType(fieldType)}
+              id={`defaultValue-${form.id}`}
+              type={getInputTypeForFieldType(form.fieldType)}
               placeholder="Enter default value"
-              value={defaultValue}
-              onChange={(e) => setDefaultValue(e.target.value)}
-              min={fieldType === 'year' ? '1900' : undefined}
-              max={fieldType === 'year' ? '2100' : undefined}
+              value={form.defaultValue}
+              onChange={(e) => updateFormField(form.id, 'defaultValue', e.target.value)}
+              min={form.fieldType === 'year' ? '1900' : undefined}
+              max={form.fieldType === 'year' ? '2100' : undefined}
             />
           )}
         </div>
-      )}
-
-      {isFormValid() && !showEditDialog && (
-        <Button
-          onClick={handleAddColumn}
-          disabled={isLoading}
-          className="w-full sm:w-auto"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add Custom Column
-        </Button>
       )}
     </>
   );
 
   return (
     <div className="space-y-6">
-      {/* Add Custom Column Form */}
-      <div className="space-y-4 p-6 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <Plus className="h-5 w-5 text-primary" />
+      {/* Add Custom Columns Form */}
+      <div className="space-y-6 p-6 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Plus className="h-5 w-5 text-primary" />
+            </div>
+            <h4 className="text-base font-semibold text-foreground">
+              Add New Custom Columns
+            </h4>
           </div>
-          <h4 className="text-base font-semibold text-foreground">
-            Add New Custom Column
-          </h4>
+          <span className="text-xs text-muted-foreground bg-background/50 px-3 py-1 rounded-full">
+            {columnForms.length} of 10 forms
+          </span>
         </div>
-        {renderFormFields()}
+
+        {columnForms.map((form, index) => (
+          <div key={form.id} className="space-y-4 p-5 rounded-lg bg-background/50 border border-border">
+            {renderFormFields(form, index)}
+            
+            {isFormValid(form) && index === columnForms.length - 1 && columnForms.length < 10 && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={addNewForm}
+                className="w-full border-dashed"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Another Column
+              </Button>
+            )}
+          </div>
+        ))}
+
+        {columnForms.some(form => isFormValid(form)) && (
+          <Button
+            onClick={handleSaveAllColumns}
+            disabled={isLoading}
+            size="lg"
+            className="w-full"
+          >
+            Save All Columns ({columnForms.filter(form => isFormValid(form)).length})
+          </Button>
+        )}
       </div>
 
       {/* Custom Columns List */}
@@ -700,15 +867,181 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            {renderFormFields()}
+            {editFormData && (
+              <>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-columnLabel">Column Name</Label>
+                    <Input
+                      id="edit-columnLabel"
+                      placeholder="e.g., Customer Rating"
+                      value={editFormData.columnLabel}
+                      onChange={(e) => setEditFormData({ ...editFormData, columnLabel: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-fieldType">Field Type</Label>
+                    <Select value={editFormData.fieldType} onValueChange={(value) => {
+                      setEditFormData({
+                        ...editFormData,
+                        fieldType: value,
+                        numberSubtype: value === 'number' ? editFormData.numberSubtype : 'integer',
+                        minValue: value === 'number' ? editFormData.minValue : '',
+                        maxValue: value === 'number' ? editFormData.maxValue : '',
+                        options: ['dropdown', 'multiple_choice', 'multiple_select'].includes(value) ? editFormData.options : ['']
+                      });
+                    }}>
+                      <SelectTrigger id="edit-fieldType">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {FIELD_TYPES.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {editFormData.fieldType === 'number' && (
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="space-y-2">
+                      <Label htmlFor="edit-numberSubtype">Number Type</Label>
+                      <Select value={editFormData.numberSubtype} onValueChange={(value) => setEditFormData({ ...editFormData, numberSubtype: value })}>
+                        <SelectTrigger id="edit-numberSubtype">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {NUMBER_SUBTYPES.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              {type.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edit-minValue">Min Value (Optional)</Label>
+                      <Input
+                        id="edit-minValue"
+                        type="number"
+                        placeholder="e.g., 0"
+                        value={editFormData.minValue}
+                        onChange={(e) => setEditFormData({ ...editFormData, minValue: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edit-maxValue">Max Value (Optional)</Label>
+                      <Input
+                        id="edit-maxValue"
+                        type="number"
+                        placeholder="e.g., 100"
+                        value={editFormData.maxValue}
+                        onChange={(e) => setEditFormData({ ...editFormData, maxValue: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {['dropdown', 'multiple_choice', 'multiple_select'].includes(editFormData.fieldType) && (
+                  <div className="space-y-2">
+                    <Label>Options (at least 1 required)</Label>
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {editFormData.options.map((option, index) => (
+                        <div key={index} className="flex gap-2">
+                          <Input
+                            placeholder={`Option ${index + 1}`}
+                            value={option}
+                            onChange={(e) => handleEditOptionChange(index, e.target.value)}
+                          />
+                          {editFormData.options.length > 1 && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEditRemoveOption(index)}
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10 flex-shrink-0"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleEditAddOption}
+                      className="w-full sm:w-auto"
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Option
+                    </Button>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between p-4 rounded-lg bg-muted/30 max-w-md">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="edit-isOptional" className="text-sm font-medium">
+                      Optional Field
+                    </Label>
+                    <p className="text-xs text-muted-foreground">
+                      Allow this field to be left empty
+                    </p>
+                  </div>
+                  <Switch
+                    id="edit-isOptional"
+                    checked={editFormData.isOptional}
+                    onCheckedChange={(checked) => setEditFormData({ ...editFormData, isOptional: checked })}
+                  />
+                </div>
+
+                <div className="space-y-2 max-w-md">
+                  <Label htmlFor="edit-defaultValue">Default Value (Optional)</Label>
+                  {editFormData.fieldType === 'textarea' ? (
+                    <textarea
+                      id="edit-defaultValue"
+                      className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      placeholder="Enter default value"
+                      value={editFormData.defaultValue}
+                      onChange={(e) => setEditFormData({ ...editFormData, defaultValue: e.target.value })}
+                    />
+                  ) : editFormData.fieldType === 'boolean' ? (
+                    <select
+                      id="edit-defaultValue"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      value={editFormData.defaultValue}
+                      onChange={(e) => setEditFormData({ ...editFormData, defaultValue: e.target.value })}
+                    >
+                      <option value="">None</option>
+                      <option value="true">Yes</option>
+                      <option value="false">No</option>
+                    </select>
+                  ) : (
+                    <Input
+                      id="edit-defaultValue"
+                      type={getInputTypeForFieldType(editFormData.fieldType)}
+                      placeholder="Enter default value"
+                      value={editFormData.defaultValue}
+                      onChange={(e) => setEditFormData({ ...editFormData, defaultValue: e.target.value })}
+                      min={editFormData.fieldType === 'year' ? '1900' : undefined}
+                      max={editFormData.fieldType === 'year' ? '2100' : undefined}
+                    />
+                  )}
+                </div>
+              </>
+            )}
           </div>
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={resetForm}>
               Cancel
             </Button>
             <Button 
-              onClick={handleAddColumn} 
-              disabled={isLoading || !isFormValid()}
+              onClick={handleUpdateColumn} 
+              disabled={isLoading || !editFormData || !isFormValid(editFormData)}
             >
               {editingColumn ? 'Update Column' : 'Create Column'}
             </Button>
