@@ -85,8 +85,12 @@ export type Database = {
           column_key: string
           column_label: string
           created_at: string
+          default_value: string | null
           field_type: string
           id: string
+          is_optional: boolean | null
+          max_value: number | null
+          min_value: number | null
           number_subtype: string | null
           options: string[] | null
           updated_at: string
@@ -96,8 +100,12 @@ export type Database = {
           column_key: string
           column_label: string
           created_at?: string
+          default_value?: string | null
           field_type: string
           id?: string
+          is_optional?: boolean | null
+          max_value?: number | null
+          min_value?: number | null
           number_subtype?: string | null
           options?: string[] | null
           updated_at?: string
@@ -107,8 +115,12 @@ export type Database = {
           column_key?: string
           column_label?: string
           created_at?: string
+          default_value?: string | null
           field_type?: string
           id?: string
+          is_optional?: boolean | null
+          max_value?: number | null
+          min_value?: number | null
           number_subtype?: string | null
           options?: string[] | null
           updated_at?: string
