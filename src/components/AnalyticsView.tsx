@@ -355,11 +355,11 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
 
   return (
     <div className="relative">
-      {/* Navigation Bar - Becomes Sticky on Scroll */}
-      <div className={`transition-all duration-300 z-50 -mx-6 px-6 py-4 mb-8 ${
+      {/* Navigation Bar - Always Sticky, Visual Style Changes on Scroll */}
+      <div className={`sticky top-16 lg:top-8 z-30 -mx-6 px-6 py-4 mb-8 transition-all duration-300 ${
         isSticky 
-          ? 'sticky top-0 bg-background/98 backdrop-blur-xl border-b border-border/50 shadow-lg' 
-          : 'bg-transparent'
+          ? 'bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg' 
+          : 'bg-transparent border-transparent'
       }`}>
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
           {navigationSections.map((section) => {
