@@ -59,7 +59,7 @@ const FIELD_TYPES = [
   { value: 'dropdown', label: 'Dropdown' },
   { value: 'multiple_choice', label: 'Multiple Choice' },
   { value: 'multiple_select', label: 'Multiple Select' },
-  { value: 'range', label: 'Range (Min/Max)' },
+  { value: 'range', label: 'Range (Min & Max)' },
   { value: 'rating', label: 'Rating' },
 ];
 
@@ -613,6 +613,34 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
         </div>
       )}
 
+      {/* Range Type Input */}
+      {form.fieldType === 'range' && (
+        <>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor={`minRange-${form.id}`}>Minimum Range (User can enter from)</Label>
+              <Input
+                id={`minRange-${form.id}`}
+                type="number"
+                placeholder="e.g., 0"
+                value={form.minValue}
+                onChange={(e) => updateFormField(form.id, 'minValue', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor={`maxRange-${form.id}`}>Maximum Range (User can enter up to)</Label>
+              <Input
+                id={`maxRange-${form.id}`}
+                type="number"
+                placeholder="e.g., 100"
+                value={form.maxValue}
+                onChange={(e) => updateFormField(form.id, 'maxValue', e.target.value)}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Options Input for dropdown/multiple choice/multiple select */}
       {form.fieldType && ['dropdown', 'multiple_choice', 'multiple_select'].includes(form.fieldType) && (
         <div className="space-y-2">
@@ -694,6 +722,35 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
               <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
+          ) : form.fieldType === 'range' ? (
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label htmlFor={`defaultMin-${form.id}`} className="text-sm text-muted-foreground">Minimum</Label>
+                <Input
+                  id={`defaultMin-${form.id}`}
+                  type="number"
+                  placeholder="Min default"
+                  value={form.defaultValue.split('-')[0] || ''}
+                  onChange={(e) => {
+                    const maxVal = form.defaultValue.split('-')[1] || '';
+                    updateFormField(form.id, 'defaultValue', `${e.target.value}-${maxVal}`);
+                  }}
+                />
+              </div>
+              <div>
+                <Label htmlFor={`defaultMax-${form.id}`} className="text-sm text-muted-foreground">Maximum</Label>
+                <Input
+                  id={`defaultMax-${form.id}`}
+                  type="number"
+                  placeholder="Max default"
+                  value={form.defaultValue.split('-')[1] || ''}
+                  onChange={(e) => {
+                    const minVal = form.defaultValue.split('-')[0] || '';
+                    updateFormField(form.id, 'defaultValue', `${minVal}-${e.target.value}`);
+                  }}
+                />
+              </div>
+            </div>
           ) : (
             <Input
               id={`defaultValue-${form.id}`}
@@ -945,6 +1002,31 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
                   </div>
                 )}
 
+                {editFormData.fieldType === 'range' && (
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="edit-minRange">Minimum Range (User can enter from)</Label>
+                      <Input
+                        id="edit-minRange"
+                        type="number"
+                        placeholder="e.g., 0"
+                        value={editFormData.minValue}
+                        onChange={(e) => setEditFormData({ ...editFormData, minValue: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edit-maxRange">Maximum Range (User can enter up to)</Label>
+                      <Input
+                        id="edit-maxRange"
+                        type="number"
+                        placeholder="e.g., 100"
+                        value={editFormData.maxValue}
+                        onChange={(e) => setEditFormData({ ...editFormData, maxValue: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {['dropdown', 'multiple_choice', 'multiple_select'].includes(editFormData.fieldType) && (
                   <div className="space-y-2">
                     <Label>Options (at least 1 required)</Label>
@@ -1020,6 +1102,35 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
                       <option value="true">Yes</option>
                       <option value="false">No</option>
                     </select>
+                  ) : editFormData.fieldType === 'range' ? (
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <Label htmlFor="edit-defaultMin" className="text-sm text-muted-foreground">Minimum</Label>
+                        <Input
+                          id="edit-defaultMin"
+                          type="number"
+                          placeholder="Min default"
+                          value={editFormData.defaultValue.split('-')[0] || ''}
+                          onChange={(e) => {
+                            const maxVal = editFormData.defaultValue.split('-')[1] || '';
+                            setEditFormData({ ...editFormData, defaultValue: `${e.target.value}-${maxVal}` });
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="edit-defaultMax" className="text-sm text-muted-foreground">Maximum</Label>
+                        <Input
+                          id="edit-defaultMax"
+                          type="number"
+                          placeholder="Max default"
+                          value={editFormData.defaultValue.split('-')[1] || ''}
+                          onChange={(e) => {
+                            const minVal = editFormData.defaultValue.split('-')[0] || '';
+                            setEditFormData({ ...editFormData, defaultValue: `${minVal}-${e.target.value}` });
+                          }}
+                        />
+                      </div>
+                    </div>
                   ) : (
                     <Input
                       id="edit-defaultValue"
