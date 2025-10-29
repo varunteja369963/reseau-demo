@@ -37,7 +37,7 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
   }, []);
 
   return (
-    <nav className="bg-card border-b border-border shadow-soft sticky top-0 z-40 max-w-full overflow-x-hidden">
+    <nav className="bg-card border-b border-border shadow-soft sticky top-0 z-50 max-w-full overflow-x-hidden">
       <div className="flex items-center justify-between px-3 md:px-6 py-3 md:py-4 max-w-[calc(100vw-6rem)]">
         {/* Left: Toggle */}
         <div className="flex items-center gap-2 md:gap-8 flex-1 lg:flex-initial overflow-x-auto scrollbar-hide">
@@ -105,7 +105,7 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
             </button>
 
             {showDealershipDropdown && (
-              <div className="absolute right-0 mt-2 w-72 bg-card rounded-2xl shadow-strong border border-border overflow-hidden z-50">
+              <div className="absolute right-0 mt-2 w-72 bg-card rounded-2xl shadow-strong border border-border overflow-hidden z-[100]">
                 <div className="p-2">
                   {/* Organization */}
                   <button
@@ -170,7 +170,7 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
 
             {/* Dropdown */}
             {showDropdown && (
-              <div className="absolute right-0 mt-2 w-56 bg-card rounded-2xl shadow-strong border border-border overflow-hidden z-50">
+              <div className="absolute right-0 mt-2 w-56 bg-card rounded-2xl shadow-strong border border-border overflow-hidden z-[100]">
                 <div className="p-2">
                   <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-smooth text-left">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(var(--teal))] to-[hsl(var(--blue))] flex items-center justify-center text-white text-sm font-semibold">
