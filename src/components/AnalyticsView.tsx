@@ -74,7 +74,11 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 1);
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.scrollY;
+      const scrolledToBottom = scrollTop + windowHeight >= documentHeight - 100;
+      setIsScrolled(scrolledToBottom);
     };
 
     window.addEventListener('scroll', handleScroll);
