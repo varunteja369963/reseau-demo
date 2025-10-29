@@ -74,16 +74,28 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
 
   useEffect(() => {
     const handleScroll = () => {
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY;
-      const scrolledToBottom = scrollTop + windowHeight >= documentHeight - 100;
-      setIsScrolled(scrolledToBottom);
+      setIsScrolled(window.scrollY > 100);
+      
+      // Update active section based on scroll position
+      const navHeight = navRef.current?.offsetHeight ?? 56;
+      const totalOffset = (navOffset ?? 0) + navHeight + 200;
+      
+      for (let i = navigationSections.length - 1; i >= 0; i--) {
+        const section = navigationSections[i];
+        const element = document.getElementById(section.id);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= totalOffset) {
+            setActiveSection(section.id);
+            break;
+          }
+        }
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [navOffset]);
 
   useEffect(() => {
     const checkScrollButtons = () => {
