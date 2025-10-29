@@ -6,21 +6,6 @@ import { TrendingUp, TrendingDown, DollarSign, Users, Target, Clock, BarChart3, 
 
 const COLORS = ['hsl(var(--teal))', 'hsl(var(--blue))', 'hsl(var(--purple))', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#10b981'];
 
-// Render pie labels inside slices to avoid overflow
-const RADIAN = Math.PI / 180;
-const renderPieLabel = (props: any) => {
-  const { cx, cy, midAngle, innerRadius, outerRadius, percent, name } = props;
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  const text = `${name} ${(percent * 100).toFixed(0)}%`;
-  return (
-    <text x={x} y={y} fill="hsl(var(--foreground))" textAnchor="middle" dominantBaseline="central" fontSize={12}>
-      {text}
-    </text>
-  );
-};
-
 interface AnalyticsViewProps {
   leads?: Lead[];
   navOffset?: number;
@@ -376,11 +361,12 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
       {/* Navigation Bar - Always Sticky */}
       <div
         ref={navRef}
-        className={`sticky top-16 md:top-[72px] z-30 -mx-6 px-6 py-4 mb-6 transition-all duration-300 ${
+        className={`sticky z-30 -mx-6 px-6 py-4 mb-6 transition-all duration-300 ${
           isScrolled
             ? 'bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg'
             : 'bg-transparent border-transparent'
         }`}
+        style={{ top: 0 }}
       >
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
           {navigationSections.map((section) => {
@@ -476,7 +462,7 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
         <div className="grid grid-cols-1 gap-6">
           <ChartCard title="Monthly Performance Trends" fullWidth>
             <ResponsiveContainer width="100%" height={350}>
-              <AreaChart data={monthlyTrendChart} margin={{ top: 8, right: 24, bottom: 16, left: 24 }}>
+              <AreaChart data={monthlyTrendChart}>
                 <defs>
                   <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="hsl(var(--blue))" stopOpacity={0.3}/>
@@ -521,8 +507,8 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ChartCard title="Sales Funnel by Stage">
-            <ResponsiveContainer width="100%" height={320}>
-              <BarChart data={dealStageChart} layout="vertical" margin={{ top: 8, right: 24, bottom: 16, left: 24 }}>
+              <ResponsiveContainer width="100%" height={320}>
+                <BarChart data={dealStageChart} layout="vertical">
                   <defs>
                     <linearGradient id="stageGradient" x1="0" y1="0" x2="1" y2="0">
                       <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={0.8}/>
@@ -546,8 +532,8 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
             </ChartCard>
 
             <ChartCard title="Close Probability Distribution">
-            <ResponsiveContainer width="100%" height={320}>
-              <BarChart data={closeProbChart} margin={{ top: 8, right: 24, bottom: 16, left: 24 }}>
+              <ResponsiveContainer width="100%" height={320}>
+                <BarChart data={closeProbChart}>
                   <defs>
                     <linearGradient id="probGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="hsl(var(--purple))" stopOpacity={1}/>
@@ -584,7 +570,7 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard title="Lead Status Distribution">
             <ResponsiveContainer width="100%" height={300}>
-              <PieChart margin={{ top: 8, right: 24, bottom: 16, left: 24 }}>
+              <PieChart>
                 <Pie
                   data={leadStatusChart}
                   cx="50%"
@@ -616,7 +602,7 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
 
           <ChartCard title="Lead Sources">
             <ResponsiveContainer width="100%" height={300}>
-              <PieChart margin={{ top: 8, right: 24, bottom: 16, left: 24 }}>
+              <PieChart>
                 <Pie
                   data={leadSourceChart}
                   cx="50%"
@@ -648,7 +634,7 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
 
           <ChartCard title="Lead Scoring Distribution">
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={scoreChart} margin={{ top: 8, right: 24, bottom: 16, left: 24 }}>
+              <BarChart data={scoreChart}>
                 <defs>
                   <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#f59e0b" stopOpacity={1}/>
@@ -673,7 +659,7 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
 
           <ChartCard title="Deal Status Overview">
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={dealStatusChart} margin={{ top: 8, right: 24, bottom: 16, left: 24 }}>
+              <BarChart data={dealStatusChart}>
                 <defs>
                   <linearGradient id="dealStatusGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="hsl(var(--blue))" stopOpacity={1}/>
