@@ -1,5 +1,5 @@
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, RadialBarChart, RadialBar } from 'recharts';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { generateDemoLeads } from '@/utils/demoData';
 import { Lead } from '@/types/lead';
 import { TrendingUp, TrendingDown, DollarSign, Users, Target, Clock, BarChart3, UserCheck, Package, MapPin, Calendar, Star } from 'lucide-react';
@@ -53,8 +53,33 @@ const ChartCard = ({ title, children, fullWidth = false }: { title: string; chil
   </div>
 );
 
+const navigationSections = [
+  { id: 'executive', label: 'Executive Overview', icon: BarChart3 },
+  { id: 'sales', label: 'Sales Performance', icon: TrendingUp },
+  { id: 'leads', label: 'Lead Management', icon: Users },
+  { id: 'team', label: 'Team Performance', icon: UserCheck },
+  { id: 'customers', label: 'Customer Insights', icon: Target },
+  { id: 'products', label: 'Product & Market', icon: Package },
+];
+
 export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
   const allLeads = useMemo(() => propLeads || generateDemoLeads(), [propLeads]);
+  const [activeSection, setActiveSection] = useState('executive');
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 120; // Account for sticky nav height
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      setActiveSection(sectionId);
+    }
+  };
   
   // Calculate analytics data
   const analytics = useMemo(() => {
@@ -320,8 +345,32 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
 
   return (
     <div className="space-y-12 pb-8">
+      {/* Navigation Bar */}
+      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border/50 shadow-sm -mx-6 px-6 py-3 mb-8">
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+          {navigationSections.map((section) => {
+            const Icon = section.icon;
+            const isActive = activeSection === section.id;
+            return (
+              <button
+                key={section.id}
+                onClick={() => scrollToSection(section.id)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl whitespace-nowrap transition-all duration-300 ${
+                  isActive 
+                    ? 'bg-primary text-primary-foreground shadow-md scale-105' 
+                    : 'bg-card/50 text-muted-foreground hover:bg-card hover:text-foreground hover:scale-102'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="text-sm font-medium">{section.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Executive Overview */}
-      <section>
+      <section id="executive">
         <SectionHeader 
           icon={BarChart3} 
           title="Executive Overview" 
@@ -380,7 +429,7 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
       </section>
 
       {/* Sales Performance */}
-      <section>
+      <section id="sales">
         <SectionHeader 
           icon={TrendingUp} 
           title="Sales Performance" 
@@ -488,7 +537,7 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
       </section>
 
       {/* Lead Management */}
-      <section>
+      <section id="leads">
         <SectionHeader 
           icon={Target} 
           title="Lead Management" 
@@ -613,7 +662,7 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
       </section>
 
       {/* Team Performance */}
-      <section>
+      <section id="team">
         <SectionHeader 
           icon={UserCheck} 
           title="Team Performance" 
@@ -713,7 +762,7 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
       </section>
 
       {/* Customer Insights */}
-      <section>
+      <section id="customers">
         <SectionHeader 
           icon={Users} 
           title="Customer Insights" 
@@ -856,7 +905,7 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
       </section>
 
       {/* Product & Market Analysis */}
-      <section>
+      <section id="products">
         <SectionHeader 
           icon={Package} 
           title="Product & Market Analysis" 
