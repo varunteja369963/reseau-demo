@@ -366,7 +366,7 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
             ? 'bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg'
             : 'bg-transparent border-transparent'
         }`}
-        style={{ top: navOffset ?? 0 }}
+        style={{ top: 0 }}
       >
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
           {navigationSections.map((section) => {
