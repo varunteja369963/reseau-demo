@@ -722,6 +722,20 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
               <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
+          ) : ['dropdown', 'multiple_choice', 'multiple_select'].includes(form.fieldType) ? (
+            <select
+              id={`defaultValue-${form.id}`}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              value={form.defaultValue}
+              onChange={(e) => updateFormField(form.id, 'defaultValue', e.target.value)}
+            >
+              <option value="">None</option>
+              {form.options.filter(opt => opt.trim() !== '').map((option, idx) => (
+                <option key={idx} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
           ) : form.fieldType === 'range' ? (
             <div className="grid grid-cols-2 gap-2">
               <div>
@@ -1101,6 +1115,20 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
                       <option value="">None</option>
                       <option value="true">Yes</option>
                       <option value="false">No</option>
+                    </select>
+                  ) : ['dropdown', 'multiple_choice', 'multiple_select'].includes(editFormData.fieldType) ? (
+                    <select
+                      id="edit-defaultValue"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      value={editFormData.defaultValue}
+                      onChange={(e) => setEditFormData({ ...editFormData, defaultValue: e.target.value })}
+                    >
+                      <option value="">None</option>
+                      {editFormData.options.filter(opt => opt.trim() !== '').map((option, idx) => (
+                        <option key={idx} value={option}>
+                          {option}
+                        </option>
+                      ))}
                     </select>
                   ) : editFormData.fieldType === 'range' ? (
                     <div className="grid grid-cols-2 gap-2">
