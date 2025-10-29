@@ -1,8 +1,8 @@
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, RadialBarChart, RadialBar } from 'recharts';
 import { useMemo } from 'react';
 import { generateDemoLeads } from '@/utils/demoData';
 import { Lead } from '@/types/lead';
-import { TrendingUp, TrendingDown, DollarSign, Users, Target, Clock } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, Users, Target, Clock, BarChart3, UserCheck, Package, MapPin, Calendar, Star } from 'lucide-react';
 
 const COLORS = ['hsl(var(--teal))', 'hsl(var(--blue))', 'hsl(var(--purple))', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#10b981'];
 
@@ -17,18 +17,39 @@ const StatCard = ({ title, value, change, icon: Icon, trend }: {
   icon: any;
   trend?: 'up' | 'down';
 }) => (
-  <div className="bg-card rounded-2xl p-6 shadow-soft">
+  <div className="group relative bg-gradient-to-br from-card to-card/50 rounded-2xl p-6 shadow-soft hover:shadow-medium transition-all duration-300 border border-border/50">
     <div className="flex items-start justify-between mb-3">
-      <div className="text-sm text-muted-foreground">{title}</div>
-      <Icon className="w-5 h-5 text-muted-foreground" />
+      <div className="text-sm font-medium text-muted-foreground">{title}</div>
+      <div className="p-2 rounded-lg bg-primary/5">
+        <Icon className="w-5 h-5 text-primary" />
+      </div>
     </div>
     <div className="text-3xl font-bold text-foreground mb-1">{value}</div>
     {change && (
-      <div className={`text-xs flex items-center gap-1 ${trend === 'up' ? 'text-[hsl(var(--teal))]' : 'text-red-500'}`}>
+      <div className={`text-xs flex items-center gap-1 font-medium ${trend === 'up' ? 'text-[hsl(var(--teal))]' : 'text-red-500'}`}>
         {trend === 'up' ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
         {change}
       </div>
     )}
+  </div>
+);
+
+const SectionHeader = ({ icon: Icon, title, description }: { icon: any; title: string; description: string }) => (
+  <div className="flex items-start gap-4 mb-6">
+    <div className="p-3 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5">
+      <Icon className="w-6 h-6 text-primary" />
+    </div>
+    <div>
+      <h2 className="text-2xl font-bold text-foreground">{title}</h2>
+      <p className="text-sm text-muted-foreground mt-1">{description}</p>
+    </div>
+  </div>
+);
+
+const ChartCard = ({ title, children, fullWidth = false }: { title: string; children: React.ReactNode; fullWidth?: boolean }) => (
+  <div className={`bg-gradient-to-br from-card via-card to-card/80 rounded-2xl p-6 shadow-soft border border-border/50 ${fullWidth ? 'col-span-full' : ''}`}>
+    <h3 className="text-lg font-semibold text-foreground mb-4">{title}</h3>
+    {children}
   </div>
 );
 
@@ -52,6 +73,12 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
     // Deal Stage Funnel
     const stageCounts = allLeads.reduce((acc, lead) => {
       acc[lead.dealStage] = (acc[lead.dealStage] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    // Deal Status Distribution
+    const dealStatusCounts = allLeads.reduce((acc, lead) => {
+      acc[lead.dealStatus] = (acc[lead.dealStatus] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
 
@@ -85,6 +112,12 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
     // Vehicle Make Distribution
     const makeData = allLeads.reduce((acc, lead) => {
       acc[lead.vehicleMake] = (acc[lead.vehicleMake] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    // Vehicle Model Distribution
+    const modelData = allLeads.reduce((acc, lead) => {
+      acc[lead.vehicleModel] = (acc[lead.vehicleModel] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
 
@@ -150,6 +183,15 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
         return acc;
       }, {} as Record<string, number>);
 
+    // Close Probability Distribution
+    const closeProbRanges = { '0-25%': 0, '26-50%': 0, '51-75%': 0, '76-100%': 0 };
+    allLeads.forEach(lead => {
+      if (lead.closeProbability <= 25) closeProbRanges['0-25%']++;
+      else if (lead.closeProbability <= 50) closeProbRanges['26-50%']++;
+      else if (lead.closeProbability <= 75) closeProbRanges['51-75%']++;
+      else closeProbRanges['76-100%']++;
+    });
+
     // Calculate KPIs
     const totalLeads = allLeads.length;
     const soldLeads = allLeads.filter(l => l.leadStatus === 'Sold').length;
@@ -166,14 +208,18 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
       allLeads.filter(l => l.dealStatus === 'Open').reduce((sum, l) => sum + l.closeProbability, 0) /
       activeDeals
     );
+    const lostLeads = allLeads.filter(l => l.leadStatus === 'Lost').length;
+    const avgLeadScore = (allLeads.reduce((sum, l) => sum + l.leadScoring, 0) / totalLeads).toFixed(1);
 
     return {
       statusCounts,
       sourceCounts,
       stageCounts,
+      dealStatusCounts,
       salespersonStats,
       monthlyData,
       makeData,
+      modelData,
       cityData,
       channelData,
       scoreData,
@@ -182,15 +228,18 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
       newUsedData,
       customerTypeData,
       paymentTypeData,
+      closeProbRanges,
       kpis: {
         totalLeads,
         soldLeads,
+        lostLeads,
         conversionRate,
         avgDealValue,
         totalRevenue,
         avgResponseTime,
         activeDeals,
-        avgCloseProbability
+        avgCloseProbability,
+        avgLeadScore
       }
     };
   }, [allLeads]);
@@ -199,6 +248,13 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
   const leadSourceChart = Object.entries(analytics.sourceCounts)
     .map(([name, value]) => ({ name, value }))
     .sort((a, b) => b.value - a.value);
+
+  const leadStatusChart = Object.entries(analytics.statusCounts)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value);
+
+  const dealStatusChart = Object.entries(analytics.dealStatusCounts)
+    .map(([name, value]) => ({ name, value }));
 
   const dealStageChart = Object.entries(analytics.stageCounts)
     .map(([stage, count]) => ({ stage, count }))
@@ -209,7 +265,8 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
 
   const salespersonChart = Object.entries(analytics.salespersonStats)
     .map(([name, stats]) => ({ name, leads: stats.leads, sold: stats.sold, revenue: stats.revenue }))
-    .sort((a, b) => b.revenue - a.revenue);
+    .sort((a, b) => b.revenue - a.revenue)
+    .slice(0, 8);
 
   const monthlyTrendChart = Object.entries(analytics.monthlyData)
     .map(([month, data]) => ({ month, ...data }))
@@ -220,9 +277,15 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
     .sort((a, b) => b.value - a.value)
     .slice(0, 10);
 
+  const vehicleModelChart = Object.entries(analytics.modelData)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 8);
+
   const cityChart = Object.entries(analytics.cityData)
     .map(([name, value]) => ({ name, value }))
-    .sort((a, b) => b.value - a.value);
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 8);
 
   const channelChart = Object.entries(analytics.channelData)
     .map(([name, data]) => ({ 
@@ -252,357 +315,204 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
   const paymentTypeChart = Object.entries(analytics.paymentTypeData)
     .map(([type, value]) => ({ type, value }));
 
+  const closeProbChart = Object.entries(analytics.closeProbRanges)
+    .map(([range, count]) => ({ range, count }));
+
   return (
-    <div className="space-y-6">
-      {/* KPI Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
-          title="Total Leads" 
-          value={analytics.kpis.totalLeads} 
-          change="+12% from last month"
-          icon={Users}
-          trend="up"
+    <div className="space-y-12 pb-8">
+      {/* Executive Overview */}
+      <section>
+        <SectionHeader 
+          icon={BarChart3} 
+          title="Executive Overview" 
+          description="Key performance indicators and business metrics at a glance"
         />
-        <StatCard 
-          title="Conversion Rate" 
-          value={`${analytics.kpis.conversionRate}%`}
-          change="+3.2% from last month"
-          icon={Target}
-          trend="up"
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <StatCard 
+            title="Total Leads" 
+            value={analytics.kpis.totalLeads} 
+            change="+12% from last month"
+            icon={Users}
+            trend="up"
+          />
+          <StatCard 
+            title="Conversion Rate" 
+            value={`${analytics.kpis.conversionRate}%`}
+            change="+3.2% from last month"
+            icon={Target}
+            trend="up"
+          />
+          <StatCard 
+            title="Avg Deal Value" 
+            value={`$${(analytics.kpis.avgDealValue / 1000).toFixed(0)}K`}
+            change="+$2.1k from last month"
+            icon={DollarSign}
+            trend="up"
+          />
+          <StatCard 
+            title="Avg Response Time" 
+            value={`${analytics.kpis.avgResponseTime} min`}
+            change="-5 min from last month"
+            icon={Clock}
+            trend="up"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-gradient-to-br from-card to-card/50 rounded-2xl p-6 shadow-soft border border-border/50">
+            <div className="text-sm font-medium text-muted-foreground mb-2">Total Revenue</div>
+            <div className="text-3xl font-bold text-foreground">${(analytics.kpis.totalRevenue / 1000000).toFixed(2)}M</div>
+          </div>
+          <div className="bg-gradient-to-br from-card to-card/50 rounded-2xl p-6 shadow-soft border border-border/50">
+            <div className="text-sm font-medium text-muted-foreground mb-2">Active Deals</div>
+            <div className="text-3xl font-bold text-foreground">{analytics.kpis.activeDeals}</div>
+          </div>
+          <div className="bg-gradient-to-br from-card to-card/50 rounded-2xl p-6 shadow-soft border border-border/50">
+            <div className="text-sm font-medium text-muted-foreground mb-2">Avg Lead Score</div>
+            <div className="text-3xl font-bold text-foreground">{analytics.kpis.avgLeadScore} <Star className="w-5 h-5 inline text-yellow-500" /></div>
+          </div>
+          <div className="bg-gradient-to-br from-card to-card/50 rounded-2xl p-6 shadow-soft border border-border/50">
+            <div className="text-sm font-medium text-muted-foreground mb-2">Deals Closed</div>
+            <div className="text-3xl font-bold text-foreground">{analytics.kpis.soldLeads}</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sales Performance */}
+      <section>
+        <SectionHeader 
+          icon={TrendingUp} 
+          title="Sales Performance" 
+          description="Track revenue, conversions, and sales trends over time"
         />
-        <StatCard 
-          title="Avg Deal Value" 
-          value={`$${(analytics.kpis.avgDealValue / 1000).toFixed(0)}K`}
-          change="+$2.1k from last month"
-          icon={DollarSign}
-          trend="up"
+        
+        <div className="grid grid-cols-1 gap-6">
+          <ChartCard title="Monthly Performance Trends" fullWidth>
+            <ResponsiveContainer width="100%" height={350}>
+              <AreaChart data={monthlyTrendChart}>
+                <defs>
+                  <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--blue))" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="hsl(var(--blue))" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorSold" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--teal))" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="hsl(var(--teal))" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+                <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }} 
+                />
+                <Legend />
+                <Area 
+                  type="monotone" 
+                  dataKey="leads" 
+                  stroke="hsl(var(--blue))" 
+                  fillOpacity={1} 
+                  fill="url(#colorLeads)"
+                  strokeWidth={3}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="sold" 
+                  stroke="hsl(var(--teal))" 
+                  fillOpacity={1} 
+                  fill="url(#colorSold)"
+                  strokeWidth={3}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ChartCard title="Sales Funnel by Stage">
+              <ResponsiveContainer width="100%" height={320}>
+                <BarChart data={dealStageChart} layout="vertical">
+                  <defs>
+                    <linearGradient id="stageGradient" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={0.8}/>
+                      <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+                  <XAxis type="number" stroke="hsl(var(--muted-foreground))" />
+                  <YAxis dataKey="stage" type="category" stroke="hsl(var(--muted-foreground))" width={100} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '12px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    }} 
+                  />
+                  <Bar dataKey="count" fill="url(#stageGradient)" radius={[0, 12, 12, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartCard>
+
+            <ChartCard title="Close Probability Distribution">
+              <ResponsiveContainer width="100%" height={320}>
+                <BarChart data={closeProbChart}>
+                  <defs>
+                    <linearGradient id="probGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--purple))" stopOpacity={1}/>
+                      <stop offset="100%" stopColor="hsl(var(--purple))" stopOpacity={0.7}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+                  <XAxis dataKey="range" stroke="hsl(var(--muted-foreground))" />
+                  <YAxis stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '12px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    }} 
+                  />
+                  <Bar dataKey="count" fill="url(#probGradient)" radius={[12, 12, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartCard>
+          </div>
+        </div>
+      </section>
+
+      {/* Lead Management */}
+      <section>
+        <SectionHeader 
+          icon={Target} 
+          title="Lead Management" 
+          description="Analyze lead sources, status, and quality metrics"
         />
-        <StatCard 
-          title="Avg Response Time" 
-          value={`${analytics.kpis.avgResponseTime} min`}
-          change="-5 min from last month"
-          icon={Clock}
-          trend="up"
-        />
-      </div>
-
-      {/* Secondary KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <div className="text-sm text-muted-foreground mb-2">Total Revenue</div>
-          <div className="text-3xl font-bold text-foreground">${(analytics.kpis.totalRevenue / 1000000).toFixed(2)}M</div>
-        </div>
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <div className="text-sm text-muted-foreground mb-2">Active Deals</div>
-          <div className="text-3xl font-bold text-foreground">{analytics.kpis.activeDeals}</div>
-        </div>
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <div className="text-sm text-muted-foreground mb-2">Avg Close Probability</div>
-          <div className="text-3xl font-bold text-foreground">{analytics.kpis.avgCloseProbability}%</div>
-        </div>
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <div className="text-sm text-muted-foreground mb-2">Deals Closed</div>
-          <div className="text-3xl font-bold text-foreground">{analytics.kpis.soldLeads}</div>
-        </div>
-      </div>
-
-      {/* Monthly Revenue & Lead Trends */}
-      <div className="bg-card rounded-2xl p-6 shadow-soft">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Monthly Performance Trends</h3>
-        <ResponsiveContainer width="100%" height={350}>
-          <AreaChart data={monthlyTrendChart}>
-            <defs>
-              <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(var(--blue))" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="hsl(var(--blue))" stopOpacity={0}/>
-              </linearGradient>
-              <linearGradient id="colorSold" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(var(--teal))" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="hsl(var(--teal))" stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
-            <YAxis stroke="hsl(var(--muted-foreground))" />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'hsl(var(--card))', 
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '8px'
-              }} 
-            />
-            <Legend />
-            <Area 
-              type="monotone" 
-              dataKey="leads" 
-              stroke="hsl(var(--blue))" 
-              fillOpacity={1} 
-              fill="url(#colorLeads)"
-              strokeWidth={2}
-            />
-            <Area 
-              type="monotone" 
-              dataKey="sold" 
-              stroke="hsl(var(--teal))" 
-              fillOpacity={1} 
-              fill="url(#colorSold)"
-              strokeWidth={2}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Deal Stage Funnel & Lead Sources */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Sales Funnel by Stage</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={dealStageChart} layout="vertical">
-              <defs>
-                <linearGradient id="stageGradient" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={0.8}/>
-                  <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis type="number" stroke="hsl(var(--muted-foreground))" />
-              <YAxis dataKey="stage" type="category" stroke="hsl(var(--muted-foreground))" width={100} />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'hsl(var(--card))', 
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px'
-                }} 
-              />
-              <Bar dataKey="count" fill="url(#stageGradient)" radius={[0, 8, 8, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Lead Sources</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={leadSourceChart}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                outerRadius={95}
-                innerRadius={60}
-                fill="#8884d8"
-                dataKey="value"
-                stroke="hsl(var(--card))"
-                strokeWidth={3}
-              >
-                {leadSourceChart.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'hsl(var(--card))', 
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px'
-                }} 
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Salesperson Performance */}
-      <div className="bg-card rounded-2xl p-6 shadow-soft">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Salesperson Performance</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={salespersonChart}>
-            <defs>
-              <linearGradient id="gradientBlue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--blue))" stopOpacity={1}/>
-                <stop offset="100%" stopColor="hsl(var(--blue))" stopOpacity={0.7}/>
-              </linearGradient>
-              <linearGradient id="gradientTealBar" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
-                <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={0.7}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-            <YAxis stroke="hsl(var(--muted-foreground))" />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'hsl(var(--card))', 
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '8px'
-              }} 
-            />
-            <Legend />
-            <Bar dataKey="leads" fill="url(#gradientBlue)" radius={[8, 8, 0, 0]} />
-            <Bar dataKey="sold" fill="url(#gradientTealBar)" radius={[8, 8, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Vehicle Interest & Geographic Distribution */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Top Vehicle Makes</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={vehicleMakeChart}>
-              <defs>
-                <linearGradient id="makeGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="hsl(var(--purple))" stopOpacity={1}/>
-                  <stop offset="100%" stopColor="hsl(var(--purple))" stopOpacity={0.7}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" angle={-20} textAnchor="end" height={80} />
-              <YAxis stroke="hsl(var(--muted-foreground))" />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'hsl(var(--card))', 
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px'
-                }} 
-              />
-              <Bar dataKey="value" fill="url(#makeGradient)" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Geographic Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={cityChart}>
-              <defs>
-                <linearGradient id="cityGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#f59e0b" stopOpacity={1}/>
-                  <stop offset="100%" stopColor="#f59e0b" stopOpacity={0.7}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-              <YAxis stroke="hsl(var(--muted-foreground))" />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'hsl(var(--card))', 
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px'
-                }} 
-              />
-              <Bar dataKey="value" fill="url(#cityGradient)" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Marketing Channel Performance */}
-      <div className="bg-card rounded-2xl p-6 shadow-soft">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Marketing Channel Performance</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={channelChart}>
-            <defs>
-              <linearGradient id="gradientBlue2" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--blue))" stopOpacity={1}/>
-                <stop offset="100%" stopColor="hsl(var(--blue))" stopOpacity={0.7}/>
-              </linearGradient>
-              <linearGradient id="gradientTealBar2" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
-                <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={0.7}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-            <YAxis stroke="hsl(var(--muted-foreground))" />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'hsl(var(--card))', 
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '8px'
-              }} 
-            />
-            <Legend />
-            <Bar dataKey="leads" fill="url(#gradientBlue2)" radius={[8, 8, 0, 0]} />
-            <Bar dataKey="conversions" fill="url(#gradientTealBar2)" radius={[8, 8, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Response Time & Lead Scoring */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Response Time Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={responseTimeChart}>
-              <defs>
-                <linearGradient id="responseGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
-                  <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={0.7}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="range" stroke="hsl(var(--muted-foreground))" />
-              <YAxis stroke="hsl(var(--muted-foreground))" />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'hsl(var(--card))', 
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px'
-                }} 
-              />
-              <Bar dataKey="count" fill="url(#responseGradient)" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Lead Scoring Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={scoreChart}>
-              <defs>
-                <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="hsl(var(--purple))" stopOpacity={1}/>
-                  <stop offset="100%" stopColor="hsl(var(--purple))" stopOpacity={0.7}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="score" stroke="hsl(var(--muted-foreground))" />
-              <YAxis stroke="hsl(var(--muted-foreground))" />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'hsl(var(--card))', 
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px'
-                }} 
-              />
-              <Bar dataKey="count" fill="url(#scoreGradient)" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Lost Reasons & Vehicle Type */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {lostReasonChart.length > 0 && (
-          <div className="bg-card rounded-2xl p-6 shadow-soft">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Lost Deal Reasons</h3>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ChartCard title="Lead Status Distribution">
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={lostReasonChart}
+                  data={leadStatusChart}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ reason, percent }) => `${reason} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={95}
-                  innerRadius={60}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={100}
+                  innerRadius={65}
                   fill="#8884d8"
                   dataKey="value"
                   stroke="hsl(var(--card))"
-                  strokeWidth={3}
+                  strokeWidth={4}
                 >
-                  {lostReasonChart.map((entry, index) => (
+                  {leadStatusChart.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -610,100 +520,224 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                   contentStyle={{ 
                     backgroundColor: 'hsl(var(--card))', 
                     border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px'
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                   }} 
                 />
               </PieChart>
             </ResponsiveContainer>
-          </div>
-        )}
+          </ChartCard>
 
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-foreground mb-4">New vs Used Vehicles</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={newUsedChart}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ type, percent }) => `${type} ${(percent * 100).toFixed(0)}%`}
-                outerRadius={95}
-                innerRadius={60}
-                fill="#8884d8"
-                dataKey="value"
-                stroke="hsl(var(--card))"
-                strokeWidth={3}
-              >
-                {newUsedChart.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'hsl(var(--card))', 
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px'
-                }} 
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Customer Type & Payment Type */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Customer Type Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={customerTypeChart}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ type, percent }) => `${type} ${(percent * 100).toFixed(0)}%`}
-                outerRadius={95}
-                innerRadius={60}
-                fill="#8884d8"
-                dataKey="value"
-                stroke="hsl(var(--card))"
-                strokeWidth={3}
-              >
-                {customerTypeChart.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'hsl(var(--card))', 
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px'
-                }} 
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        {paymentTypeChart.length > 0 && (
-          <div className="bg-card rounded-2xl p-6 shadow-soft">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Payment Type (Sold Deals)</h3>
+          <ChartCard title="Lead Sources">
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={paymentTypeChart}
+                  data={leadSourceChart}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={100}
+                  innerRadius={65}
+                  fill="#8884d8"
+                  dataKey="value"
+                  stroke="hsl(var(--card))"
+                  strokeWidth={4}
+                >
+                  {leadSourceChart.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }} 
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title="Lead Scoring Distribution">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={scoreChart}>
+                <defs>
+                  <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f59e0b" stopOpacity={1}/>
+                    <stop offset="100%" stopColor="#f59e0b" stopOpacity={0.7}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+                <XAxis dataKey="score" stroke="hsl(var(--muted-foreground))" />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }} 
+                />
+                <Bar dataKey="count" fill="url(#scoreGradient)" radius={[12, 12, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title="Deal Status Overview">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={dealStatusChart}>
+                <defs>
+                  <linearGradient id="dealStatusGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--blue))" stopOpacity={1}/>
+                    <stop offset="100%" stopColor="hsl(var(--blue))" stopOpacity={0.7}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }} 
+                />
+                <Bar dataKey="value" fill="url(#dealStatusGradient)" radius={[12, 12, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+      </section>
+
+      {/* Team Performance */}
+      <section>
+        <SectionHeader 
+          icon={UserCheck} 
+          title="Team Performance" 
+          description="Sales team metrics and individual performance tracking"
+        />
+        
+        <div className="grid grid-cols-1 gap-6">
+          <ChartCard title="Salesperson Performance" fullWidth>
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={salespersonChart}>
+                <defs>
+                  <linearGradient id="leadsGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--blue))" stopOpacity={1}/>
+                    <stop offset="100%" stopColor="hsl(var(--blue))" stopOpacity={0.7}/>
+                  </linearGradient>
+                  <linearGradient id="soldGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
+                    <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={0.7}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }} 
+                />
+                <Legend />
+                <Bar dataKey="leads" fill="url(#leadsGradient)" radius={[12, 12, 0, 0]} />
+                <Bar dataKey="sold" fill="url(#soldGradient)" radius={[12, 12, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ChartCard title="Marketing Channel Performance">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={channelChart}>
+                  <defs>
+                    <linearGradient id="channelLeadsGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--purple))" stopOpacity={1}/>
+                      <stop offset="100%" stopColor="hsl(var(--purple))" stopOpacity={0.7}/>
+                    </linearGradient>
+                    <linearGradient id="channelConvGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
+                      <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={0.7}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+                  <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                  <YAxis stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '12px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    }} 
+                  />
+                  <Legend />
+                  <Bar dataKey="leads" fill="url(#channelLeadsGrad)" radius={[12, 12, 0, 0]} />
+                  <Bar dataKey="conversions" fill="url(#channelConvGrad)" radius={[12, 12, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartCard>
+
+            <ChartCard title="Response Time Distribution">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={responseTimeChart}>
+                  <defs>
+                    <linearGradient id="responseGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
+                      <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={0.7}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+                  <XAxis dataKey="range" stroke="hsl(var(--muted-foreground))" />
+                  <YAxis stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '12px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    }} 
+                  />
+                  <Bar dataKey="count" fill="url(#responseGradient)" radius={[12, 12, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartCard>
+          </div>
+        </div>
+      </section>
+
+      {/* Customer Insights */}
+      <section>
+        <SectionHeader 
+          icon={Users} 
+          title="Customer Insights" 
+          description="Understand customer demographics, preferences, and buying patterns"
+        />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ChartCard title="Customer Type Distribution">
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={customerTypeChart}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
                   label={({ type, percent }) => `${type} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={95}
-                  innerRadius={60}
+                  outerRadius={100}
+                  innerRadius={65}
                   fill="#8884d8"
                   dataKey="value"
                   stroke="hsl(var(--card))"
-                  strokeWidth={3}
+                  strokeWidth={4}
                 >
-                  {paymentTypeChart.map((entry, index) => (
+                  {customerTypeChart.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -711,14 +745,201 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                   contentStyle={{ 
                     backgroundColor: 'hsl(var(--card))', 
                     border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px'
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                   }} 
                 />
               </PieChart>
             </ResponsiveContainer>
-          </div>
-        )}
-      </div>
+          </ChartCard>
+
+          <ChartCard title="New vs Used Vehicles">
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={newUsedChart}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ type, percent }) => `${type} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={100}
+                  innerRadius={65}
+                  fill="#8884d8"
+                  dataKey="value"
+                  stroke="hsl(var(--card))"
+                  strokeWidth={4}
+                >
+                  {newUsedChart.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }} 
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          {paymentTypeChart.length > 0 && (
+            <ChartCard title="Payment Type (Sold Deals)">
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={paymentTypeChart}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ type, percent }) => `${type} ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={100}
+                    innerRadius={65}
+                    fill="#8884d8"
+                    dataKey="value"
+                    stroke="hsl(var(--card))"
+                    strokeWidth={4}
+                  >
+                    {paymentTypeChart.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '12px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    }} 
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </ChartCard>
+          )}
+
+          {lostReasonChart.length > 0 && (
+            <ChartCard title="Lost Deal Reasons">
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={lostReasonChart}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ reason, percent }) => `${reason} ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={100}
+                    innerRadius={65}
+                    fill="#8884d8"
+                    dataKey="value"
+                    stroke="hsl(var(--card))"
+                    strokeWidth={4}
+                  >
+                    {lostReasonChart.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '12px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    }} 
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </ChartCard>
+          )}
+        </div>
+      </section>
+
+      {/* Product & Market Analysis */}
+      <section>
+        <SectionHeader 
+          icon={Package} 
+          title="Product & Market Analysis" 
+          description="Vehicle preferences and geographic distribution insights"
+        />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ChartCard title="Top Vehicle Makes">
+            <ResponsiveContainer width="100%" height={320}>
+              <BarChart data={vehicleMakeChart}>
+                <defs>
+                  <linearGradient id="makeGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--purple))" stopOpacity={1}/>
+                    <stop offset="100%" stopColor="hsl(var(--purple))" stopOpacity={0.7}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" angle={-20} textAnchor="end" height={80} />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }} 
+                />
+                <Bar dataKey="value" fill="url(#makeGradient)" radius={[12, 12, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title="Top Vehicle Models">
+            <ResponsiveContainer width="100%" height={320}>
+              <BarChart data={vehicleModelChart}>
+                <defs>
+                  <linearGradient id="modelGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--blue))" stopOpacity={1}/>
+                    <stop offset="100%" stopColor="hsl(var(--blue))" stopOpacity={0.7}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" angle={-20} textAnchor="end" height={80} />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }} 
+                />
+                <Bar dataKey="value" fill="url(#modelGradient)" radius={[12, 12, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title="Geographic Distribution" fullWidth>
+            <ResponsiveContainer width="100%" height={320}>
+              <BarChart data={cityChart}>
+                <defs>
+                  <linearGradient id="cityGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f59e0b" stopOpacity={1}/>
+                    <stop offset="100%" stopColor="#f59e0b" stopOpacity={0.7}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }} 
+                />
+                <Bar dataKey="value" fill="url(#cityGradient)" radius={[12, 12, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+      </section>
     </div>
   );
 };
