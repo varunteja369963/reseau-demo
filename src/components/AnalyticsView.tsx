@@ -344,9 +344,9 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
     .map(([range, count]) => ({ range, count }));
 
   return (
-    <div className="space-y-12 pb-8">
-      {/* Navigation Bar */}
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border/50 shadow-sm -mx-6 px-6 py-3 mb-8">
+    <div className="relative">
+      {/* Navigation Bar - Sticky */}
+      <div className="sticky top-[72px] z-50 bg-background/98 backdrop-blur-xl border-b border-border/50 shadow-lg -mx-6 px-6 py-4 mb-8">
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
           {navigationSections.map((section) => {
             const Icon = section.icon;
@@ -368,6 +368,8 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
           })}
         </div>
       </div>
+
+      <div className="space-y-12 pb-8">
 
       {/* Executive Overview */}
       <section id="executive">
@@ -989,6 +991,7 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
           </ChartCard>
         </div>
       </section>
+      </div>
     </div>
   );
 };
