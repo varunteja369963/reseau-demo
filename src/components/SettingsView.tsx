@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { CardSelection } from './settings/CardSelection';
 import { PermissionManagement } from './settings/PermissionManagement';
 import { AccessList } from './settings/AccessList';
+import { CustomColumnManagement } from './settings/CustomColumnManagement';
 
 interface Column {
   key: string;
@@ -133,6 +134,15 @@ export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewPro
           View and manage users who have access to your CRM.
         </p>
         <AccessList userId={userId} />
+      </div>
+
+      {/* Custom Columns Management */}
+      <div className="bg-card rounded-2xl p-6 shadow-soft">
+        <h3 className="text-lg font-semibold text-foreground mb-2">Custom Columns</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          Add custom fields to your CRM table with different data types.
+        </p>
+        <CustomColumnManagement userId={userId} />
       </div>
 
       {/* Card Selection */}

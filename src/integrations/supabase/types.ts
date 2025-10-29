@@ -80,6 +80,36 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_custom_columns: {
+        Row: {
+          column_key: string
+          column_label: string
+          created_at: string
+          field_type: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          column_key: string
+          column_label: string
+          created_at?: string
+          field_type: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          column_key?: string
+          column_label?: string
+          created_at?: string
+          field_type?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
