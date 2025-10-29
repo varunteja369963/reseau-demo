@@ -23,6 +23,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface CustomColumn {
   id: string;
@@ -80,6 +87,7 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
   const [isLoading, setIsLoading] = useState(false);
   const [editingColumn, setEditingColumn] = useState<CustomColumn | null>(null);
   const [deleteColumnId, setDeleteColumnId] = useState<string | null>(null);
+  const [showEditDialog, setShowEditDialog] = useState(false);
   const { toast } = useToast();
 
   // Demo data that appears when no custom columns exist
@@ -152,6 +160,19 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
     setMinValue('');
     setMaxValue('');
     setEditingColumn(null);
+    setShowEditDialog(false);
+  };
+
+  const isFormValid = () => {
+    if (!columnLabel.trim() || !fieldType) return false;
+    
+    const needsOptions = ['dropdown', 'multiple_choice', 'multiple_select'].includes(fieldType);
+    if (needsOptions) {
+      const validOptions = options.filter(opt => opt.trim() !== '');
+      return validOptions.length >= 1;
+    }
+    
+    return true;
   };
 
   const handleAddColumn = async () => {
@@ -309,7 +330,7 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
       return;
     }
 
-    // Regular edit
+    // Regular edit - open dialog with pre-filled values
     setEditingColumn(column);
     setColumnLabel(column.column_label);
     setFieldType(column.field_type);
@@ -319,6 +340,7 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
     setDefaultValue(column.default_value || '');
     setMinValue(column.min_value?.toString() || '');
     setMaxValue(column.max_value?.toString() || '');
+    setShowEditDialog(true);
   };
 
   const handleAddOption = () => {
@@ -404,58 +426,56 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
 
   const displayColumns = customColumns.length > 0 ? customColumns : demoColumns;
 
-  return (
-    <div className="space-y-6">
-      {/* Add/Edit Custom Column Form */}
-      <div className="space-y-4 p-6 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <Plus className="h-5 w-5 text-primary" />
-            </div>
-            <h4 className="text-base font-semibold text-foreground">
-              {editingColumn ? 'Edit Custom Column' : 'Add New Custom Column'}
-            </h4>
-          </div>
-          {editingColumn && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={resetForm}
-            >
-              Cancel
-            </Button>
-          )}
+  const renderFormFields = () => (
+    <>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="space-y-2">
+          <Label htmlFor="columnLabel">Column Name</Label>
+          <Input
+            id="columnLabel"
+            placeholder="e.g., Customer Rating"
+            value={columnLabel}
+            onChange={(e) => setColumnLabel(e.target.value)}
+          />
         </div>
+        <div className="space-y-2">
+          <Label htmlFor="fieldType">Field Type</Label>
+          <Select value={fieldType} onValueChange={(value) => {
+            setFieldType(value);
+            if (value !== 'number') {
+              setNumberSubtype('integer');
+              setMinValue('');
+              setMaxValue('');
+            }
+            if (!['dropdown', 'multiple_choice', 'multiple_select'].includes(value)) {
+              setOptions(['']);
+            }
+          }}>
+            <SelectTrigger id="fieldType">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {FIELD_TYPES.map((type) => (
+                <SelectItem key={type.value} value={type.value}>
+                  {type.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+      {/* Number Subtype and Range */}
+      {fieldType === 'number' && (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div className="space-y-2">
-            <Label htmlFor="columnLabel">Column Name</Label>
-            <Input
-              id="columnLabel"
-              placeholder="e.g., Customer Rating"
-              value={columnLabel}
-              onChange={(e) => setColumnLabel(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="fieldType">Field Type</Label>
-            <Select value={fieldType} onValueChange={(value) => {
-              setFieldType(value);
-              if (value !== 'number') {
-                setNumberSubtype('integer');
-                setMinValue('');
-                setMaxValue('');
-              }
-              if (!['dropdown', 'multiple_choice', 'multiple_select'].includes(value)) {
-                setOptions(['']);
-              }
-            }}>
-              <SelectTrigger id="fieldType">
+            <Label htmlFor="numberSubtype">Number Type</Label>
+            <Select value={numberSubtype} onValueChange={setNumberSubtype}>
+              <SelectTrigger id="numberSubtype">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {FIELD_TYPES.map((type) => (
+                {NUMBER_SUBTYPES.map((type) => (
                   <SelectItem key={type.value} value={type.value}>
                     {type.label}
                   </SelectItem>
@@ -463,154 +483,150 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
               </SelectContent>
             </Select>
           </div>
-        </div>
-
-        {/* Number Subtype and Range */}
-        {fieldType === 'number' && (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="numberSubtype">Number Type</Label>
-              <Select value={numberSubtype} onValueChange={setNumberSubtype}>
-                <SelectTrigger id="numberSubtype">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {NUMBER_SUBTYPES.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="minValue">Min Value (Optional)</Label>
-                <Input
-                  id="minValue"
-                  type="number"
-                  placeholder="e.g., 0"
-                  value={minValue}
-                  onChange={(e) => setMinValue(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="maxValue">Max Value (Optional)</Label>
-                <Input
-                  id="maxValue"
-                  type="number"
-                  placeholder="e.g., 100"
-                  value={maxValue}
-                  onChange={(e) => setMaxValue(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Options Input for dropdown/multiple choice/multiple select */}
-        {fieldType && ['dropdown', 'multiple_choice', 'multiple_select'].includes(fieldType) && (
           <div className="space-y-2">
-            <Label>Options (minimum 2)</Label>
-            <div className="space-y-2">
-              {options.map((option, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    placeholder={`Option ${index + 1}`}
-                    value={option}
-                    onChange={(e) => handleOptionChange(index, e.target.value)}
-                  />
-                  {options.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleRemoveOption(index)}
-                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleAddOption}
-                className="w-full"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Option
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Optional Field Toggle - Only show after field type is selected */}
-        {fieldType && (
-          <div className="flex items-center justify-between p-4 rounded-lg bg-muted/30">
-            <div className="space-y-0.5">
-              <Label htmlFor="isOptional" className="text-sm font-medium">
-                Optional Field
-              </Label>
-              <p className="text-xs text-muted-foreground">
-                Allow this field to be left empty
-              </p>
-            </div>
-            <Switch
-              id="isOptional"
-              checked={isOptional}
-              onCheckedChange={setIsOptional}
+            <Label htmlFor="minValue">Min Value (Optional)</Label>
+            <Input
+              id="minValue"
+              type="number"
+              placeholder="e.g., 0"
+              value={minValue}
+              onChange={(e) => setMinValue(e.target.value)}
             />
           </div>
-        )}
-
-        {/* Default Value - Only show after field type is selected */}
-        {fieldType && (
           <div className="space-y-2">
-            <Label htmlFor="defaultValue">Default Value (Optional)</Label>
-            {fieldType === 'textarea' ? (
-              <textarea
-                id="defaultValue"
-                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                placeholder="Enter default value"
-                value={defaultValue}
-                onChange={(e) => setDefaultValue(e.target.value)}
-              />
-            ) : fieldType === 'boolean' ? (
-              <select
-                id="defaultValue"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                value={defaultValue}
-                onChange={(e) => setDefaultValue(e.target.value)}
-              >
-                <option value="">None</option>
-                <option value="true">Yes</option>
-                <option value="false">No</option>
-              </select>
-            ) : (
-              <Input
-                id="defaultValue"
-                type={getInputTypeForFieldType(fieldType)}
-                placeholder="Enter default value"
-                value={defaultValue}
-                onChange={(e) => setDefaultValue(e.target.value)}
-                min={fieldType === 'year' ? '1900' : undefined}
-                max={fieldType === 'year' ? '2100' : undefined}
-              />
-            )}
+            <Label htmlFor="maxValue">Max Value (Optional)</Label>
+            <Input
+              id="maxValue"
+              type="number"
+              placeholder="e.g., 100"
+              value={maxValue}
+              onChange={(e) => setMaxValue(e.target.value)}
+            />
           </div>
-        )}
+        </div>
+      )}
 
+      {/* Options Input for dropdown/multiple choice/multiple select */}
+      {fieldType && ['dropdown', 'multiple_choice', 'multiple_select'].includes(fieldType) && (
+        <div className="space-y-2">
+          <Label>Options (at least 1 required)</Label>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {options.map((option, index) => (
+              <div key={index} className="flex gap-2">
+                <Input
+                  placeholder={`Option ${index + 1}`}
+                  value={option}
+                  onChange={(e) => handleOptionChange(index, e.target.value)}
+                />
+                {options.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleRemoveOption(index)}
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10 flex-shrink-0"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleAddOption}
+            className="w-full sm:w-auto"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Option
+          </Button>
+        </div>
+      )}
+
+      {/* Optional Field Toggle - Only show after field type is selected */}
+      {fieldType && (
+        <div className="flex items-center justify-between p-4 rounded-lg bg-muted/30 max-w-md">
+          <div className="space-y-0.5">
+            <Label htmlFor="isOptional" className="text-sm font-medium">
+              Optional Field
+            </Label>
+            <p className="text-xs text-muted-foreground">
+              Allow this field to be left empty
+            </p>
+          </div>
+          <Switch
+            id="isOptional"
+            checked={isOptional}
+            onCheckedChange={setIsOptional}
+          />
+        </div>
+      )}
+
+      {/* Default Value - Only show after field type is selected */}
+      {fieldType && (
+        <div className="space-y-2 max-w-md">
+          <Label htmlFor="defaultValue">Default Value (Optional)</Label>
+          {fieldType === 'textarea' ? (
+            <textarea
+              id="defaultValue"
+              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              placeholder="Enter default value"
+              value={defaultValue}
+              onChange={(e) => setDefaultValue(e.target.value)}
+            />
+          ) : fieldType === 'boolean' ? (
+            <select
+              id="defaultValue"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              value={defaultValue}
+              onChange={(e) => setDefaultValue(e.target.value)}
+            >
+              <option value="">None</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          ) : (
+            <Input
+              id="defaultValue"
+              type={getInputTypeForFieldType(fieldType)}
+              placeholder="Enter default value"
+              value={defaultValue}
+              onChange={(e) => setDefaultValue(e.target.value)}
+              min={fieldType === 'year' ? '1900' : undefined}
+              max={fieldType === 'year' ? '2100' : undefined}
+            />
+          )}
+        </div>
+      )}
+
+      {isFormValid() && (
         <Button
           onClick={handleAddColumn}
-          disabled={isLoading || !columnLabel.trim()}
-          className="w-full md:w-auto"
+          disabled={isLoading}
+          className="w-full sm:w-auto"
         >
           <Plus className="mr-2 h-4 w-4" />
-          {editingColumn ? 'Update Column' : 'Add Custom Column'}
+          Add Custom Column
         </Button>
+      )}
+    </>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Add Custom Column Form */}
+      <div className="space-y-4 p-6 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Plus className="h-5 w-5 text-primary" />
+          </div>
+          <h4 className="text-base font-semibold text-foreground">
+            Add New Custom Column
+          </h4>
+        </div>
+        {renderFormFields()}
       </div>
 
       {/* Custom Columns List */}
@@ -709,6 +725,34 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
             ))}
           </div>
         </div>
+
+      {/* Edit Column Dialog */}
+      <Dialog open={showEditDialog} onOpenChange={(open) => {
+        if (!open) resetForm();
+      }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Custom Column</DialogTitle>
+            <DialogDescription>
+              Modify the settings for this custom column
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {renderFormFields()}
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={resetForm}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleAddColumn} 
+              disabled={isLoading || !isFormValid()}
+            >
+              Update Column
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={!!deleteColumnId} onOpenChange={() => setDeleteColumnId(null)}>
