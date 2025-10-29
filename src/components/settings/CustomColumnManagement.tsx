@@ -82,6 +82,36 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
   const [deleteColumnId, setDeleteColumnId] = useState<string | null>(null);
   const { toast } = useToast();
 
+  // Demo data that appears when no custom columns exist
+  const demoColumns: CustomColumn[] = [
+    {
+      id: 'demo-1',
+      column_key: 'customer_rating',
+      column_label: 'Customer Rating',
+      field_type: 'rating',
+      is_optional: true,
+      default_value: '3',
+    },
+    {
+      id: 'demo-2',
+      column_key: 'purchase_amount',
+      column_label: 'Purchase Amount',
+      field_type: 'number',
+      number_subtype: 'price',
+      min_value: 0,
+      is_optional: false,
+    },
+    {
+      id: 'demo-3',
+      column_key: 'subscription_type',
+      column_label: 'Subscription Type',
+      field_type: 'dropdown',
+      options: ['Free', 'Basic', 'Premium', 'Enterprise'],
+      is_optional: true,
+      default_value: 'Free',
+    },
+  ];
+
   useEffect(() => {
     if (userId) {
       fetchCustomColumns();
@@ -234,7 +264,52 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
     setIsLoading(false);
   };
 
-  const handleEditColumn = (column: CustomColumn) => {
+  const handleEditColumn = async (column: CustomColumn) => {
+    // If it's a demo column, convert it to a real column
+    if (column.id.startsWith('demo-')) {
+      const columnKey = generateColumnKey(column.column_label);
+      const insertData: any = {
+        user_id: userId,
+        column_key: columnKey,
+        column_label: column.column_label,
+        field_type: column.field_type,
+        is_optional: column.is_optional ?? true,
+        default_value: column.default_value || null,
+      };
+
+      if (column.field_type === 'number') {
+        insertData.number_subtype = column.number_subtype;
+        if (column.min_value) insertData.min_value = column.min_value;
+        if (column.max_value) insertData.max_value = column.max_value;
+      }
+
+      if (column.options) {
+        insertData.options = column.options;
+      }
+
+      const { error } = await supabase
+        .from('crm_custom_columns')
+        .insert(insertData);
+
+      if (error) {
+        console.error('Error converting demo column:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to create column',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      toast({
+        title: 'Success',
+        description: 'Demo column converted to custom column',
+      });
+      fetchCustomColumns();
+      return;
+    }
+
+    // Regular edit
     setEditingColumn(column);
     setColumnLabel(column.column_label);
     setFieldType(column.field_type);
@@ -273,6 +348,16 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
   const handleDeleteColumn = async () => {
     if (!deleteColumnId) return;
 
+    // If it's a demo column, just close the dialog
+    if (deleteColumnId.startsWith('demo-')) {
+      toast({
+        title: 'Info',
+        description: 'Demo columns are for reference only',
+      });
+      setDeleteColumnId(null);
+      return;
+    }
+
     const { error } = await supabase
       .from('crm_custom_columns')
       .delete()
@@ -295,14 +380,43 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
     setDeleteColumnId(null);
   };
 
+  const getInputTypeForFieldType = (fieldType: string) => {
+    switch (fieldType) {
+      case 'number':
+      case 'rating':
+      case 'range':
+        return 'number';
+      case 'date':
+        return 'date';
+      case 'year':
+        return 'number';
+      case 'email':
+      case 'business_email':
+        return 'email';
+      case 'url':
+        return 'url';
+      case 'phone':
+        return 'tel';
+      default:
+        return 'text';
+    }
+  };
+
+  const displayColumns = customColumns.length > 0 ? customColumns : demoColumns;
+
   return (
     <div className="space-y-6">
       {/* Add/Edit Custom Column Form */}
-      <div className="space-y-4 p-6 rounded-xl bg-muted/20 border border-border">
+      <div className="space-y-4 p-6 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20">
         <div className="flex items-center justify-between mb-2">
-          <h4 className="text-sm font-semibold text-foreground">
-            {editingColumn ? 'Edit Custom Column' : 'Add Custom Column'}
-          </h4>
+          <div className="flex items-center gap-2">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Plus className="h-5 w-5 text-primary" />
+            </div>
+            <h4 className="text-base font-semibold text-foreground">
+              {editingColumn ? 'Edit Custom Column' : 'Add New Custom Column'}
+            </h4>
+          </div>
           {editingColumn && (
             <Button
               variant="ghost"
@@ -395,7 +509,7 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
         )}
 
         {/* Options Input for dropdown/multiple choice/multiple select */}
-        {(['dropdown', 'multiple_choice', 'multiple_select'].includes(fieldType)) && (
+        {fieldType && ['dropdown', 'multiple_choice', 'multiple_select'].includes(fieldType) && (
           <div className="space-y-2">
             <Label>Options (minimum 2)</Label>
             <div className="space-y-2">
@@ -433,33 +547,61 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
           </div>
         )}
 
-        {/* Optional Field Toggle */}
-        <div className="flex items-center justify-between p-4 rounded-lg bg-muted/30">
-          <div className="space-y-0.5">
-            <Label htmlFor="isOptional" className="text-sm font-medium">
-              Optional Field
-            </Label>
-            <p className="text-xs text-muted-foreground">
-              Allow this field to be left empty
-            </p>
+        {/* Optional Field Toggle - Only show after field type is selected */}
+        {fieldType && (
+          <div className="flex items-center justify-between p-4 rounded-lg bg-muted/30">
+            <div className="space-y-0.5">
+              <Label htmlFor="isOptional" className="text-sm font-medium">
+                Optional Field
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                Allow this field to be left empty
+              </p>
+            </div>
+            <Switch
+              id="isOptional"
+              checked={isOptional}
+              onCheckedChange={setIsOptional}
+            />
           </div>
-          <Switch
-            id="isOptional"
-            checked={isOptional}
-            onCheckedChange={setIsOptional}
-          />
-        </div>
+        )}
 
-        {/* Default Value */}
-        <div className="space-y-2">
-          <Label htmlFor="defaultValue">Default Value (Optional)</Label>
-          <Input
-            id="defaultValue"
-            placeholder="Enter default value"
-            value={defaultValue}
-            onChange={(e) => setDefaultValue(e.target.value)}
-          />
-        </div>
+        {/* Default Value - Only show after field type is selected */}
+        {fieldType && (
+          <div className="space-y-2">
+            <Label htmlFor="defaultValue">Default Value (Optional)</Label>
+            {fieldType === 'textarea' ? (
+              <textarea
+                id="defaultValue"
+                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder="Enter default value"
+                value={defaultValue}
+                onChange={(e) => setDefaultValue(e.target.value)}
+              />
+            ) : fieldType === 'boolean' ? (
+              <select
+                id="defaultValue"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                value={defaultValue}
+                onChange={(e) => setDefaultValue(e.target.value)}
+              >
+                <option value="">None</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            ) : (
+              <Input
+                id="defaultValue"
+                type={getInputTypeForFieldType(fieldType)}
+                placeholder="Enter default value"
+                value={defaultValue}
+                onChange={(e) => setDefaultValue(e.target.value)}
+                min={fieldType === 'year' ? '1900' : undefined}
+                max={fieldType === 'year' ? '2100' : undefined}
+              />
+            )}
+          </div>
+        )}
 
         <Button
           onClick={handleAddColumn}
@@ -472,11 +614,19 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
       </div>
 
       {/* Custom Columns List */}
-      {customColumns.length > 0 && (
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-semibold text-foreground">
+            {customColumns.length > 0 ? 'Your Custom Columns' : 'Example Custom Columns'}
+          </h4>
+          {customColumns.length === 0 && (
+            <span className="text-xs text-muted-foreground bg-primary/10 px-2 py-1 rounded-full">
+              Demo Data - Click Edit to use
+            </span>
+          )}
+        </div>
         <div className="space-y-3">
-          <h4 className="text-sm font-semibold text-foreground">Your Custom Columns</h4>
-          <div className="space-y-3">
-            {customColumns.map((column) => (
+          {displayColumns.map((column) => (
               <div
                 key={column.id}
                 className="flex items-start justify-between p-5 rounded-xl bg-gradient-to-br from-muted/40 to-muted/20 border border-border hover:border-primary/30 transition-colors"
@@ -559,15 +709,19 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
             ))}
           </div>
         </div>
-      )}
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={!!deleteColumnId} onOpenChange={() => setDeleteColumnId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Custom Column</AlertDialogTitle>
+            <AlertDialogTitle>
+              {deleteColumnId?.startsWith('demo-') ? 'Demo Column' : 'Delete Custom Column'}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this custom column? This action cannot be undone and will remove all data associated with this column.
+              {deleteColumnId?.startsWith('demo-') 
+                ? 'This is a demo column for reference. You can edit it to create a real custom column.'
+                : 'Are you sure you want to delete this custom column? This action cannot be undone and will remove all data associated with this column.'
+              }
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
