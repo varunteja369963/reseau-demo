@@ -2,7 +2,7 @@ import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Toolti
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { generateDemoLeads } from '@/utils/demoData';
 import { Lead } from '@/types/lead';
-import { TrendingUp, TrendingDown, DollarSign, Users, Target, Clock, BarChart3, UserCheck, Package, MapPin, Calendar, Star } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, Users, Target, Clock, BarChart3, UserCheck, Package, MapPin, Calendar, Star, ChevronRight } from 'lucide-react';
 
 const COLORS = ['hsl(var(--teal))', 'hsl(var(--blue))', 'hsl(var(--purple))', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#10b981'];
 
@@ -368,25 +368,32 @@ export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProp
         }`}
         style={{ top: 0 }}
       >
-        <div className="flex items-center gap-2 overflow-x-auto scroll-smooth scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent hover:scrollbar-thumb-primary/40 pb-2">
-          {navigationSections.map((section) => {
-            const Icon = section.icon;
-            const isActive = activeSection === section.id;
-            return (
-              <button
-                key={section.id}
-                onClick={() => scrollToSection(section.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl whitespace-nowrap transition-all duration-300 flex-shrink-0 ${
-                  isActive 
-                    ? 'bg-primary text-primary-foreground shadow-md scale-105' 
-                    : 'bg-card/50 text-muted-foreground hover:bg-card hover:text-foreground hover:scale-102'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span className="text-sm font-medium">{section.label}</span>
-              </button>
-            );
-          })}
+        <div className="relative flex items-center">
+          {/* Scroll indicator */}
+          <div className="absolute left-0 z-10 flex items-center justify-center w-8 h-full bg-gradient-to-r from-background via-background to-transparent pointer-events-none">
+            <ChevronRight className="w-4 h-4 text-muted-foreground animate-pulse" />
+          </div>
+          
+          <div className="flex items-center gap-2 overflow-x-auto scroll-smooth scrollbar-none pl-8">
+            {navigationSections.map((section) => {
+              const Icon = section.icon;
+              const isActive = activeSection === section.id;
+              return (
+                <button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl whitespace-nowrap transition-all duration-300 flex-shrink-0 ${
+                    isActive 
+                      ? 'bg-primary text-primary-foreground shadow-md scale-105' 
+                      : 'bg-card/50 text-muted-foreground hover:bg-card hover:text-foreground hover:scale-102'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="text-sm font-medium">{section.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
