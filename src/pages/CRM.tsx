@@ -34,6 +34,7 @@ const CRM = () => {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
   const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
   const [groupBy, setGroupBy] = useState<string | null>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const [filters, setFilters] = useState<FilterValues>({
     customerName: '',
     customerNameFilterType: 'contains',
@@ -66,6 +67,17 @@ const CRM = () => {
 
   useEffect(() => {
     setLeads(generateDemoLeads());
+  }, []);
+
+  useEffect(() => {
+    const measureHeader = () => {
+      const navElement = document.querySelector('nav.sticky') as HTMLElement | null;
+      setHeaderHeight(navElement?.offsetHeight ?? 0);
+    };
+
+    measureHeader();
+    window.addEventListener('resize', measureHeader);
+    return () => window.removeEventListener('resize', measureHeader);
   }, []);
 
   // Helper function for string filtering
@@ -248,7 +260,7 @@ const CRM = () => {
       <div className="lg:ml-24 min-h-screen flex flex-col max-w-[100vw]">
         <TopNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
         
-        <main className="flex-1 p-4 md:p-6 lg:p-6 overflow-x-hidden pt-16 lg:pt-8">
+        <main className="flex-1 p-4 md:p-6 lg:p-6 overflow-x-hidden" style={{ paddingTop: headerHeight }}>
           <div className="max-w-full mx-auto">
             {activeTab === "crm" && (
               <>
@@ -320,7 +332,7 @@ const CRM = () => {
               </>
             )}
 
-            {activeTab === "analytics" && <AnalyticsView leads={filteredLeads} />}
+            {activeTab === "analytics" && <AnalyticsView leads={filteredLeads} navOffset={headerHeight} />}
             
             {activeTab === "settings" && (
               <SettingsView 

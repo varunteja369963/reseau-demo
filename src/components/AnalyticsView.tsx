@@ -1,5 +1,5 @@
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, RadialBarChart, RadialBar } from 'recharts';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { generateDemoLeads } from '@/utils/demoData';
 import { Lead } from '@/types/lead';
 import { TrendingUp, TrendingDown, DollarSign, Users, Target, Clock, BarChart3, UserCheck, Package, MapPin, Calendar, Star } from 'lucide-react';
@@ -8,6 +8,7 @@ const COLORS = ['hsl(var(--teal))', 'hsl(var(--blue))', 'hsl(var(--purple))', '#
 
 interface AnalyticsViewProps {
   leads?: Lead[];
+  navOffset?: number;
 }
 
 const StatCard = ({ title, value, change, icon: Icon, trend }: { 
@@ -62,45 +63,35 @@ const navigationSections = [
   { id: 'products', label: 'Product & Market', icon: Package },
 ];
 
-export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
+export const AnalyticsView = ({ leads: propLeads, navOffset }: AnalyticsViewProps) => {
   const allLeads = useMemo(() => propLeads || generateDemoLeads(), [propLeads]);
   const [activeSection, setActiveSection] = useState('executive');
-  const [isSticky, setIsSticky] = useState(false);
-  const [headerOffset, setHeaderOffset] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsSticky(window.scrollY > 8);
+      setIsScrolled(window.scrollY > 1);
     };
 
-    const computeHeader = () => {
-      const topNav = document.querySelector('nav.sticky') as HTMLElement | null;
-      setHeaderOffset(topNav?.offsetHeight ?? 0);
-    };
-
-    computeHeader();
-    window.addEventListener('resize', computeHeader);
     window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('resize', computeHeader);
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
-    if (element) {
-      const offset = 120; // Account for sticky nav height
-      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-      const offsetPosition = elementPosition - offset;
+    if (!element) return;
+    
+    const navHeight = navRef.current?.offsetHeight ?? 56;
+    const totalOffset = (navOffset ?? 0) + navHeight + 8;
+    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+    const scrollPosition = elementPosition - totalOffset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-      setActiveSection(sectionId);
-    }
+    window.scrollTo({
+      top: scrollPosition,
+      behavior: 'smooth'
+    });
+    setActiveSection(sectionId);
   };
   
   // Calculate analytics data
@@ -367,14 +358,15 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
 
   return (
     <div className="relative">
-      {/* Navigation Bar - Always Sticky, Visual Style Changes on Scroll */}
+      {/* Navigation Bar - Always Sticky */}
       <div
-        className={`sticky z-30 -mt-16 lg:-mt-8 -mx-6 px-6 py-4 mb-8 transition-all duration-300 ${
-          isSticky
+        ref={navRef}
+        className={`sticky z-30 -mx-6 px-6 py-4 mb-6 transition-all duration-300 ${
+          isScrolled
             ? 'bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg'
             : 'bg-transparent border-transparent'
         }`}
-        style={{ top: headerOffset }}
+        style={{ top: navOffset ?? 0 }}
       >
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
           {navigationSections.map((section) => {
