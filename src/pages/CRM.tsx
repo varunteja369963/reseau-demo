@@ -9,6 +9,7 @@ import { CustomerProfileModal } from "@/components/modals/CustomerProfileModal";
 import { ContactModal } from "@/components/modals/ContactModal";
 import { AnalyticsView } from "@/components/AnalyticsView";
 import { SettingsView } from "@/components/SettingsView";
+import { HistoryView } from "@/components/HistoryView";
 import { ChatPanel } from "@/components/ChatPanel";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { generateDemoLeads } from "@/utils/demoData";
@@ -323,6 +324,8 @@ const CRM = () => {
             )}
 
             {activeTab === "analytics" && <AnalyticsView leads={filteredLeads} />}
+            
+            {activeTab === "history" && <HistoryView />}
             
             {activeTab === "settings" && (
               <SettingsView 

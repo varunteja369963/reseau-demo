@@ -56,6 +56,42 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_activity_log: {
+        Row: {
+          action_type: string
+          created_at: string
+          description: string
+          entity_data: Json
+          entity_id: string
+          entity_type: string
+          id: string
+          previous_data: Json | null
+          user_id: string
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          description: string
+          entity_data: Json
+          entity_id: string
+          entity_type?: string
+          id?: string
+          previous_data?: Json | null
+          user_id: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          description?: string
+          entity_data?: Json
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          previous_data?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       crm_card_settings: {
         Row: {
           created_at: string
