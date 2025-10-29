@@ -25,6 +25,7 @@ export const HistoryView = () => {
   const [activities, setActivities] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [reverting, setReverting] = useState<string | null>(null);
+  const [filterType, setFilterType] = useState<'all' | 'create' | 'update' | 'delete'>('all');
 
   useEffect(() => {
     loadActivities();
@@ -161,6 +162,10 @@ export const HistoryView = () => {
     );
   }
 
+  const filteredActivities = filterType === 'all' 
+    ? activities 
+    : activities.filter(activity => activity.action_type === filterType);
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 mb-6">
@@ -181,6 +186,44 @@ export const HistoryView = () => {
         </Button>
       </div>
 
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-sm font-medium text-muted-foreground">Filter:</span>
+        <Button
+          variant={filterType === 'all' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setFilterType('all')}
+        >
+          All ({activities.length})
+        </Button>
+        <Button
+          variant={filterType === 'create' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setFilterType('create')}
+          className={filterType === 'create' ? '' : 'border-green-200 text-green-700 hover:bg-green-50'}
+        >
+          <Plus className="w-3 h-3 mr-1" />
+          Created ({activities.filter(a => a.action_type === 'create').length})
+        </Button>
+        <Button
+          variant={filterType === 'update' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setFilterType('update')}
+          className={filterType === 'update' ? '' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}
+        >
+          <Edit className="w-3 h-3 mr-1" />
+          Updated ({activities.filter(a => a.action_type === 'update').length})
+        </Button>
+        <Button
+          variant={filterType === 'delete' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setFilterType('delete')}
+          className={filterType === 'delete' ? '' : 'border-red-200 text-red-700 hover:bg-red-50'}
+        >
+          <Trash2 className="w-3 h-3 mr-1" />
+          Deleted ({activities.filter(a => a.action_type === 'delete').length})
+        </Button>
+      </div>
+
       <div className="bg-blue-500/10 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
         <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
         <div className="text-sm text-blue-900">
@@ -193,7 +236,7 @@ export const HistoryView = () => {
 
       <ScrollArea className="h-[calc(100vh-300px)]">
         <div className="space-y-4 pr-4">
-          {activities.map((activity) => (
+          {filteredActivities.map((activity) => (
             <Card key={activity.id} className="p-6 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex gap-4 flex-1 min-w-0">
