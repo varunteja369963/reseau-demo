@@ -12,6 +12,27 @@ import { EmailSettings } from "@/components/email/EmailSettings";
 const Email = () => {
   const [activeTab, setActiveTab] = useState<string>("dashboard");
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case "dashboard":
+        return <EmailDashboard />;
+      case "contacts":
+        return <EmailContacts />;
+      case "campaigns":
+        return <EmailCampaigns />;
+      case "templates":
+        return <EmailTemplates />;
+      case "automations":
+        return <EmailAutomations />;
+      case "analytics":
+        return <EmailAnalytics />;
+      case "settings":
+        return <EmailSettings />;
+      default:
+        return <EmailDashboard />;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Sidebar />
@@ -21,13 +42,7 @@ const Email = () => {
         
         <main className="flex-1 p-4 md:p-6 lg:p-6 overflow-x-hidden">
           <div className="max-w-full mx-auto">
-            {activeTab === "dashboard" && <EmailDashboard />}
-            {activeTab === "contacts" && <EmailContacts />}
-            {activeTab === "campaigns" && <EmailCampaigns />}
-            {activeTab === "templates" && <EmailTemplates />}
-            {activeTab === "automations" && <EmailAutomations />}
-            {activeTab === "analytics" && <EmailAnalytics />}
-            {activeTab === "settings" && <EmailSettings />}
+            {renderContent()}
           </div>
         </main>
       </div>
