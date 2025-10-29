@@ -357,16 +357,16 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
         <div className="bg-card rounded-2xl p-6 shadow-soft">
           <h3 className="text-lg font-semibold text-foreground mb-4">Sales Funnel by Stage</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={dealStageChart}>
+            <BarChart data={dealStageChart} layout="vertical">
               <defs>
-                <linearGradient id="stageGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--teal))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--teal))" stopOpacity={0}/>
+                <linearGradient id="stageGradient" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={0.8}/>
+                  <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="stage" stroke="hsl(var(--muted-foreground))" angle={-20} textAnchor="end" height={80} />
-              <YAxis stroke="hsl(var(--muted-foreground))" />
+              <XAxis type="number" stroke="hsl(var(--muted-foreground))" />
+              <YAxis dataKey="stage" type="category" stroke="hsl(var(--muted-foreground))" width={100} />
               <Tooltip 
                 contentStyle={{ 
                   backgroundColor: 'hsl(var(--card))', 
@@ -374,31 +374,32 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                   borderRadius: '8px'
                 }} 
               />
-              <Area 
-                type="monotone" 
-                dataKey="count" 
-                stroke="hsl(var(--teal))" 
-                fillOpacity={1} 
-                fill="url(#stageGradient)"
-                strokeWidth={2}
-              />
-            </AreaChart>
+              <Bar dataKey="count" fill="url(#stageGradient)" radius={[0, 8, 8, 0]} />
+            </BarChart>
           </ResponsiveContainer>
         </div>
 
         <div className="bg-card rounded-2xl p-6 shadow-soft">
           <h3 className="text-lg font-semibold text-foreground mb-4">Lead Sources</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={leadSourceChart}>
-              <defs>
-                <linearGradient id="sourceGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--blue))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--blue))" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-              <YAxis stroke="hsl(var(--muted-foreground))" />
+            <PieChart>
+              <Pie
+                data={leadSourceChart}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                outerRadius={95}
+                innerRadius={60}
+                fill="#8884d8"
+                dataKey="value"
+                stroke="hsl(var(--card))"
+                strokeWidth={3}
+              >
+                {leadSourceChart.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
               <Tooltip 
                 contentStyle={{ 
                   backgroundColor: 'hsl(var(--card))', 
@@ -406,15 +407,7 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                   borderRadius: '8px'
                 }} 
               />
-              <Area 
-                type="monotone" 
-                dataKey="value" 
-                stroke="hsl(var(--blue))" 
-                fillOpacity={1} 
-                fill="url(#sourceGradient)"
-                strokeWidth={2}
-              />
-            </AreaChart>
+            </PieChart>
           </ResponsiveContainer>
         </div>
       </div>
@@ -423,15 +416,15 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
       <div className="bg-card rounded-2xl p-6 shadow-soft">
         <h3 className="text-lg font-semibold text-foreground mb-4">Salesperson Performance</h3>
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={salespersonChart}>
+          <BarChart data={salespersonChart}>
             <defs>
-              <linearGradient id="salesLeadsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(var(--blue))" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="hsl(var(--blue))" stopOpacity={0}/>
+              <linearGradient id="gradientBlue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--blue))" stopOpacity={1}/>
+                <stop offset="100%" stopColor="hsl(var(--blue))" stopOpacity={0.7}/>
               </linearGradient>
-              <linearGradient id="salesSoldGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(var(--teal))" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="hsl(var(--teal))" stopOpacity={0}/>
+              <linearGradient id="gradientTealBar" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
+                <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={0.7}/>
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -445,23 +438,9 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
               }} 
             />
             <Legend />
-            <Area 
-              type="monotone" 
-              dataKey="leads" 
-              stroke="hsl(var(--blue))" 
-              fillOpacity={1} 
-              fill="url(#salesLeadsGradient)"
-              strokeWidth={2}
-            />
-            <Area 
-              type="monotone" 
-              dataKey="sold" 
-              stroke="hsl(var(--teal))" 
-              fillOpacity={1} 
-              fill="url(#salesSoldGradient)"
-              strokeWidth={2}
-            />
-          </AreaChart>
+            <Bar dataKey="leads" fill="url(#gradientBlue)" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="sold" fill="url(#gradientTealBar)" radius={[8, 8, 0, 0]} />
+          </BarChart>
         </ResponsiveContainer>
       </div>
 
@@ -470,11 +449,11 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
         <div className="bg-card rounded-2xl p-6 shadow-soft">
           <h3 className="text-lg font-semibold text-foreground mb-4">Top Vehicle Makes</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={vehicleMakeChart}>
+            <BarChart data={vehicleMakeChart}>
               <defs>
                 <linearGradient id="makeGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--purple))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--purple))" stopOpacity={0}/>
+                  <stop offset="0%" stopColor="hsl(var(--purple))" stopOpacity={1}/>
+                  <stop offset="100%" stopColor="hsl(var(--purple))" stopOpacity={0.7}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -487,26 +466,19 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                   borderRadius: '8px'
                 }} 
               />
-              <Area 
-                type="monotone" 
-                dataKey="value" 
-                stroke="hsl(var(--purple))" 
-                fillOpacity={1} 
-                fill="url(#makeGradient)"
-                strokeWidth={2}
-              />
-            </AreaChart>
+              <Bar dataKey="value" fill="url(#makeGradient)" radius={[8, 8, 0, 0]} />
+            </BarChart>
           </ResponsiveContainer>
         </div>
 
         <div className="bg-card rounded-2xl p-6 shadow-soft">
           <h3 className="text-lg font-semibold text-foreground mb-4">Geographic Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={cityChart}>
+            <BarChart data={cityChart}>
               <defs>
                 <linearGradient id="cityGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                  <stop offset="0%" stopColor="#f59e0b" stopOpacity={1}/>
+                  <stop offset="100%" stopColor="#f59e0b" stopOpacity={0.7}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -519,15 +491,8 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                   borderRadius: '8px'
                 }} 
               />
-              <Area 
-                type="monotone" 
-                dataKey="value" 
-                stroke="#f59e0b" 
-                fillOpacity={1} 
-                fill="url(#cityGradient)"
-                strokeWidth={2}
-              />
-            </AreaChart>
+              <Bar dataKey="value" fill="url(#cityGradient)" radius={[8, 8, 0, 0]} />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
@@ -536,15 +501,15 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
       <div className="bg-card rounded-2xl p-6 shadow-soft">
         <h3 className="text-lg font-semibold text-foreground mb-4">Marketing Channel Performance</h3>
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={channelChart}>
+          <BarChart data={channelChart}>
             <defs>
-              <linearGradient id="channelLeadsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(var(--blue))" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="hsl(var(--blue))" stopOpacity={0}/>
+              <linearGradient id="gradientBlue2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--blue))" stopOpacity={1}/>
+                <stop offset="100%" stopColor="hsl(var(--blue))" stopOpacity={0.7}/>
               </linearGradient>
-              <linearGradient id="channelConversionsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(var(--teal))" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="hsl(var(--teal))" stopOpacity={0}/>
+              <linearGradient id="gradientTealBar2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
+                <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={0.7}/>
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -558,23 +523,9 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
               }} 
             />
             <Legend />
-            <Area 
-              type="monotone" 
-              dataKey="leads" 
-              stroke="hsl(var(--blue))" 
-              fillOpacity={1} 
-              fill="url(#channelLeadsGradient)"
-              strokeWidth={2}
-            />
-            <Area 
-              type="monotone" 
-              dataKey="conversions" 
-              stroke="hsl(var(--teal))" 
-              fillOpacity={1} 
-              fill="url(#channelConversionsGradient)"
-              strokeWidth={2}
-            />
-          </AreaChart>
+            <Bar dataKey="leads" fill="url(#gradientBlue2)" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="conversions" fill="url(#gradientTealBar2)" radius={[8, 8, 0, 0]} />
+          </BarChart>
         </ResponsiveContainer>
       </div>
 
@@ -583,11 +534,11 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
         <div className="bg-card rounded-2xl p-6 shadow-soft">
           <h3 className="text-lg font-semibold text-foreground mb-4">Response Time Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={responseTimeChart}>
+            <BarChart data={responseTimeChart}>
               <defs>
                 <linearGradient id="responseGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--teal))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--teal))" stopOpacity={0}/>
+                  <stop offset="0%" stopColor="hsl(var(--teal))" stopOpacity={1}/>
+                  <stop offset="100%" stopColor="hsl(var(--teal))" stopOpacity={0.7}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -600,26 +551,19 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                   borderRadius: '8px'
                 }} 
               />
-              <Area 
-                type="monotone" 
-                dataKey="count" 
-                stroke="hsl(var(--teal))" 
-                fillOpacity={1} 
-                fill="url(#responseGradient)"
-                strokeWidth={2}
-              />
-            </AreaChart>
+              <Bar dataKey="count" fill="url(#responseGradient)" radius={[8, 8, 0, 0]} />
+            </BarChart>
           </ResponsiveContainer>
         </div>
 
         <div className="bg-card rounded-2xl p-6 shadow-soft">
           <h3 className="text-lg font-semibold text-foreground mb-4">Lead Scoring Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={scoreChart}>
+            <BarChart data={scoreChart}>
               <defs>
                 <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--purple))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--purple))" stopOpacity={0}/>
+                  <stop offset="0%" stopColor="hsl(var(--purple))" stopOpacity={1}/>
+                  <stop offset="100%" stopColor="hsl(var(--purple))" stopOpacity={0.7}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -632,15 +576,8 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                   borderRadius: '8px'
                 }} 
               />
-              <Area 
-                type="monotone" 
-                dataKey="count" 
-                stroke="hsl(var(--purple))" 
-                fillOpacity={1} 
-                fill="url(#scoreGradient)"
-                strokeWidth={2}
-              />
-            </AreaChart>
+              <Bar dataKey="count" fill="url(#scoreGradient)" radius={[8, 8, 0, 0]} />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
@@ -651,16 +588,24 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
           <div className="bg-card rounded-2xl p-6 shadow-soft">
             <h3 className="text-lg font-semibold text-foreground mb-4">Lost Deal Reasons</h3>
             <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={lostReasonChart}>
-                <defs>
-                  <linearGradient id="lostGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="reason" stroke="hsl(var(--muted-foreground))" angle={-20} textAnchor="end" height={80} />
-                <YAxis stroke="hsl(var(--muted-foreground))" />
+              <PieChart>
+                <Pie
+                  data={lostReasonChart}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ reason, percent }) => `${reason} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={95}
+                  innerRadius={60}
+                  fill="#8884d8"
+                  dataKey="value"
+                  stroke="hsl(var(--card))"
+                  strokeWidth={3}
+                >
+                  {lostReasonChart.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
                 <Tooltip 
                   contentStyle={{ 
                     backgroundColor: 'hsl(var(--card))', 
@@ -668,15 +613,7 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                     borderRadius: '8px'
                   }} 
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke="#ef4444" 
-                  fillOpacity={1} 
-                  fill="url(#lostGradient)"
-                  strokeWidth={2}
-                />
-              </AreaChart>
+              </PieChart>
             </ResponsiveContainer>
           </div>
         )}
@@ -684,16 +621,24 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
         <div className="bg-card rounded-2xl p-6 shadow-soft">
           <h3 className="text-lg font-semibold text-foreground mb-4">New vs Used Vehicles</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={newUsedChart}>
-              <defs>
-                <linearGradient id="newUsedGradient1" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--teal))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--teal))" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="type" stroke="hsl(var(--muted-foreground))" />
-              <YAxis stroke="hsl(var(--muted-foreground))" />
+            <PieChart>
+              <Pie
+                data={newUsedChart}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ type, percent }) => `${type} ${(percent * 100).toFixed(0)}%`}
+                outerRadius={95}
+                innerRadius={60}
+                fill="#8884d8"
+                dataKey="value"
+                stroke="hsl(var(--card))"
+                strokeWidth={3}
+              >
+                {newUsedChart.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
               <Tooltip 
                 contentStyle={{ 
                   backgroundColor: 'hsl(var(--card))', 
@@ -701,15 +646,7 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                   borderRadius: '8px'
                 }} 
               />
-              <Area 
-                type="monotone" 
-                dataKey="value" 
-                stroke="hsl(var(--teal))" 
-                fillOpacity={1} 
-                fill="url(#newUsedGradient1)"
-                strokeWidth={2}
-              />
-            </AreaChart>
+            </PieChart>
           </ResponsiveContainer>
         </div>
       </div>
@@ -719,16 +656,24 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
         <div className="bg-card rounded-2xl p-6 shadow-soft">
           <h3 className="text-lg font-semibold text-foreground mb-4">Customer Type Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={customerTypeChart}>
-              <defs>
-                <linearGradient id="customerGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--blue))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--blue))" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="type" stroke="hsl(var(--muted-foreground))" />
-              <YAxis stroke="hsl(var(--muted-foreground))" />
+            <PieChart>
+              <Pie
+                data={customerTypeChart}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ type, percent }) => `${type} ${(percent * 100).toFixed(0)}%`}
+                outerRadius={95}
+                innerRadius={60}
+                fill="#8884d8"
+                dataKey="value"
+                stroke="hsl(var(--card))"
+                strokeWidth={3}
+              >
+                {customerTypeChart.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
               <Tooltip 
                 contentStyle={{ 
                   backgroundColor: 'hsl(var(--card))', 
@@ -736,15 +681,7 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                   borderRadius: '8px'
                 }} 
               />
-              <Area 
-                type="monotone" 
-                dataKey="value" 
-                stroke="hsl(var(--blue))" 
-                fillOpacity={1} 
-                fill="url(#customerGradient)"
-                strokeWidth={2}
-              />
-            </AreaChart>
+            </PieChart>
           </ResponsiveContainer>
         </div>
 
@@ -752,16 +689,24 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
           <div className="bg-card rounded-2xl p-6 shadow-soft">
             <h3 className="text-lg font-semibold text-foreground mb-4">Payment Type (Sold Deals)</h3>
             <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={paymentTypeChart}>
-                <defs>
-                  <linearGradient id="paymentGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--purple))" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="hsl(var(--purple))" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="type" stroke="hsl(var(--muted-foreground))" />
-                <YAxis stroke="hsl(var(--muted-foreground))" />
+              <PieChart>
+                <Pie
+                  data={paymentTypeChart}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ type, percent }) => `${type} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={95}
+                  innerRadius={60}
+                  fill="#8884d8"
+                  dataKey="value"
+                  stroke="hsl(var(--card))"
+                  strokeWidth={3}
+                >
+                  {paymentTypeChart.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
                 <Tooltip 
                   contentStyle={{ 
                     backgroundColor: 'hsl(var(--card))', 
@@ -769,15 +714,7 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
                     borderRadius: '8px'
                   }} 
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke="hsl(var(--purple))" 
-                  fillOpacity={1} 
-                  fill="url(#paymentGradient)"
-                  strokeWidth={2}
-                />
-              </AreaChart>
+              </PieChart>
             </ResponsiveContainer>
           </div>
         )}
