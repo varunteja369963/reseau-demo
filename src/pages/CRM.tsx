@@ -320,7 +320,7 @@ const CRM = () => {
               </>
             )}
 
-            {activeTab === "analytics" && <AnalyticsView />}
+            {activeTab === "analytics" && <AnalyticsView leads={filteredLeads} />}
             
             {activeTab === "settings" && (
               <SettingsView 
