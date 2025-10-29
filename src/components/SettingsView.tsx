@@ -1,11 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Check } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { CardSelection } from './settings/CardSelection';
 import { PermissionManagement } from './settings/PermissionManagement';
 import { AccessList } from './settings/AccessList';
 import { CustomColumnManagement } from './settings/CustomColumnManagement';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 
 interface Column {
   key: string;
@@ -99,6 +104,8 @@ export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewPro
   const [userId, setUserId] = useState<string | undefined>();
   const [showStatsCards, setShowStatsCards] = useState(true);
   const [enableChatInAnalytics, setEnableChatInAnalytics] = useState(false);
+  const [customColumnsOpen, setCustomColumnsOpen] = useState(false);
+  const [statsCardOpen, setStatsCardOpen] = useState(false);
 
   useEffect(() => {
     const getUserId = async () => {
@@ -137,23 +144,47 @@ export const SettingsView = ({ visibleColumns, onColumnChange }: SettingsViewPro
       </div>
 
       {/* Custom Columns Management */}
-      <div className="bg-card rounded-2xl p-6 shadow-soft">
-        <h3 className="text-lg font-semibold text-foreground mb-2">Custom Columns</h3>
-        <p className="text-sm text-muted-foreground mb-4">
-          Add custom fields to your CRM table with different data types.
-        </p>
-        <CustomColumnManagement userId={userId} />
-      </div>
+      <Collapsible open={customColumnsOpen} onOpenChange={setCustomColumnsOpen}>
+        <div className="bg-card rounded-2xl p-6 shadow-soft">
+          <CollapsibleTrigger className="w-full">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-foreground">Custom Columns</h3>
+              <ChevronDown className={cn(
+                "h-5 w-5 transition-transform",
+                customColumnsOpen && "rotate-180"
+              )} />
+            </div>
+          </CollapsibleTrigger>
+          <p className="text-sm text-muted-foreground mb-4 text-left">
+            Add custom fields to your CRM table with different data types.
+          </p>
+          <CollapsibleContent>
+            <CustomColumnManagement userId={userId} />
+          </CollapsibleContent>
+        </div>
+      </Collapsible>
 
       {/* Card Selection */}
       {showStatsCards && (
-        <div className="bg-card rounded-2xl p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-foreground mb-2">Stats Card Display</h3>
-          <p className="text-sm text-muted-foreground mb-6">
-            Select up to 4 stat cards to display above your CRM table.
-          </p>
-          <CardSelection userId={userId} />
-        </div>
+        <Collapsible open={statsCardOpen} onOpenChange={setStatsCardOpen}>
+          <div className="bg-card rounded-2xl p-6 shadow-soft">
+            <CollapsibleTrigger className="w-full">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-lg font-semibold text-foreground">Stats Card Display</h3>
+                <ChevronDown className={cn(
+                  "h-5 w-5 transition-transform",
+                  statsCardOpen && "rotate-180"
+                )} />
+              </div>
+            </CollapsibleTrigger>
+            <p className="text-sm text-muted-foreground mb-6 text-left">
+              Select up to 4 stat cards to display above your CRM table.
+            </p>
+            <CollapsibleContent>
+              <CardSelection userId={userId} />
+            </CollapsibleContent>
+          </div>
+        </Collapsible>
       )}
 
       <div className="bg-card rounded-2xl p-6 shadow-soft">

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2 } from 'lucide-react';
+import { Plus, Trash2, Edit2, ChevronDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { cn } from '@/lib/utils';
 import {
   Select,
   SelectContent,
@@ -30,6 +31,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 
 interface CustomColumn {
   id: string;
@@ -106,6 +112,7 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
   const [deleteColumnId, setDeleteColumnId] = useState<string | null>(null);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [editFormData, setEditFormData] = useState<ColumnFormData | null>(null);
+  const [columnsListOpen, setColumnsListOpen] = useState(false);
   const { toast } = useToast();
 
   // Demo data that appears when no custom columns exist
@@ -830,101 +837,113 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
       </div>
 
       {/* Custom Columns List */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h4 className="text-sm font-semibold text-foreground">
-            {customColumns.length > 0 ? 'Your Custom Columns' : 'Example Custom Columns'}
-          </h4>
-          {customColumns.length === 0 && (
-            <span className="text-xs text-muted-foreground bg-primary/10 px-2 py-1 rounded-full">
-              Demo Data - Click Edit to use
-            </span>
-          )}
-        </div>
+      <Collapsible open={columnsListOpen} onOpenChange={setColumnsListOpen}>
         <div className="space-y-3">
-          {displayColumns.map((column) => (
-              <div
-                key={column.id}
-                className="flex items-start justify-between p-5 rounded-xl bg-gradient-to-br from-muted/40 to-muted/20 border border-border hover:border-primary/30 transition-colors"
-              >
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-foreground">
-                      {column.column_label}
-                    </p>
-                    {!column.is_optional && (
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-destructive/10 text-destructive font-medium">
-                        Required
-                      </span>
-                    )}
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                    <span className="px-2 py-1 rounded-md bg-primary/10 text-primary font-medium">
-                      {getFieldTypeLabel(column.field_type)}
-                    </span>
-                    
-                    {column.field_type === 'number' && column.number_subtype && (
-                      <span className="px-2 py-1 rounded-md bg-muted">
-                        {getNumberSubtypeLabel(column.number_subtype)}
-                      </span>
-                    )}
-                    
-                    {column.min_value !== null && column.min_value !== undefined && (
-                      <span className="px-2 py-1 rounded-md bg-muted">
-                        Min: {column.min_value}
-                      </span>
-                    )}
-                    
-                    {column.max_value !== null && column.max_value !== undefined && (
-                      <span className="px-2 py-1 rounded-md bg-muted">
-                        Max: {column.max_value}
-                      </span>
-                    )}
-                    
-                    {column.default_value && (
-                      <span className="px-2 py-1 rounded-md bg-muted">
-                        Default: {column.default_value}
-                      </span>
-                    )}
-                  </div>
-                  
-                  {column.options && column.options.length > 0 && (
-                    <div className="pt-1">
-                      <p className="text-xs text-muted-foreground mb-1">Options:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {column.options.map((opt, idx) => (
-                          <span key={idx} className="text-xs px-2 py-0.5 rounded-md bg-accent/50 text-accent-foreground">
-                            {opt}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="flex gap-1 ml-3">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleEditColumn(column)}
-                    className="hover:bg-primary/10 hover:text-primary"
-                  >
-                    <Edit2 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setDeleteColumnId(column.id)}
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+          <CollapsibleTrigger className="w-full">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <h4 className="text-sm font-semibold text-foreground">
+                  {customColumns.length > 0 ? 'Your Custom Columns' : 'Example Custom Columns'}
+                </h4>
+                {customColumns.length === 0 && (
+                  <span className="text-xs text-muted-foreground bg-primary/10 px-2 py-1 rounded-full">
+                    Demo Data - Click Edit to use
+                  </span>
+                )}
               </div>
-            ))}
-          </div>
+              <ChevronDown className={cn(
+                "h-4 w-4 transition-transform",
+                columnsListOpen && "rotate-180"
+              )} />
+            </div>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="space-y-3">
+              {displayColumns.map((column) => (
+                  <div
+                    key={column.id}
+                    className="flex items-start justify-between p-5 rounded-xl bg-gradient-to-br from-muted/40 to-muted/20 border border-border hover:border-primary/30 transition-colors"
+                  >
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold text-foreground">
+                          {column.column_label}
+                        </p>
+                        {!column.is_optional && (
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-destructive/10 text-destructive font-medium">
+                            Required
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                        <span className="px-2 py-1 rounded-md bg-primary/10 text-primary font-medium">
+                          {getFieldTypeLabel(column.field_type)}
+                        </span>
+                        
+                        {column.field_type === 'number' && column.number_subtype && (
+                          <span className="px-2 py-1 rounded-md bg-muted">
+                            {getNumberSubtypeLabel(column.number_subtype)}
+                          </span>
+                        )}
+                        
+                        {column.min_value !== null && column.min_value !== undefined && (
+                          <span className="px-2 py-1 rounded-md bg-muted">
+                            Min: {column.min_value}
+                          </span>
+                        )}
+                        
+                        {column.max_value !== null && column.max_value !== undefined && (
+                          <span className="px-2 py-1 rounded-md bg-muted">
+                            Max: {column.max_value}
+                          </span>
+                        )}
+                        
+                        {column.default_value && (
+                          <span className="px-2 py-1 rounded-md bg-muted">
+                            Default: {column.default_value}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {column.options && column.options.length > 0 && (
+                        <div className="pt-1">
+                          <p className="text-xs text-muted-foreground mb-1">Options:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {column.options.map((opt, idx) => (
+                              <span key={idx} className="text-xs px-2 py-0.5 rounded-md bg-accent/50 text-accent-foreground">
+                                {opt}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex gap-1 ml-3">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditColumn(column)}
+                        className="hover:bg-primary/10 hover:text-primary"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setDeleteColumnId(column.id)}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </CollapsibleContent>
         </div>
+      </Collapsible>
 
       {/* Edit Column Dialog */}
       <Dialog open={showEditDialog} onOpenChange={(open) => {
