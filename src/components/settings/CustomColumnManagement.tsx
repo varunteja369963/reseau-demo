@@ -164,12 +164,17 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
   };
 
   const isFormValid = () => {
-    if (!columnLabel.trim() || !fieldType) return false;
+    // Must have column name
+    if (!columnLabel.trim()) return false;
     
+    // Must have field type
+    if (!fieldType) return false;
+    
+    // For dropdown/multiple choice/multiple select, must have at least 1 non-empty option
     const needsOptions = ['dropdown', 'multiple_choice', 'multiple_select'].includes(fieldType);
     if (needsOptions) {
       const validOptions = options.filter(opt => opt.trim() !== '');
-      return validOptions.length >= 1;
+      if (validOptions.length < 1) return false;
     }
     
     return true;
