@@ -1,5 +1,5 @@
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, RadialBarChart, RadialBar } from 'recharts';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { generateDemoLeads } from '@/utils/demoData';
 import { Lead } from '@/types/lead';
 import { TrendingUp, TrendingDown, DollarSign, Users, Target, Clock, BarChart3, UserCheck, Package, MapPin, Calendar, Star } from 'lucide-react';
@@ -65,6 +65,16 @@ const navigationSections = [
 export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
   const allLeads = useMemo(() => propLeads || generateDemoLeads(), [propLeads]);
   const [activeSection, setActiveSection] = useState('executive');
+  const [isSticky, setIsSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsSticky(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -345,8 +355,12 @@ export const AnalyticsView = ({ leads: propLeads }: AnalyticsViewProps) => {
 
   return (
     <div className="relative">
-      {/* Navigation Bar - Sticky */}
-      <div className="sticky top-[72px] z-50 bg-background/98 backdrop-blur-xl border-b border-border/50 shadow-lg -mx-6 px-6 py-4 mb-8">
+      {/* Navigation Bar - Becomes Sticky on Scroll */}
+      <div className={`transition-all duration-300 z-50 -mx-6 px-6 py-4 mb-8 ${
+        isSticky 
+          ? 'sticky top-0 bg-background/98 backdrop-blur-xl border-b border-border/50 shadow-lg' 
+          : 'bg-transparent'
+      }`}>
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
           {navigationSections.map((section) => {
             const Icon = section.icon;
