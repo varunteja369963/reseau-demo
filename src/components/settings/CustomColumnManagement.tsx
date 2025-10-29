@@ -285,57 +285,14 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
     setIsLoading(false);
   };
 
-  const handleEditColumn = async (column: CustomColumn) => {
-    // If it's a demo column, convert it to a real column
-    if (column.id.startsWith('demo-')) {
-      const columnKey = generateColumnKey(column.column_label);
-      const insertData: any = {
-        user_id: userId,
-        column_key: columnKey,
-        column_label: column.column_label,
-        field_type: column.field_type,
-        is_optional: column.is_optional ?? true,
-        default_value: column.default_value || null,
-      };
-
-      if (column.field_type === 'number') {
-        insertData.number_subtype = column.number_subtype;
-        if (column.min_value) insertData.min_value = column.min_value;
-        if (column.max_value) insertData.max_value = column.max_value;
-      }
-
-      if (column.options) {
-        insertData.options = column.options;
-      }
-
-      const { error } = await supabase
-        .from('crm_custom_columns')
-        .insert(insertData);
-
-      if (error) {
-        console.error('Error converting demo column:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to create column',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      toast({
-        title: 'Success',
-        description: 'Demo column converted to custom column',
-      });
-      fetchCustomColumns();
-      return;
-    }
-
-    // Regular edit - open dialog with pre-filled values
-    setEditingColumn(column);
+  const handleEditColumn = (column: CustomColumn) => {
+    // Open dialog with pre-filled values for both demo and real columns
+    // For demo columns, editingColumn will be null so it creates a new column
+    setEditingColumn(column.id.startsWith('demo-') ? null : column);
     setColumnLabel(column.column_label);
     setFieldType(column.field_type);
     setNumberSubtype(column.number_subtype || 'integer');
-    setOptions(column.options || ['']);
+    setOptions(column.options && column.options.length > 0 ? column.options : ['']);
     setIsOptional(column.is_optional ?? true);
     setDefaultValue(column.default_value || '');
     setMinValue(column.min_value?.toString() || '');
@@ -601,7 +558,7 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
         </div>
       )}
 
-      {isFormValid() && (
+      {isFormValid() && !showEditDialog && (
         <Button
           onClick={handleAddColumn}
           disabled={isLoading}
@@ -732,9 +689,9 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
       }}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Edit Custom Column</DialogTitle>
+            <DialogTitle>{editingColumn ? 'Edit Custom Column' : 'Create Custom Column'}</DialogTitle>
             <DialogDescription>
-              Modify the settings for this custom column
+              {editingColumn ? 'Modify the settings for this custom column' : 'Configure your new custom column'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -748,7 +705,7 @@ export const CustomColumnManagement = ({ userId }: CustomColumnManagementProps) 
               onClick={handleAddColumn} 
               disabled={isLoading || !isFormValid()}
             >
-              Update Column
+              {editingColumn ? 'Update Column' : 'Create Column'}
             </Button>
           </div>
         </DialogContent>
