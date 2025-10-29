@@ -1,6 +1,7 @@
 import { ChevronDown, Building2, Building, Settings, History } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 
 interface TopNavbarProps {
   activeTab: string;
@@ -8,12 +9,7 @@ interface TopNavbarProps {
 }
 
 export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
-  const [showDropdown, setShowDropdown] = useState<boolean>(false);
-  const [showDealershipDropdown, setShowDealershipDropdown] = useState<boolean>(false);
   const [selectedDealership, setSelectedDealership] = useState<string>('Reseau (Org)');
-  
-  const profileDropdownRef = useRef<HTMLDivElement>(null);
-  const dealershipDropdownRef = useRef<HTMLDivElement>(null);
 
   const organization = 'Reseau (Org)';
   const dealerships: string[] = [
@@ -21,20 +17,6 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
     'Reseau Kia Penticton',
     'Reseau Honda Vernon'
   ];
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
-        setShowDropdown(false);
-      }
-      if (dealershipDropdownRef.current && !dealershipDropdownRef.current.contains(event.target as Node)) {
-        setShowDealershipDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   return (
     <nav className="bg-card border-b border-border shadow-soft sticky top-0 z-50 max-w-full overflow-x-hidden">
@@ -94,107 +76,88 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
         {/* Right: Profile - Hidden on mobile */}
         <div className="hidden md:flex items-center gap-3">
           {/* Dealership Dropdown */}
-          <div className="relative" ref={dealershipDropdownRef}>
-            <button
-              onClick={() => setShowDealershipDropdown(!showDealershipDropdown)}
-              className="flex items-center gap-2 hover:bg-muted px-4 py-2 rounded-2xl transition-smooth"
-            >
-              <Building2 className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm font-medium">{selectedDealership}</span>
-              <ChevronDown className="w-4 h-4 text-muted-foreground" />
-            </button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="flex items-center gap-2 hover:bg-muted px-4 py-2 rounded-2xl transition-smooth">
+                <Building2 className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm font-medium">{selectedDealership}</span>
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" side="bottom" sideOffset={8} className="z-[500] w-72 p-2 bg-card rounded-2xl shadow-strong border border-border">
+              {/* Organization */}
+              <button
+                onClick={() => setSelectedDealership(organization)}
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-smooth text-left",
+                  selectedDealership === organization
+                    ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]"
+                    : "hover:bg-muted"
+                )}
+              >
+                <Building2 className="w-5 h-5" />
+                <div className="text-sm font-semibold">{organization}</div>
+              </button>
 
-            {showDealershipDropdown && (
-              <div className="absolute right-0 mt-2 w-72 bg-card rounded-2xl shadow-strong border border-border overflow-hidden z-[100]">
-                <div className="p-2">
-                  {/* Organization */}
+              {/* Divider */}
+              <div className="my-1 mx-4 border-t border-border/50" />
+
+              {/* Dealerships */}
+              <div className="pl-2">
+                {dealerships.map((dealer) => (
                   <button
-                    onClick={() => {
-                      setSelectedDealership(organization);
-                      setShowDealershipDropdown(false);
-                    }}
+                    key={dealer}
+                    onClick={() => setSelectedDealership(dealer)}
                     className={cn(
-                      "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-smooth text-left",
-                      selectedDealership === organization
+                      "w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-smooth text-left",
+                      selectedDealership === dealer
                         ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]"
                         : "hover:bg-muted"
                     )}
                   >
-                    <Building2 className="w-5 h-5" />
-                    <div className="text-sm font-semibold">{organization}</div>
+                    <Building className="w-4 h-4 opacity-70" />
+                    <div className="text-sm font-medium">{dealer}</div>
                   </button>
-
-                  {/* Divider */}
-                  <div className="my-1 mx-4 border-t border-border/50" />
-
-                  {/* Dealerships */}
-                  <div className="pl-2">
-                    {dealerships.map((dealer) => (
-                      <button
-                        key={dealer}
-                        onClick={() => {
-                          setSelectedDealership(dealer);
-                          setShowDealershipDropdown(false);
-                        }}
-                        className={cn(
-                          "w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-smooth text-left",
-                          selectedDealership === dealer
-                            ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]"
-                            : "hover:bg-muted"
-                        )}
-                      >
-                        <Building className="w-4 h-4 opacity-70" />
-                        <div className="text-sm font-medium">{dealer}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                ))}
               </div>
-            )}
-          </div>
+            </PopoverContent>
+          </Popover>
 
           <div className="w-px h-6 bg-border" />
 
           {/* Profile Dropdown */}
-          <div className="relative" ref={profileDropdownRef}>
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center gap-2 hover:bg-muted px-4 py-2 rounded-2xl transition-smooth"
-            >
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(var(--teal))] to-[hsl(var(--blue))] flex items-center justify-center text-white text-sm font-semibold">
-                S
-              </div>
-              <span className="text-sm font-medium">Sean</span>
-              <ChevronDown className="w-4 h-4 text-muted-foreground" />
-            </button>
-
-            {/* Dropdown */}
-            {showDropdown && (
-              <div className="absolute right-0 mt-2 w-56 bg-card rounded-2xl shadow-strong border border-border overflow-hidden z-[100]">
-                <div className="p-2">
-                  <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-smooth text-left">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(var(--teal))] to-[hsl(var(--blue))] flex items-center justify-center text-white text-sm font-semibold">
-                      S
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium">Profile</div>
-                      <div className="text-xs text-muted-foreground">View your profile</div>
-                    </div>
-                  </button>
-                  <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-smooth text-left">
-                    <div className="text-sm font-medium">Access Management</div>
-                  </button>
-                  <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-smooth text-left">
-                    <div className="text-sm font-medium">Settings</div>
-                  </button>
-                  <div className="my-2 border-t border-border" />
-                  <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-destructive/10 text-destructive transition-smooth text-left">
-                    <div className="text-sm font-medium">Logout</div>
-                  </button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="flex items-center gap-2 hover:bg-muted px-4 py-2 rounded-2xl transition-smooth">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(var(--teal))] to-[hsl(var(--blue))] flex items-center justify-center text-white text-sm font-semibold">
+                  S
                 </div>
-              </div>
-            )}
-          </div>
+                <span className="text-sm font-medium">Sean</span>
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" side="bottom" sideOffset={8} className="z-[500] w-56 p-2 bg-card rounded-2xl shadow-strong border border-border">
+              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-smooth text-left">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(var(--teal))] to-[hsl(var(--blue))] flex items-center justify-center text-white text-sm font-semibold">
+                  S
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Profile</div>
+                  <div className="text-xs text-muted-foreground">View your profile</div>
+                </div>
+              </button>
+              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-smooth text-left">
+                <div className="text-sm font-medium">Access Management</div>
+              </button>
+              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-smooth text-left">
+                <div className="text-sm font-medium">Settings</div>
+              </button>
+              <div className="my-2 border-t border-border" />
+              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-destructive/10 text-destructive transition-smooth text-left">
+                <div className="text-sm font-medium">Logout</div>
+              </button>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </nav>
