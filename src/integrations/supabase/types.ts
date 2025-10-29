@@ -87,6 +87,8 @@ export type Database = {
           created_at: string
           field_type: string
           id: string
+          number_subtype: string | null
+          options: string[] | null
           updated_at: string
           user_id: string
         }
@@ -96,6 +98,8 @@ export type Database = {
           created_at?: string
           field_type: string
           id?: string
+          number_subtype?: string | null
+          options?: string[] | null
           updated_at?: string
           user_id: string
         }
@@ -105,6 +109,8 @@ export type Database = {
           created_at?: string
           field_type?: string
           id?: string
+          number_subtype?: string | null
+          options?: string[] | null
           updated_at?: string
           user_id?: string
         }
