@@ -24,9 +24,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { EmailTemplateBuilder } from "./EmailTemplateBuilder";
 
 export const EmailTemplates = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [builderOpen, setBuilderOpen] = useState(false);
+  const [editingTemplate, setEditingTemplate] = useState<any>(null);
 
   const systemTemplates = [
     { 
@@ -112,11 +115,22 @@ export const EmailTemplates = () => {
           <p className="text-muted-foreground">Create and manage reusable email templates</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button 
+            variant="outline"
+            onClick={() => {
+              setEditingTemplate(null);
+              setBuilderOpen(true);
+            }}
+          >
             <Sparkles className="w-4 h-4 mr-2" />
             AI Template
           </Button>
-          <Button>
+          <Button
+            onClick={() => {
+              setEditingTemplate(null);
+              setBuilderOpen(true);
+            }}
+          >
             <Plus className="w-4 h-4 mr-2" />
             Create Template
           </Button>
@@ -244,7 +258,14 @@ export const EmailTemplates = () => {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setEditingTemplate(template);
+                              setBuilderOpen(true);
+                            }}
+                          >
+                            Edit
+                          </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Eye className="w-4 h-4 mr-2" />
                             Preview
@@ -283,6 +304,15 @@ export const EmailTemplates = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      <EmailTemplateBuilder
+        open={builderOpen}
+        onClose={() => {
+          setBuilderOpen(false);
+          setEditingTemplate(null);
+        }}
+        template={editingTemplate}
+      />
     </div>
   );
 };
