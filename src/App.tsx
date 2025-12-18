@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import CRM from "./pages/CRM";
 import Email from "./pages/Email";
+import SMS from "./pages/SMS";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/reset" element={<ResetPassword />} />
           <Route path="/crm" element={<CRM />} />
           <Route path="/email" element={<Email />} />
+          <Route path="/sms" element={<SMS />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
