@@ -1,4 +1,4 @@
-import { Radar, Users, Mail, Megaphone, Headset, Bot, Package, Plug, Zap, MessageSquare } from "lucide-react";
+import { Radar, Users, Mail, Megaphone, Headset, Bot, Package, Plug, Zap, MessageSquare, MessagesSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -16,6 +16,7 @@ const navItems: NavItem[] = [
   { icon: Mail, label: "Email", path: "/email" },
   { icon: MessageSquare, label: "SMS", path: "/sms" },
   { icon: Headset, label: "Calls", path: "/calls" },
+  { icon: MessagesSquare, label: "Conversations", path: "/conversations" },
   { icon: Bot, label: "Chatbot", path: "/chatbot" },
   { icon: Package, label: "Inventory", path: "/inventory" },
   { icon: Megaphone, label: "Ads", path: "/ads" },
