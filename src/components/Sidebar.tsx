@@ -16,7 +16,7 @@ const navItems: NavItem[] = [
   { icon: Mail, label: "Email", path: "/email" },
   { icon: MessageSquare, label: "SMS", path: "/sms" },
   { icon: Headset, label: "Calls", path: "/calls" },
-  { icon: MessagesSquare, label: "Conversations", path: "/conversations" },
+  { icon: MessagesSquare, label: "Conv", path: "/conversations" },
   { icon: Bot, label: "Chatbot", path: "/chatbot" },
   { icon: Package, label: "Inventory", path: "/inventory" },
   { icon: Megaphone, label: "Ads", path: "/ads" },
@@ -78,7 +78,7 @@ export const Sidebar = () => {
                 : "hover:bg-white/10"
             )}
           >
-            <item.icon className="w-5 h-5" />
+            <item.icon className="w-4 h-4" />
             <span className="text-[10px] font-medium text-center leading-tight whitespace-nowrap">
               {item.label}
             </span>
