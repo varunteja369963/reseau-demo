@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Sidebar } from "@/components/Sidebar";
 import { SMSTopNav } from "@/components/sms/SMSTopNav";
 import { SMSDashboard } from "@/components/sms/SMSDashboard";
 import { SMSCampaigns } from "@/components/sms/SMSCampaigns";
@@ -54,11 +55,18 @@ const SMS = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <SMSTopNav activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="p-6">
-        {renderContent()}
-      </main>
+    <div className="min-h-screen bg-background overflow-x-hidden">
+      <Sidebar />
+      
+      <div className="lg:ml-24 min-h-screen flex flex-col max-w-[100vw]">
+        <SMSTopNav activeTab={activeTab} onTabChange={setActiveTab} />
+        
+        <main className="flex-1 p-4 md:p-6 lg:p-6 overflow-x-hidden">
+          <div className="max-w-full mx-auto">
+            {renderContent()}
+          </div>
+        </main>
+      </div>
     </div>
   );
 };
