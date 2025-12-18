@@ -8,6 +8,7 @@ import CRM from "./pages/CRM";
 import Email from "./pages/Email";
 import SMS from "./pages/SMS";
 import Calls from "./pages/Calls";
+import Conversations from "./pages/Conversations";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/email" element={<Email />} />
           <Route path="/sms" element={<SMS />} />
           <Route path="/calls" element={<Calls />} />
+          <Route path="/conversations" element={<Conversations />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
