@@ -16,7 +16,6 @@ import {
   Bell,
   HelpCircle,
   Search,
-  ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +27,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import type { SMSTab } from "@/pages/SMS";
 
 interface SMSTopNavProps {
@@ -58,34 +56,7 @@ export function SMSTopNav({ activeTab, onTabChange }: SMSTopNavProps) {
       {/* Top Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border">
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/")}
-            className="gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="gap-2">
-                <div className="h-6 w-6 rounded bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
-                  R
-                </div>
-                Reseau SMS
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem>Reseau SMS</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Create New Workspace</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          
-          <Badge variant="secondary" className="text-xs">Production</Badge>
+          <h1 className="text-lg font-semibold">SMS Marketing</h1>
         </div>
 
         <div className="flex-1 max-w-md mx-8">
