@@ -219,7 +219,7 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
                       <Badge
                         key={channel}
                         variant="secondary"
-                        className="text-[10px] px-1.5 py-0 h-5 gap-1 rounded-lg bg-sky-500/15 text-sky-600 border-0 font-medium"
+                        className="text-[10px] px-1.5 py-0 h-5 gap-1 rounded-lg bg-[hsl(var(--blue))]/12 text-[hsl(var(--blue))] border border-[hsl(var(--blue))]/20 font-medium"
                       >
                         {getChannelIcon(channel)}
                         {channel}
@@ -238,7 +238,7 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
                       variant="secondary"
                       className={`text-[10px] rounded-lg border-0 ${
                         conversation.status === "open" 
-                          ? "bg-green-500/10 text-green-600" 
+                          ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]" 
                           : "bg-muted text-muted-foreground"
                       }`}
                     >

@@ -190,7 +190,7 @@ export const MyConversations = () => {
                       variant="secondary"
                       className={`rounded-lg border-0 ${
                         conversation.status === "open" 
-                          ? "bg-green-500/10 text-green-600" 
+                          ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]" 
                           : "bg-muted text-muted-foreground"
                       }`}
                     >

@@ -206,7 +206,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                 <Label>Friendly Name</Label>
                 <Tooltip>
                   <TooltipTrigger>
-                    <AlertTriangle className="h-4 w-4 text-amber-500" />
+                    <AlertTriangle className="h-4 w-4 text-[hsl(var(--red))]" />
                   </TooltipTrigger>
                   <TooltipContent className="rounded-xl">
                     <p className="max-w-xs">
@@ -479,7 +479,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               <Button variant="outline" size="sm" className="rounded-xl">
                 Reset Changes
               </Button>
-              <Button size="sm" className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">Save</Button>
+              <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl">Save</Button>
             </div>
           </TabsContent>
 
@@ -509,7 +509,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                 <Switch 
                   checked={autoClose} 
                   onCheckedChange={setAutoClose}
-                  className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-teal-500 data-[state=checked]:to-teal-600"
+                  className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
               </div>
 
@@ -527,9 +527,9 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                 </Select>
               )}
 
-              <div className="p-3 bg-gradient-to-r from-teal-500/10 to-teal-600/10 rounded-xl border border-teal-500/20">
+              <div className="p-3 bg-gradient-to-r from-[hsl(var(--teal))]/8 to-[hsl(var(--blue))]/8 rounded-xl border border-[hsl(var(--teal))]/15">
                 <div className="flex items-start gap-2">
-                  <Info className="h-4 w-4 text-teal-600 mt-0.5" />
+                  <Info className="h-4 w-4 text-[hsl(var(--teal))] mt-0.5" />
                   <p className="text-xs text-muted-foreground">
                     Timers help manage lifecycle and reduce inactive threads. This helps keep users focused on active conversations.
                   </p>
@@ -540,9 +540,9 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
 
           {/* Webhooks Tab */}
           <TabsContent value="webhooks" className="p-4 space-y-4 m-0">
-            <div className="p-3 bg-gradient-to-r from-teal-500/10 to-teal-600/10 rounded-xl border border-teal-500/20 mb-4">
+            <div className="p-3 bg-gradient-to-r from-[hsl(var(--teal))]/8 to-[hsl(var(--blue))]/8 rounded-xl border border-[hsl(var(--teal))]/15 mb-4">
               <div className="flex items-start gap-2">
-                <Info className="h-4 w-4 text-teal-600 mt-0.5" />
+                <Info className="h-4 w-4 text-[hsl(var(--teal))] mt-0.5" />
                 <div>
                   <p className="text-xs text-muted-foreground mb-1">
                     Configure service-level webhooks in Settings → Service.
@@ -556,7 +556,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
 
             <div className="flex items-center justify-between">
               <h4 className="font-medium">Conversation Webhooks</h4>
-              <Button size="sm" className="gap-1 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
+              <Button size="sm" className="gap-1 bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl">
                 <Plus className="h-4 w-4" />
                 Add
               </Button>
@@ -566,27 +566,30 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               {demoWebhooks.map((webhook) => (
                 <div
                   key={webhook.id}
-                  className="p-3 border border-teal-500/20 rounded-xl space-y-2 bg-teal-500/5"
+                  className="p-3 border border-[hsl(var(--teal))]/15 rounded-xl space-y-2 bg-[hsl(var(--teal))]/5"
                 >
                   <div className="flex items-center justify-between">
                     <code className="text-xs truncate max-w-[200px]">{webhook.url}</code>
-                    <Badge variant={webhook.enabled ? "default" : "secondary"} className={`rounded-lg ${webhook.enabled ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white border-0" : ""}`}>
+                    <Badge
+                      variant={webhook.enabled ? "default" : "secondary"}
+                      className={`rounded-lg ${webhook.enabled ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))] border-0" : ""}`}
+                    >
                       {webhook.enabled ? "Enabled" : "Disabled"}
                     </Badge>
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {webhook.events.map((event) => (
-                      <Badge key={event} variant="outline" className="text-[10px] rounded-lg border-teal-500/30 text-teal-600">
+                      <Badge key={event} variant="outline" className="text-[10px] rounded-lg border-[hsl(var(--teal))]/25 text-[hsl(var(--teal))]">
                         {event}
                       </Badge>
                     ))}
                   </div>
                   <div className="flex items-center justify-between">
-                    <Badge variant="secondary" className="text-[10px] rounded-lg bg-teal-500/10 text-teal-600 border-0">
+                    <Badge variant="secondary" className="text-[10px] rounded-lg bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))] border-0">
                       {webhook.type}
                     </Badge>
                     <div className="flex gap-1">
-                      <Button variant="ghost" size="icon" className="h-6 w-6 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
+                      <Button variant="ghost" size="icon" className="h-6 w-6 rounded-lg hover:bg-[hsl(var(--teal))]/10 hover:text-[hsl(var(--teal))]">
                         <ExternalLink className="h-3 w-3" />
                       </Button>
                       <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive rounded-lg hover:bg-destructive/10">
@@ -610,7 +613,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                   "onParticipantUpdated",
                 ].map((event) => (
                   <div key={event} className="flex items-center gap-2">
-                    <input type="checkbox" id={event} className="rounded accent-teal-500" />
+                    <input type="checkbox" id={event} className="rounded accent-[hsl(var(--teal))]" />
                     <label htmlFor={event}>{event}</label>
                   </div>
                 ))}
@@ -639,9 +642,9 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               {demoActivity.map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex items-start gap-3 p-2 border-l-2 border-teal-500"
+                  className="flex items-start gap-3 p-2 border-l-2 border-l-[hsl(var(--teal))]"
                 >
-                  <Clock className="h-4 w-4 text-teal-600 mt-0.5" />
+                  <Clock className="h-4 w-4 text-[hsl(var(--teal))] mt-0.5" />
                   <div className="flex-1">
                     <p className="text-sm">{activity.description}</p>
                     <div className="flex items-center gap-2 mt-1">
@@ -666,11 +669,11 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               {demoNotes.map((note) => (
                 <div
                   key={note.id}
-                  className="p-3 bg-gradient-to-r from-teal-500/10 to-teal-600/10 border border-teal-500/20 rounded-xl"
+                  className="p-3 bg-gradient-to-r from-[hsl(var(--teal))]/8 to-[hsl(var(--blue))]/8 border border-[hsl(var(--teal))]/15 rounded-xl"
                 >
                   <p className="text-sm">{note.content}</p>
                   <div className="flex items-center gap-2 mt-2">
-                    <span className="text-xs font-medium text-teal-600">{note.author}</span>
+                    <span className="text-xs font-medium text-[hsl(var(--teal))]">{note.author}</span>
                     <span className="text-xs text-muted-foreground">
                       {new Date(note.timestamp).toLocaleString()}
                     </span>
@@ -686,7 +689,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                 onChange={(e) => setNewNote(e.target.value)}
                 className="min-h-[80px] rounded-xl bg-muted/30"
               />
-              <Button size="sm" disabled={!newNote.trim()} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl disabled:opacity-50">
+              <Button size="sm" disabled={!newNote.trim()} className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl disabled:opacity-50">
                 Add Note
               </Button>
             </div>
