@@ -88,6 +88,14 @@ const templates = [
 
 const categories = ["All", "Onboarding", "Marketing", "Transactional", "Survey", "Custom"];
 
+const categoryColors: Record<string, string> = {
+  Onboarding: "bg-teal-500/10 text-teal-600",
+  Marketing: "bg-purple-500/10 text-purple-600",
+  Transactional: "bg-amber-500/10 text-amber-600",
+  Survey: "bg-red-500/10 text-red-500",
+  Custom: "bg-muted text-muted-foreground",
+};
+
 export function SMSTemplates() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
@@ -122,7 +130,7 @@ export function SMSTemplates() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Templates</h1>
+          <h1 className="text-2xl font-bold text-foreground">Templates</h1>
           <p className="text-muted-foreground">Create and manage SMS message templates</p>
         </div>
         <Button onClick={() => openEditor()} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
@@ -141,7 +149,7 @@ export function SMSTemplates() {
                 placeholder="Search templates..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 rounded-xl"
+                className="pl-9 rounded-xl border-0 bg-muted/30"
               />
             </div>
             <div className="flex gap-2">
@@ -151,7 +159,7 @@ export function SMSTemplates() {
                   variant={categoryFilter === category ? "secondary" : "ghost"}
                   size="sm"
                   onClick={() => setCategoryFilter(category)}
-                  className="rounded-xl"
+                  className={`rounded-xl ${categoryFilter === category ? "bg-teal-500/10 text-teal-600 hover:bg-teal-500/20" : ""}`}
                 >
                   {category}
                 </Button>
@@ -164,16 +172,18 @@ export function SMSTemplates() {
       {/* Templates Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredTemplates.map((template) => (
-          <Card key={template.id} className="rounded-3xl shadow-soft border-0 bg-card hover:shadow-md transition-all">
+          <Card key={template.id} className="rounded-3xl shadow-soft border-0 bg-card hover:shadow-md transition-all group">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-base">{template.name}</CardTitle>
-                  <CardDescription>{template.category}</CardDescription>
+                  <CardTitle className="text-base text-foreground">{template.name}</CardTitle>
+                  <Badge variant="secondary" className={`mt-1 rounded-lg ${categoryColors[template.category] || categoryColors.Custom}`}>
+                    {template.category}
+                  </Badge>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="rounded-xl">
+                    <Button variant="ghost" size="icon" className="rounded-xl opacity-0 group-hover:opacity-100 transition-opacity">
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -197,7 +207,7 @@ export function SMSTemplates() {
             </CardHeader>
             <CardContent>
               <div className="bg-muted/30 rounded-xl p-3 mb-3">
-                <p className="text-sm line-clamp-3">{template.preview}</p>
+                <p className="text-sm line-clamp-3 text-muted-foreground">{template.preview}</p>
               </div>
               <p className="text-xs text-muted-foreground">
                 Last updated: {template.lastUpdated}
@@ -209,9 +219,9 @@ export function SMSTemplates() {
 
       {/* Template Editor Dialog */}
       <Dialog open={editorOpen} onOpenChange={setEditorOpen}>
-        <DialogContent className="max-w-4xl h-[80vh]">
+        <DialogContent className="max-w-4xl h-[80vh] rounded-2xl">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-foreground">
               {selectedTemplate ? "Edit Template" : "Create Template"}
             </DialogTitle>
             <DialogDescription>
@@ -226,15 +236,16 @@ export function SMSTemplates() {
                 <Input 
                   placeholder="Enter template name" 
                   defaultValue={selectedTemplate?.name}
+                  className="rounded-xl border-0 bg-muted/30"
                 />
               </div>
               <div className="space-y-2">
                 <Label>Category</Label>
                 <Select defaultValue={selectedTemplate?.category || "Custom"}>
-                  <SelectTrigger>
+                  <SelectTrigger className="rounded-xl border-0 bg-muted/30">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="rounded-xl">
                     {categories.filter(c => c !== "All").map((category) => (
                       <SelectItem key={category} value={category}>
                         {category}
@@ -248,12 +259,12 @@ export function SMSTemplates() {
                   <Label>Message Body</Label>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="rounded-xl border-0 bg-muted/30">
                         <Code className="h-4 w-4 mr-2" />
                         Insert Merge Tag
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent>
+                    <DropdownMenuContent className="rounded-xl">
                       <DropdownMenuItem onClick={() => insertMergeTag("first_name")}>
                         {"{{first_name}}"}
                       </DropdownMenuItem>
@@ -271,7 +282,7 @@ export function SMSTemplates() {
                 </div>
                 <Textarea
                   placeholder="Type your message here..."
-                  className="min-h-[200px] font-mono"
+                  className="min-h-[200px] font-mono rounded-xl border-0 bg-muted/30"
                   value={templateBody}
                   onChange={(e) => setTemplateBody(e.target.value)}
                 />
@@ -279,12 +290,12 @@ export function SMSTemplates() {
                   <span className="text-muted-foreground">
                     {charCount}/160 characters • {segments} segment{segments > 1 ? "s" : ""}
                   </span>
-                  <Badge variant={isUnicode ? "secondary" : "outline"}>
+                  <Badge variant={isUnicode ? "secondary" : "outline"} className={`rounded-lg ${isUnicode ? "bg-amber-500/10 text-amber-600" : ""}`}>
                     {isUnicode ? "Unicode" : "GSM-7"}
                   </Badge>
                 </div>
                 {isUnicode && (
-                  <p className="text-xs text-yellow-500">
+                  <p className="text-xs text-amber-600">
                     ⚠️ Unicode characters detected. Message segments will be limited to 70 characters.
                   </p>
                 )}
@@ -293,15 +304,17 @@ export function SMSTemplates() {
 
             {/* Preview & Tools */}
             <div className="space-y-4 overflow-y-auto">
-              <Card>
+              <Card className="rounded-2xl shadow-soft border-0 bg-card">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <FileText className="h-4 w-4" />
+                  <CardTitle className="text-base flex items-center gap-2 text-foreground">
+                    <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-teal-500/20 to-teal-600/20 flex items-center justify-center">
+                      <FileText className="h-4 w-4 text-teal-500" />
+                    </div>
                     Preview
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="bg-muted rounded-lg p-4">
+                  <div className="bg-muted/30 rounded-xl p-4">
                     <p className="text-sm whitespace-pre-wrap">
                       {templateBody || "Your message preview will appear here..."}
                     </p>
@@ -309,10 +322,12 @@ export function SMSTemplates() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="rounded-2xl shadow-soft border-0 bg-card">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <Sparkles className="h-4 w-4" />
+                  <CardTitle className="text-base flex items-center gap-2 text-foreground">
+                    <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center">
+                      <Sparkles className="h-4 w-4 text-purple-500" />
+                    </div>
                     Test Render
                   </CardTitle>
                   <CardDescription>
@@ -321,18 +336,18 @@ export function SMSTemplates() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <Select value={testContact} onValueChange={setTestContact}>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl border-0 bg-muted/30">
                       <SelectValue placeholder="Select sample contact" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-xl">
                       <SelectItem value="john">John Smith (+1 555-0123)</SelectItem>
                       <SelectItem value="sarah">Sarah Johnson (+1 555-0456)</SelectItem>
                       <SelectItem value="mike">Mike Wilson (+1 555-0789)</SelectItem>
                     </SelectContent>
                   </Select>
                   {testContact && (
-                    <div className="bg-primary/10 rounded-lg p-4">
-                      <p className="text-sm whitespace-pre-wrap">
+                    <div className="bg-teal-500/10 rounded-xl p-4">
+                      <p className="text-sm whitespace-pre-wrap text-teal-700 dark:text-teal-300">
                         {templateBody
                           .replace("{{first_name}}", testContact === "john" ? "John" : testContact === "sarah" ? "Sarah" : "Mike")
                           .replace("{{last_name}}", testContact === "john" ? "Smith" : testContact === "sarah" ? "Johnson" : "Wilson")}
@@ -342,10 +357,12 @@ export function SMSTemplates() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="rounded-2xl shadow-soft border-0 bg-card">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <Type className="h-4 w-4" />
+                  <CardTitle className="text-base flex items-center gap-2 text-foreground">
+                    <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-600/20 flex items-center justify-center">
+                      <Type className="h-4 w-4 text-amber-500" />
+                    </div>
                     Available Merge Tags
                   </CardTitle>
                 </CardHeader>
@@ -355,7 +372,7 @@ export function SMSTemplates() {
                       <Badge
                         key={tag}
                         variant="outline"
-                        className="cursor-pointer hover:bg-muted"
+                        className="cursor-pointer hover:bg-teal-500/10 hover:text-teal-600 rounded-lg border-0 bg-muted/30"
                         onClick={() => insertMergeTag(tag)}
                       >
                         {`{{${tag}}}`}
@@ -367,14 +384,14 @@ export function SMSTemplates() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditorOpen(false)}>
+            <Button variant="outline" onClick={() => setEditorOpen(false)} className="rounded-xl">
               Cancel
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" className="rounded-xl">
               <Copy className="h-4 w-4 mr-2" />
               Duplicate
             </Button>
-            <Button onClick={() => setEditorOpen(false)}>
+            <Button onClick={() => setEditorOpen(false)} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
               Save Template
             </Button>
           </DialogFooter>
