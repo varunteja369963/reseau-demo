@@ -172,10 +172,10 @@ export function SMSCampaigns() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Campaigns</h1>
+          <h1 className="text-2xl font-bold text-foreground">Campaigns</h1>
           <p className="text-muted-foreground">Create and manage your SMS campaigns</p>
         </div>
-        <Button onClick={() => setCreateDialogOpen(true)} className="gap-2">
+        <Button onClick={() => setCreateDialogOpen(true)} className="gap-2 gradient-teal text-white border-0 rounded-xl">
           <Plus className="h-4 w-4" />
           New Campaign
         </Button>
@@ -184,7 +184,7 @@ export function SMSCampaigns() {
       <SMSComplianceBanner />
 
       {/* Filters */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0">
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
             <div className="relative flex-1 max-w-sm">
@@ -193,14 +193,14 @@ export function SMSCampaigns() {
                 placeholder="Search campaigns..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 rounded-xl border-0 bg-muted/30"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[150px] rounded-xl border-0 bg-muted/30">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="draft">Draft</SelectItem>
                 <SelectItem value="scheduled">Scheduled</SelectItem>
@@ -211,10 +211,10 @@ export function SMSCampaigns() {
               </SelectContent>
             </Select>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[150px] rounded-xl border-0 bg-muted/30">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="broadcast">Broadcast</SelectItem>
                 <SelectItem value="scheduled">Scheduled</SelectItem>
@@ -223,7 +223,7 @@ export function SMSCampaigns() {
                 <SelectItem value="resend">Resend</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" className="rounded-xl border-0 bg-muted/30">
               <Filter className="h-4 w-4" />
             </Button>
           </div>
@@ -231,7 +231,7 @@ export function SMSCampaigns() {
       </Card>
 
       {/* Campaigns Table */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0">
         <CardContent className="p-0">
           <Table>
             <TableHeader>

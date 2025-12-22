@@ -102,19 +102,19 @@ export const EmailContacts = () => {
       {/* Header Actions */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Contacts</h2>
+          <h2 className="text-2xl font-bold text-foreground">Contacts</h2>
           <p className="text-muted-foreground">Manage your email subscribers and audience</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-xl border-0 bg-card shadow-soft">
             <Upload className="w-4 h-4 mr-2" />
             Import
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-xl border-0 bg-card shadow-soft">
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
-          <Button>
+          <Button className="gradient-teal text-white border-0 rounded-xl">
             <UserPlus className="w-4 h-4 mr-2" />
             Add Contact
           </Button>
@@ -123,66 +123,66 @@ export const EmailContacts = () => {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Contacts</p>
-                <p className="text-2xl font-bold">12,458</p>
-                <p className="text-xs text-green-500 flex items-center gap-1 mt-1">
-                  <TrendingUp className="w-3 h-3" />
-                  +12.5% this month
-                </p>
-              </div>
-              <Users className="w-8 h-8 text-muted-foreground" />
+        <div className="bg-card rounded-3xl p-5 shadow-soft">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Total Contacts</p>
+              <p className="text-2xl font-bold text-foreground">12,458</p>
+              <p className="text-xs text-green-500 flex items-center gap-1 mt-1">
+                <TrendingUp className="w-3 h-3" />
+                +12.5% this month
+              </p>
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Subscribed</p>
-                <p className="text-2xl font-bold">11,890</p>
-                <p className="text-xs text-muted-foreground mt-1">95.4% of total</p>
-              </div>
-              <Mail className="w-8 h-8 text-green-500" />
+            <div className="w-10 h-10 gradient-teal rounded-2xl flex items-center justify-center">
+              <Users className="w-5 h-5 text-white" />
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Unsubscribed</p>
-                <p className="text-2xl font-bold">432</p>
-                <p className="text-xs text-muted-foreground mt-1">3.5% of total</p>
-              </div>
-              <Mail className="w-8 h-8 text-orange-500" />
+          </div>
+        </div>
+        <div className="bg-card rounded-3xl p-5 shadow-soft">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Subscribed</p>
+              <p className="text-2xl font-bold text-foreground">11,890</p>
+              <p className="text-xs text-muted-foreground mt-1">95.4% of total</p>
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Avg. Engagement</p>
-                <p className="text-2xl font-bold">73</p>
-                <p className="text-xs text-muted-foreground mt-1">Score out of 100</p>
-              </div>
-              <TrendingUp className="w-8 h-8 text-primary" />
+            <div className="w-10 h-10 gradient-blue rounded-2xl flex items-center justify-center">
+              <Mail className="w-5 h-5 text-white" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+        <div className="bg-card rounded-3xl p-5 shadow-soft">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Unsubscribed</p>
+              <p className="text-2xl font-bold text-foreground">432</p>
+              <p className="text-xs text-muted-foreground mt-1">3.5% of total</p>
+            </div>
+            <div className="w-10 h-10 gradient-red rounded-2xl flex items-center justify-center">
+              <Mail className="w-5 h-5 text-white" />
+            </div>
+          </div>
+        </div>
+        <div className="bg-card rounded-3xl p-5 shadow-soft">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Avg. Engagement</p>
+              <p className="text-2xl font-bold text-foreground">73</p>
+              <p className="text-xs text-muted-foreground mt-1">Score out of 100</p>
+            </div>
+            <div className="w-10 h-10 gradient-purple rounded-2xl flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-white" />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="all" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="all">All Contacts</TabsTrigger>
-          <TabsTrigger value="lists">Lists</TabsTrigger>
-          <TabsTrigger value="segments">Segments</TabsTrigger>
-          <TabsTrigger value="tags">Tags</TabsTrigger>
+        <TabsList className="bg-card shadow-soft rounded-2xl p-1">
+          <TabsTrigger value="all" className="rounded-xl">All Contacts</TabsTrigger>
+          <TabsTrigger value="lists" className="rounded-xl">Lists</TabsTrigger>
+          <TabsTrigger value="segments" className="rounded-xl">Segments</TabsTrigger>
+          <TabsTrigger value="tags" className="rounded-xl">Tags</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">
@@ -194,17 +194,17 @@ export const EmailContacts = () => {
                 placeholder="Search contacts by name, email, or tags..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 rounded-xl border-0 bg-card shadow-soft"
               />
             </div>
-            <Button variant="outline">
+            <Button variant="outline" className="rounded-xl border-0 bg-card shadow-soft">
               <Filter className="w-4 h-4 mr-2" />
               Filter
             </Button>
           </div>
 
           {/* Contacts Table */}
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>

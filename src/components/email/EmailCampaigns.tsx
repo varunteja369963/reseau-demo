@@ -116,15 +116,15 @@ export const EmailCampaigns = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Campaigns</h2>
+          <h2 className="text-2xl font-bold text-foreground">Campaigns</h2>
           <p className="text-muted-foreground">Create and manage your email campaigns</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-xl border-0 bg-card shadow-soft">
             <Sparkles className="w-4 h-4 mr-2" />
             AI Campaign
           </Button>
-          <Button>
+          <Button className="gradient-teal text-white border-0 rounded-xl">
             <Plus className="w-4 h-4 mr-2" />
             Create Campaign
           </Button>
@@ -139,10 +139,10 @@ export const EmailCampaigns = () => {
             placeholder="Search campaigns..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className="pl-10 rounded-xl border-0 bg-card shadow-soft"
           />
         </div>
-        <Button variant="outline">
+        <Button variant="outline" className="rounded-xl border-0 bg-card shadow-soft">
           <Filter className="w-4 h-4 mr-2" />
           Filter
         </Button>
@@ -150,14 +150,14 @@ export const EmailCampaigns = () => {
 
       {/* Campaign Tabs */}
       <Tabs defaultValue="sent" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="sent">
+        <TabsList className="bg-card shadow-soft rounded-2xl p-1">
+          <TabsTrigger value="sent" className="rounded-xl">
             Sent ({campaigns.sent.length})
           </TabsTrigger>
-          <TabsTrigger value="scheduled">
+          <TabsTrigger value="scheduled" className="rounded-xl">
             Scheduled ({campaigns.scheduled.length})
           </TabsTrigger>
-          <TabsTrigger value="draft">
+          <TabsTrigger value="draft" className="rounded-xl">
             Drafts ({campaigns.draft.length})
           </TabsTrigger>
         </TabsList>
@@ -165,7 +165,7 @@ export const EmailCampaigns = () => {
         {/* Sent Campaigns */}
         <TabsContent value="sent" className="space-y-4">
           {campaigns.sent.map((campaign) => (
-            <Card key={campaign.id}>
+            <Card key={campaign.id} className="rounded-3xl shadow-soft border-0">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">

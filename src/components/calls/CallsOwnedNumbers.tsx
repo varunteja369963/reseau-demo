@@ -164,14 +164,14 @@ export function CallsOwnedNumbers({ onNavigate }: CallsOwnedNumbersProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Phone Numbers</h1>
+          <h1 className="text-2xl font-bold text-foreground">Phone Numbers</h1>
           <p className="text-muted-foreground">Manage your owned phone numbers</p>
         </div>
-        <Button onClick={() => onNavigate("buy")}>Buy a Number</Button>
+        <Button onClick={() => onNavigate("buy")} className="gradient-teal text-white border-0 rounded-xl">Buy a Number</Button>
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0">
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
             <div className="relative flex-1 max-w-sm">
@@ -180,14 +180,14 @@ export function CallsOwnedNumbers({ onNavigate }: CallsOwnedNumbersProps) {
                 placeholder="Search numbers..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 rounded-xl border-0 bg-muted/30"
               />
             </div>
             <Select value={countryFilter} onValueChange={setCountryFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[150px] rounded-xl border-0 bg-muted/30">
                 <SelectValue placeholder="Country" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 <SelectItem value="all">All Countries</SelectItem>
                 <SelectItem value="US">United States</SelectItem>
                 <SelectItem value="UK">United Kingdom</SelectItem>
@@ -195,10 +195,10 @@ export function CallsOwnedNumbers({ onNavigate }: CallsOwnedNumbersProps) {
               </SelectContent>
             </Select>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[150px] rounded-xl border-0 bg-muted/30">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="local">Local</SelectItem>
                 <SelectItem value="toll-free">Toll-Free</SelectItem>
@@ -229,11 +229,11 @@ export function CallsOwnedNumbers({ onNavigate }: CallsOwnedNumbersProps) {
 
       {/* Numbers Table */}
       {filteredNumbers.length > 0 ? (
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0">
           <CardContent className="p-0">
             <Table>
               <TableHeader>
-                <TableRow>
+                <TableRow className="border-muted">
                   <TableHead className="w-[50px]">
                     <Checkbox
                       checked={selectedNumbers.length === filteredNumbers.length}

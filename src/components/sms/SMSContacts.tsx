@@ -184,19 +184,19 @@ export function SMSContacts() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Contacts</h1>
+          <h1 className="text-2xl font-bold text-foreground">Contacts</h1>
           <p className="text-muted-foreground">Manage your SMS contact database</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => setImportDialogOpen(true)} className="gap-2">
+          <Button variant="outline" onClick={() => setImportDialogOpen(true)} className="gap-2 rounded-xl border-0 bg-card shadow-soft">
             <Upload className="h-4 w-4" />
             Import CSV
           </Button>
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2 rounded-xl border-0 bg-card shadow-soft">
             <Download className="h-4 w-4" />
             Export
           </Button>
-          <Button onClick={() => setAddDialogOpen(true)} className="gap-2">
+          <Button onClick={() => setAddDialogOpen(true)} className="gap-2 gradient-teal text-white border-0 rounded-xl">
             <Plus className="h-4 w-4" />
             Add Contact
           </Button>
@@ -204,7 +204,7 @@ export function SMSContacts() {
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0">
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
             <div className="relative flex-1 max-w-sm">
@@ -213,14 +213,14 @@ export function SMSContacts() {
                 placeholder="Search contacts..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 rounded-xl border-0 bg-muted/30"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] rounded-xl border-0 bg-muted/30">
                 <SelectValue placeholder="Consent Status" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="subscribed">Subscribed</SelectItem>
                 <SelectItem value="unsubscribed">Unsubscribed</SelectItem>
@@ -229,7 +229,7 @@ export function SMSContacts() {
             </Select>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2">
+                <Button variant="outline" className="gap-2 rounded-xl border-0 bg-muted/30">
                   <Filter className="h-4 w-4" />
                   More Filters
                 </Button>
@@ -296,7 +296,7 @@ export function SMSContacts() {
       </Card>
 
       {/* Contacts Table */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0">
         <CardContent className="p-0">
           <Table>
             <TableHeader>

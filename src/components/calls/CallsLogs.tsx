@@ -160,12 +160,12 @@ export function CallsLogs() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">Calls</h1>
+        <h1 className="text-2xl font-bold text-foreground">Calls</h1>
         <p className="text-muted-foreground">View call history and details</p>
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0">
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
             <div className="relative flex-1 max-w-sm">
@@ -174,18 +174,18 @@ export function CallsLogs() {
                 placeholder="Search by SID, phone..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 rounded-xl border-0 bg-muted/30"
               />
             </div>
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 rounded-xl border-0 bg-muted/30">
               <Calendar className="h-4 w-4" />
               Date Range
             </Button>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[150px] rounded-xl border-0 bg-muted/30">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
                 <SelectItem value="missed">Missed</SelectItem>
@@ -194,10 +194,10 @@ export function CallsLogs() {
               </SelectContent>
             </Select>
             <Select value={directionFilter} onValueChange={setDirectionFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[150px] rounded-xl border-0 bg-muted/30">
                 <SelectValue placeholder="Direction" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 <SelectItem value="all">All Directions</SelectItem>
                 <SelectItem value="inbound">Inbound</SelectItem>
                 <SelectItem value="outbound">Outbound</SelectItem>
@@ -208,7 +208,7 @@ export function CallsLogs() {
       </Card>
 
       {/* Calls Table */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
