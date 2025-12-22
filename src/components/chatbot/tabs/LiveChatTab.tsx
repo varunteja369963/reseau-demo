@@ -58,6 +58,13 @@ export const LiveChatTab = ({ chatbotState }: LiveChatTabProps) => {
     <div className="h-full flex min-h-0 overflow-hidden">
       {/* Left Panel - Toggle between Conversation List and Customer Details */}
       <div className="w-64 min-w-[200px] max-w-[280px] border-r border-border flex flex-col flex-shrink-0 min-h-0">
+        {/* Selected Customer Header */}
+        {selectedConv && (
+          <div className="p-3 border-b border-border flex-shrink-0">
+            <p className="text-xs text-muted-foreground">Selected</p>
+            <p className="font-medium text-sm truncate">{selectedConv.customerName}</p>
+          </div>
+        )}
         {/* Toggle Header */}
         <div className="p-2 border-b border-border flex gap-1 flex-shrink-0">
           <Button
