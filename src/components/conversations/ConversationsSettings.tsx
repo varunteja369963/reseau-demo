@@ -40,7 +40,6 @@ import {
   Users,
   Webhook,
   Database,
-  MoreHorizontal,
   Eye,
   EyeOff,
   Copy,
@@ -107,27 +106,27 @@ export const ConversationsSettings = () => {
   return (
     <div className="p-6 space-y-6 max-w-4xl">
       <div>
-        <h2 className="text-2xl font-semibold">Conversations Settings</h2>
+        <h2 className="text-2xl font-semibold text-foreground">Conversations Settings</h2>
         <p className="text-muted-foreground">
           Manage services, team access, webhooks, and data retention
         </p>
       </div>
 
       <Tabs defaultValue="services">
-        <TabsList className="rounded-full bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-800 dark:to-slate-900 p-1.5 shadow-sm border border-slate-200/50 dark:border-slate-700/50">
-          <TabsTrigger value="services" className="gap-2 rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-500 data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200">
+        <TabsList className="bg-muted/50 rounded-xl p-1">
+          <TabsTrigger value="services" className="gap-2 rounded-lg data-[state=active]:bg-card data-[state=active]:shadow-sm">
             <Settings className="h-4 w-4" />
             Services
           </TabsTrigger>
-          <TabsTrigger value="team" className="gap-2 rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-teal-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200">
+          <TabsTrigger value="team" className="gap-2 rounded-lg data-[state=active]:bg-card data-[state=active]:shadow-sm">
             <Users className="h-4 w-4" />
             Team & Roles
           </TabsTrigger>
-          <TabsTrigger value="webhooks" className="gap-2 rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200">
+          <TabsTrigger value="webhooks" className="gap-2 rounded-lg data-[state=active]:bg-card data-[state=active]:shadow-sm">
             <Webhook className="h-4 w-4" />
             Webhooks
           </TabsTrigger>
-          <TabsTrigger value="retention" className="gap-2 rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200">
+          <TabsTrigger value="retention" className="gap-2 rounded-lg data-[state=active]:bg-card data-[state=active]:shadow-sm">
             <Database className="h-4 w-4" />
             Data Retention
           </TabsTrigger>
@@ -135,89 +134,76 @@ export const ConversationsSettings = () => {
 
         {/* Services Tab */}
         <TabsContent value="services" className="space-y-4">
-          <Card className="rounded-3xl shadow-soft border-0 bg-card">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center">
-                    <Settings className="h-5 w-5 text-violet-600 dark:text-violet-400" />
-                  </div>
-                  <div>
-                    <CardTitle>Conversation Services</CardTitle>
-                    <CardDescription>
-                      Services are top-level containers for conversations and can be configured with webhooks
-                    </CardDescription>
-                  </div>
-                </div>
-                <Button className="gap-2 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white border-0 rounded-full shadow-md">
-                  <Plus className="h-4 w-4" />
-                  New Service
-                </Button>
+          <div className="bg-card rounded-2xl p-6 shadow-soft">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-foreground">Conversation Services</h3>
+                <p className="text-sm text-muted-foreground">
+                  Services are top-level containers for conversations
+                </p>
               </div>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead>Service Name</TableHead>
-                    <TableHead>Environment</TableHead>
-                    <TableHead>Webhooks</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead className="w-[50px]"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {demoServices.map((service) => (
-                    <TableRow key={service.id} className="hover:bg-muted/50">
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{service.name}</span>
-                          {service.isDefault && (
-                            <Badge variant="secondary" className="rounded-full bg-gradient-to-r from-violet-500/20 to-purple-500/20 text-violet-600 dark:text-violet-400 border border-violet-500/30 shadow-sm">Default</Badge>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            service.environment === "Production"
-                              ? "default"
-                              : "outline"
-                          }
-                          className={`rounded-full shadow-sm ${service.environment === "Production" ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0" : "border-border"}`}
-                        >
-                          {service.environment}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {service.webhooksConfigured ? (
-                          <Badge variant="secondary" className="gap-1 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 shadow-sm">
-                            <Webhook className="h-3 w-3" />
-                            Configured
-                          </Badge>
-                        ) : (
-                          <span className="text-muted-foreground">Not configured</span>
+              <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl">
+                <Plus className="h-4 w-4" />
+                New Service
+              </Button>
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Service Name</TableHead>
+                  <TableHead>Environment</TableHead>
+                  <TableHead>Webhooks</TableHead>
+                  <TableHead>Created</TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {demoServices.map((service) => (
+                  <TableRow key={service.id} className="hover:bg-muted/50">
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{service.name}</span>
+                        {service.isDefault && (
+                          <Badge variant="secondary" className="rounded-lg bg-muted text-muted-foreground">Default</Badge>
                         )}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {service.createdAt}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setSelectedService(service.id)}
-                          className="rounded-lg hover:bg-muted"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={service.environment === "Production" ? "default" : "outline"}
+                        className="rounded-lg"
+                      >
+                        {service.environment}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {service.webhooksConfigured ? (
+                        <Badge variant="secondary" className="gap-1 rounded-lg bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))] border-0">
+                          <Webhook className="h-3 w-3" />
+                          Configured
+                        </Badge>
+                      ) : (
+                        <span className="text-muted-foreground">Not configured</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {service.createdAt}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedService(service.id)}
+                        className="rounded-lg hover:bg-muted"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
 
           {/* Service Detail Modal */}
           <Dialog open={!!selectedService} onOpenChange={() => setSelectedService(null)}>
@@ -250,7 +236,7 @@ export const ConversationsSettings = () => {
                   <div className="p-4 border border-border rounded-xl bg-muted/30 space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-sm">https://api.example.com/conversations</span>
-                      <Badge className="rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 shadow-sm">Active</Badge>
+                      <Badge className="rounded-lg bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))] border-0">Active</Badge>
                     </div>
                     <div className="flex flex-wrap gap-1">
                       <Badge variant="outline" className="text-[10px] rounded-lg border-border">onConversationAdded</Badge>
@@ -295,7 +281,7 @@ export const ConversationsSettings = () => {
                 <Button variant="outline" onClick={() => setSelectedService(null)} className="rounded-xl">
                   Cancel
                 </Button>
-                <Button className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white border-0 rounded-full shadow-md">Save Changes</Button>
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl">Save Changes</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -303,162 +289,142 @@ export const ConversationsSettings = () => {
 
         {/* Team & Roles Tab */}
         <TabsContent value="team" className="space-y-4">
-          <Card className="rounded-3xl shadow-soft border-0 bg-card">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
-                    <Users className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <div>
-                    <CardTitle>Team Members</CardTitle>
-                    <CardDescription>
-                      Manage who has access to conversations
-                    </CardDescription>
-                  </div>
-                </div>
-                <Dialog open={showInviteModal} onOpenChange={setShowInviteModal}>
-                  <DialogTrigger asChild>
-                    <Button className="gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white border-0 rounded-full shadow-md">
-                      <Plus className="h-4 w-4" />
-                      Invite Member
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="rounded-2xl">
-                    <DialogHeader>
-                      <DialogTitle>Invite Team Member</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label>Email Address</Label>
-                        <Input placeholder="colleague@example.com" className="rounded-xl bg-muted/30" />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Role</Label>
-                        <Select defaultValue="agent">
-                          <SelectTrigger className="rounded-xl bg-muted/30">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="rounded-xl">
-                            <SelectItem value="admin" className="rounded-lg">Admin</SelectItem>
-                            <SelectItem value="agent" className="rounded-lg">Agent</SelectItem>
-                            <SelectItem value="readonly" className="rounded-lg">Read Only</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <Button variant="outline" onClick={() => setShowInviteModal(false)} className="rounded-xl">
-                        Cancel
-                      </Button>
-                      <Button onClick={() => setShowInviteModal(false)} className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white border-0 rounded-full shadow-md">
-                        Send Invite
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+          <div className="bg-card rounded-2xl p-6 shadow-soft">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-foreground">Team Members</h3>
+                <p className="text-sm text-muted-foreground">
+                  Manage who has access to conversations
+                </p>
               </div>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead className="w-[50px]"></TableHead>
+              <Dialog open={showInviteModal} onOpenChange={setShowInviteModal}>
+                <DialogTrigger asChild>
+                  <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl">
+                    <Plus className="h-4 w-4" />
+                    Invite Member
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="rounded-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Invite Team Member</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Email Address</Label>
+                      <Input placeholder="colleague@example.com" className="rounded-xl bg-muted/30" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Role</Label>
+                      <Select defaultValue="agent">
+                        <SelectTrigger className="rounded-xl bg-muted/30">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="admin" className="rounded-lg">Admin</SelectItem>
+                          <SelectItem value="agent" className="rounded-lg">Agent</SelectItem>
+                          <SelectItem value="readonly" className="rounded-lg">Read Only</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setShowInviteModal(false)} className="rounded-xl">
+                      Cancel
+                    </Button>
+                    <Button onClick={() => setShowInviteModal(false)} className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl">
+                      Send Invite
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {demoTeamMembers.map((member) => (
+                  <TableRow key={member.id} className="hover:bg-muted/50">
+                    <TableCell className="font-medium">{member.name}</TableCell>
+                    <TableCell>{member.email}</TableCell>
+                    <TableCell>
+                      <Select defaultValue={member.role.toLowerCase()}>
+                        <SelectTrigger className="w-[120px] rounded-xl bg-muted/30">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="owner" className="rounded-lg">Owner</SelectItem>
+                          <SelectItem value="admin" className="rounded-lg">Admin</SelectItem>
+                          <SelectItem value="agent" className="rounded-lg">Agent</SelectItem>
+                          <SelectItem value="readonly" className="rounded-lg">Read Only</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      {member.role !== "Owner" && (
+                        <Button variant="ghost" size="icon" className="text-destructive rounded-lg hover:bg-destructive/10">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {demoTeamMembers.map((member) => (
-                    <TableRow key={member.id} className="hover:bg-muted/50">
-                      <TableCell className="font-medium">{member.name}</TableCell>
-                      <TableCell>{member.email}</TableCell>
-                      <TableCell>
-                        <Select defaultValue={member.role.toLowerCase()}>
-                          <SelectTrigger className="w-[120px] rounded-xl bg-muted/30">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="rounded-xl">
-                            <SelectItem value="owner" className="rounded-lg">Owner</SelectItem>
-                            <SelectItem value="admin" className="rounded-lg">Admin</SelectItem>
-                            <SelectItem value="agent" className="rounded-lg">Agent</SelectItem>
-                            <SelectItem value="readonly" className="rounded-lg">Read Only</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </TableCell>
-                      <TableCell>
-                        {member.role !== "Owner" && (
-                          <Button variant="ghost" size="icon" className="text-destructive rounded-lg hover:bg-destructive/10">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
 
-          <Card className="rounded-3xl shadow-soft border-0 bg-card">
-            <CardHeader>
-              <CardTitle>Role Permissions</CardTitle>
-              <CardDescription>Overview of what each role can do</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead>Permission</TableHead>
-                    <TableHead>Owner</TableHead>
-                    <TableHead>Admin</TableHead>
-                    <TableHead>Agent</TableHead>
-                    <TableHead>Read Only</TableHead>
+          <div className="bg-card rounded-2xl p-6 shadow-soft">
+            <h3 className="text-lg font-semibold text-foreground mb-2">Role Permissions</h3>
+            <p className="text-sm text-muted-foreground mb-4">Overview of what each role can do</p>
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Permission</TableHead>
+                  <TableHead>Owner</TableHead>
+                  <TableHead>Admin</TableHead>
+                  <TableHead>Agent</TableHead>
+                  <TableHead>Read Only</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[
+                  { perm: "View conversations", owner: true, admin: true, agent: true, readonly: true },
+                  { perm: "Reply to conversations", owner: true, admin: true, agent: true, readonly: false },
+                  { perm: "Add notes", owner: true, admin: true, agent: true, readonly: false },
+                  { perm: "Assign conversations", owner: true, admin: true, agent: false, readonly: false },
+                  { perm: "Manage services", owner: true, admin: true, agent: false, readonly: false },
+                  { perm: "Configure webhooks", owner: true, admin: true, agent: false, readonly: false },
+                  { perm: "Manage team", owner: true, admin: false, agent: false, readonly: false },
+                  { perm: "Export data", owner: true, admin: true, agent: false, readonly: true },
+                ].map((row) => (
+                  <TableRow key={row.perm} className="hover:bg-muted/50">
+                    <TableCell>{row.perm}</TableCell>
+                    <TableCell className={row.owner ? "text-[hsl(var(--teal))] font-semibold" : "text-muted-foreground"}>{row.owner ? "✓" : "—"}</TableCell>
+                    <TableCell className={row.admin ? "text-[hsl(var(--teal))] font-semibold" : "text-muted-foreground"}>{row.admin ? "✓" : "—"}</TableCell>
+                    <TableCell className={row.agent ? "text-[hsl(var(--teal))] font-semibold" : "text-muted-foreground"}>{row.agent ? "✓" : "—"}</TableCell>
+                    <TableCell className={row.readonly ? "text-[hsl(var(--teal))] font-semibold" : "text-muted-foreground"}>{row.readonly ? "✓" : "—"}</TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {[
-                    { perm: "View conversations", owner: true, admin: true, agent: true, readonly: true },
-                    { perm: "Reply to conversations", owner: true, admin: true, agent: true, readonly: false },
-                    { perm: "Add notes", owner: true, admin: true, agent: true, readonly: false },
-                    { perm: "Assign conversations", owner: true, admin: true, agent: false, readonly: false },
-                    { perm: "Manage services", owner: true, admin: true, agent: false, readonly: false },
-                    { perm: "Configure webhooks", owner: true, admin: true, agent: false, readonly: false },
-                    { perm: "Manage team", owner: true, admin: false, agent: false, readonly: false },
-                    { perm: "Export data", owner: true, admin: true, agent: false, readonly: true },
-                  ].map((row) => (
-                    <TableRow key={row.perm} className="hover:bg-muted/50">
-                      <TableCell>{row.perm}</TableCell>
-                      <TableCell className={row.owner ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-muted-foreground"}>{row.owner ? "✓" : "—"}</TableCell>
-                      <TableCell className={row.admin ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-muted-foreground"}>{row.admin ? "✓" : "—"}</TableCell>
-                      <TableCell className={row.agent ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-muted-foreground"}>{row.agent ? "✓" : "—"}</TableCell>
-                      <TableCell className={row.readonly ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-muted-foreground"}>{row.readonly ? "✓" : "—"}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </TabsContent>
 
         {/* Webhooks Tab */}
         <TabsContent value="webhooks" className="space-y-4">
-          <Card className="rounded-3xl shadow-soft border-0 bg-card">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center">
-                  <Webhook className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                </div>
-                <div>
-                  <CardTitle>Webhook Endpoint</CardTitle>
-                  <CardDescription>
-                    Your inbound webhook endpoint base URL
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <div className="bg-card rounded-2xl p-6 shadow-soft">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-foreground">Webhook Endpoint</h3>
+              <p className="text-sm text-muted-foreground">
+                Your inbound webhook endpoint base URL
+              </p>
+            </div>
+            <div className="space-y-4">
               <div className="space-y-2">
                 <Label>Endpoint URL</Label>
                 <div className="flex items-center gap-2">
@@ -511,7 +477,7 @@ export const ConversationsSettings = () => {
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="icon" className="rounded-xl hover:bg-gradient-to-r hover:from-rose-500/10 hover:to-pink-500/10 hover:text-rose-600 hover:border-rose-500/30">
+                  <Button variant="outline" size="icon" className="rounded-xl hover:bg-muted">
                     <RefreshCw className="h-4 w-4" />
                   </Button>
                 </div>
@@ -524,27 +490,20 @@ export const ConversationsSettings = () => {
                 <ExternalLink className="h-4 w-4" />
                 View Webhook Delivery Logs
               </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Data Retention Tab */}
         <TabsContent value="retention" className="space-y-4">
-          <Card className="rounded-3xl shadow-soft border-0 bg-card">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center">
-                  <Database className="h-5 w-5 text-rose-600 dark:text-rose-400" />
-                </div>
-                <div>
-                  <CardTitle>Data Retention Policies</CardTitle>
-                  <CardDescription>
-                    Configure how long conversation data is stored
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
+          <div className="bg-card rounded-2xl p-6 shadow-soft">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-foreground">Data Retention Policies</h3>
+              <p className="text-sm text-muted-foreground">
+                Configure how long conversation data is stored
+              </p>
+            </div>
+            <div className="space-y-4">
               <div className="space-y-2">
                 <Label>Conversations</Label>
                 <Select defaultValue="forever">
@@ -605,9 +564,11 @@ export const ConversationsSettings = () => {
                 </Select>
               </div>
 
-              <Button className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white border-0 rounded-full shadow-md">Save Retention Settings</Button>
-            </CardContent>
-          </Card>
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl">
+                Save Retention Settings
+              </Button>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
