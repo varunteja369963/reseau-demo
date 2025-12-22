@@ -175,25 +175,25 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
     <div className="w-80 border-l border-border bg-card flex flex-col overflow-hidden">
       <Tabs defaultValue="overview" className="flex-1 flex flex-col">
         <TabsList className="w-full justify-start rounded-none border-b h-auto p-0 bg-transparent overflow-x-auto">
-          <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
+          <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
             Overview
           </TabsTrigger>
-          <TabsTrigger value="participants" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
+          <TabsTrigger value="participants" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
             Participants
           </TabsTrigger>
-          <TabsTrigger value="attributes" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
+          <TabsTrigger value="attributes" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
             Attributes
           </TabsTrigger>
-          <TabsTrigger value="states" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
+          <TabsTrigger value="states" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
             States
           </TabsTrigger>
-          <TabsTrigger value="webhooks" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
+          <TabsTrigger value="webhooks" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
             Webhooks
           </TabsTrigger>
-          <TabsTrigger value="activity" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
+          <TabsTrigger value="activity" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
             Activity
           </TabsTrigger>
-          <TabsTrigger value="notes" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
+          <TabsTrigger value="notes" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
             Notes
           </TabsTrigger>
         </TabsList>
@@ -208,7 +208,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                   <TooltipTrigger>
                     <AlertTriangle className="h-4 w-4 text-amber-500" />
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent className="rounded-xl">
                     <p className="max-w-xs">
                       Avoid putting personal data in Friendly Name. Use an internal reference instead.
                     </p>
@@ -218,34 +218,35 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               <Input
                 value={friendlyName}
                 onChange={(e) => setFriendlyName(e.target.value)}
+                className="rounded-xl bg-muted/30"
               />
             </div>
 
             <div className="space-y-2">
               <Label>Unique IDs</Label>
               <div className="space-y-1 text-sm">
-                <div className="flex items-center justify-between p-2 bg-muted rounded">
+                <div className="flex items-center justify-between p-2 bg-muted/30 rounded-xl">
                   <span className="text-muted-foreground">Service SID</span>
                   <div className="flex items-center gap-1">
                     <code className="text-xs">{conversation.serviceSid.slice(0, 12)}...</code>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6"
+                      className="h-6 w-6 rounded-lg hover:bg-teal-500/10 hover:text-teal-600"
                       onClick={() => copyToClipboard(conversation.serviceSid, "Service SID")}
                     >
                       <Copy className="h-3 w-3" />
                     </Button>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-2 bg-muted rounded">
+                <div className="flex items-center justify-between p-2 bg-muted/30 rounded-xl">
                   <span className="text-muted-foreground">Conversation SID</span>
                   <div className="flex items-center gap-1">
                     <code className="text-xs">{conversation.conversationSid.slice(0, 12)}...</code>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6"
+                      className="h-6 w-6 rounded-lg hover:bg-teal-500/10 hover:text-teal-600"
                       onClick={() => copyToClipboard(conversation.conversationSid, "Conversation SID")}
                     >
                       <Copy className="h-3 w-3" />
@@ -258,12 +259,12 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
             <div className="space-y-2">
               <Label>Status</Label>
               <Select defaultValue={conversation.status}>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl bg-muted/30">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="open">Open</SelectItem>
-                  <SelectItem value="closed">Closed</SelectItem>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="open" className="rounded-lg">Open</SelectItem>
+                  <SelectItem value="closed" className="rounded-lg">Closed</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -284,9 +285,9 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               <Label>Tags</Label>
               <div className="flex flex-wrap gap-1 mb-2">
                 {tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="gap-1">
+                  <Badge key={tag} variant="secondary" className="gap-1 rounded-lg bg-teal-500/10 text-teal-600 border-0">
                     {tag}
-                    <button onClick={() => removeTag(tag)}>
+                    <button onClick={() => removeTag(tag)} className="hover:bg-teal-500/20 rounded-full p-0.5">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
@@ -298,9 +299,9 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addTag()}
-                  className="flex-1"
+                  className="flex-1 rounded-xl bg-muted/30"
                 />
-                <Button size="sm" onClick={addTag}>
+                <Button size="sm" onClick={addTag} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
                   Add
                 </Button>
               </div>
@@ -309,14 +310,14 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
             <div className="space-y-2">
               <Label>Assignment</Label>
               <Select value={assignedTo} onValueChange={setAssignedTo}>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl bg-muted/30">
                   <SelectValue placeholder="Unassigned" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="unassigned">Unassigned</SelectItem>
-                  <SelectItem value="John Doe">John Doe</SelectItem>
-                  <SelectItem value="Jane Smith">Jane Smith</SelectItem>
-                  <SelectItem value="Support Team">Support Team</SelectItem>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="unassigned" className="rounded-lg">Unassigned</SelectItem>
+                  <SelectItem value="John Doe" className="rounded-lg">John Doe</SelectItem>
+                  <SelectItem value="Jane Smith" className="rounded-lg">Jane Smith</SelectItem>
+                  <SelectItem value="Support Team" className="rounded-lg">Support Team</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -324,14 +325,14 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
             <div className="space-y-2">
               <Label>Priority</Label>
               <Select defaultValue="normal">
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl bg-muted/30">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="urgent">Urgent</SelectItem>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="low" className="rounded-lg">Low</SelectItem>
+                  <SelectItem value="normal" className="rounded-lg">Normal</SelectItem>
+                  <SelectItem value="high" className="rounded-lg">High</SelectItem>
+                  <SelectItem value="urgent" className="rounded-lg">Urgent</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -343,12 +344,12 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               <h4 className="font-medium">Participants ({demoParticipants.length})</h4>
               <Dialog open={showAddParticipant} onOpenChange={setShowAddParticipant}>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="gap-1">
+                  <Button size="sm" className="gap-1 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
                     <UserPlus className="h-4 w-4" />
                     Add
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="rounded-2xl">
                   <DialogHeader>
                     <DialogTitle>Add Participant</DialogTitle>
                   </DialogHeader>
@@ -356,32 +357,32 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                     <div className="space-y-2">
                       <Label>Add by</Label>
                       <Select defaultValue="address">
-                        <SelectTrigger>
+                        <SelectTrigger className="rounded-xl bg-muted/30">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="identity">Identity (Chat user)</SelectItem>
-                          <SelectItem value="address">Address (Phone/WhatsApp)</SelectItem>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="identity" className="rounded-lg">Identity (Chat user)</SelectItem>
+                          <SelectItem value="address" className="rounded-lg">Address (Phone/WhatsApp)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-2">
                       <Label>Phone Number / Identity</Label>
-                      <Input placeholder="+1 234 567 8900" />
+                      <Input placeholder="+1 234 567 8900" className="rounded-xl bg-muted/30" />
                     </div>
                     <div className="space-y-2">
                       <Label>Display Name (optional)</Label>
-                      <Input placeholder="John Doe" />
+                      <Input placeholder="John Doe" className="rounded-xl bg-muted/30" />
                     </div>
                     <p className="text-xs text-muted-foreground">
                       You can create a conversation with up to 10 participants at once.
                     </p>
                   </div>
                   <DialogFooter>
-                    <Button variant="outline" onClick={() => setShowAddParticipant(false)}>
+                    <Button variant="outline" onClick={() => setShowAddParticipant(false)} className="rounded-xl">
                       Cancel
                     </Button>
-                    <Button onClick={() => setShowAddParticipant(false)}>
+                    <Button onClick={() => setShowAddParticipant(false)} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
                       Add Participant
                     </Button>
                   </DialogFooter>
@@ -393,16 +394,16 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               {demoParticipants.map((participant) => (
                 <div
                   key={participant.id}
-                  className="p-3 border border-border rounded-lg space-y-2"
+                  className="p-3 border border-teal-500/20 rounded-xl space-y-2 bg-teal-500/5"
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-medium text-sm">{participant.displayName}</span>
-                    <Badge variant="secondary" className="text-[10px]">
+                    <Badge variant="secondary" className="text-[10px] rounded-lg bg-teal-500/10 text-teal-600 border-0">
                       {participant.role}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-[10px]">
+                    <Badge variant="outline" className="text-[10px] rounded-lg border-teal-500/30 text-teal-600">
                       {participant.type === "identity" ? "Identity" : "Address"}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
@@ -416,10 +417,10 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                       Joined {new Date(participant.joinedAt).toLocaleDateString()}
                     </span>
                     <div className="flex gap-1">
-                      <Button variant="ghost" size="icon" className="h-6 w-6">
+                      <Button variant="ghost" size="icon" className="h-6 w-6 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                         <Send className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive">
+                      <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive rounded-lg hover:bg-destructive/10">
                         <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>
@@ -433,7 +434,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
           <TabsContent value="attributes" className="p-4 space-y-4 m-0">
             <div className="flex items-center justify-between">
               <h4 className="font-medium">Metadata</h4>
-              <Button size="sm" className="gap-1">
+              <Button size="sm" className="gap-1 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
                 <Plus className="h-4 w-4" />
                 Add Field
               </Button>
@@ -450,7 +451,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                       setAttributes(newAttrs);
                     }}
                     placeholder="Key"
-                    className="flex-1"
+                    className="flex-1 rounded-xl bg-muted/30"
                   />
                   <Input
                     value={attr.value}
@@ -460,12 +461,12 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                       setAttributes(newAttrs);
                     }}
                     placeholder="Value"
-                    className="flex-1"
+                    className="flex-1 rounded-xl bg-muted/30"
                   />
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-destructive"
+                    className="h-8 w-8 text-destructive rounded-lg hover:bg-destructive/10"
                     onClick={() => setAttributes(attributes.filter((_, i) => i !== index))}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -475,10 +476,10 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
             </div>
 
             <div className="flex gap-2">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="rounded-xl">
                 Reset Changes
               </Button>
-              <Button size="sm">Save</Button>
+              <Button size="sm" className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">Save</Button>
             </div>
           </TabsContent>
 
@@ -487,12 +488,12 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
             <div className="space-y-2">
               <Label>Status Controls</Label>
               <Select defaultValue={conversation.status}>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl bg-muted/30">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="open">Open</SelectItem>
-                  <SelectItem value="closed">Closed</SelectItem>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="open" className="rounded-lg">Open</SelectItem>
+                  <SelectItem value="closed" className="rounded-lg">Closed</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -505,26 +506,30 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                     Automatically close conversation after period of inactivity
                   </p>
                 </div>
-                <Switch checked={autoClose} onCheckedChange={setAutoClose} />
+                <Switch 
+                  checked={autoClose} 
+                  onCheckedChange={setAutoClose}
+                  className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-teal-500 data-[state=checked]:to-teal-600"
+                />
               </div>
 
               {autoClose && (
                 <Select value={autoCloseDuration} onValueChange={setAutoCloseDuration}>
-                  <SelectTrigger>
+                  <SelectTrigger className="rounded-xl bg-muted/30">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1h">1 hour</SelectItem>
-                    <SelectItem value="24h">24 hours</SelectItem>
-                    <SelectItem value="7d">7 days</SelectItem>
-                    <SelectItem value="30d">30 days</SelectItem>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="1h" className="rounded-lg">1 hour</SelectItem>
+                    <SelectItem value="24h" className="rounded-lg">24 hours</SelectItem>
+                    <SelectItem value="7d" className="rounded-lg">7 days</SelectItem>
+                    <SelectItem value="30d" className="rounded-lg">30 days</SelectItem>
                   </SelectContent>
                 </Select>
               )}
 
-              <div className="p-3 bg-muted rounded-lg">
+              <div className="p-3 bg-gradient-to-r from-teal-500/10 to-teal-600/10 rounded-xl border border-teal-500/20">
                 <div className="flex items-start gap-2">
-                  <Info className="h-4 w-4 text-muted-foreground mt-0.5" />
+                  <Info className="h-4 w-4 text-teal-600 mt-0.5" />
                   <p className="text-xs text-muted-foreground">
                     Timers help manage lifecycle and reduce inactive threads. This helps keep users focused on active conversations.
                   </p>
@@ -535,9 +540,9 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
 
           {/* Webhooks Tab */}
           <TabsContent value="webhooks" className="p-4 space-y-4 m-0">
-            <div className="p-3 bg-muted rounded-lg mb-4">
+            <div className="p-3 bg-gradient-to-r from-teal-500/10 to-teal-600/10 rounded-xl border border-teal-500/20 mb-4">
               <div className="flex items-start gap-2">
-                <Info className="h-4 w-4 text-muted-foreground mt-0.5" />
+                <Info className="h-4 w-4 text-teal-600 mt-0.5" />
                 <div>
                   <p className="text-xs text-muted-foreground mb-1">
                     Configure service-level webhooks in Settings → Service.
@@ -551,7 +556,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
 
             <div className="flex items-center justify-between">
               <h4 className="font-medium">Conversation Webhooks</h4>
-              <Button size="sm" className="gap-1">
+              <Button size="sm" className="gap-1 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
                 <Plus className="h-4 w-4" />
                 Add
               </Button>
@@ -561,30 +566,30 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               {demoWebhooks.map((webhook) => (
                 <div
                   key={webhook.id}
-                  className="p-3 border border-border rounded-lg space-y-2"
+                  className="p-3 border border-teal-500/20 rounded-xl space-y-2 bg-teal-500/5"
                 >
                   <div className="flex items-center justify-between">
                     <code className="text-xs truncate max-w-[200px]">{webhook.url}</code>
-                    <Badge variant={webhook.enabled ? "default" : "secondary"}>
+                    <Badge variant={webhook.enabled ? "default" : "secondary"} className={`rounded-lg ${webhook.enabled ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white border-0" : ""}`}>
                       {webhook.enabled ? "Enabled" : "Disabled"}
                     </Badge>
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {webhook.events.map((event) => (
-                      <Badge key={event} variant="outline" className="text-[10px]">
+                      <Badge key={event} variant="outline" className="text-[10px] rounded-lg border-teal-500/30 text-teal-600">
                         {event}
                       </Badge>
                     ))}
                   </div>
                   <div className="flex items-center justify-between">
-                    <Badge variant="secondary" className="text-[10px]">
+                    <Badge variant="secondary" className="text-[10px] rounded-lg bg-teal-500/10 text-teal-600 border-0">
                       {webhook.type}
                     </Badge>
                     <div className="flex gap-1">
-                      <Button variant="ghost" size="icon" className="h-6 w-6">
+                      <Button variant="ghost" size="icon" className="h-6 w-6 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                         <ExternalLink className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive">
+                      <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive rounded-lg hover:bg-destructive/10">
                         <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>
@@ -605,7 +610,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                   "onParticipantUpdated",
                 ].map((event) => (
                   <div key={event} className="flex items-center gap-2">
-                    <input type="checkbox" id={event} className="rounded" />
+                    <input type="checkbox" id={event} className="rounded accent-teal-500" />
                     <label htmlFor={event}>{event}</label>
                   </div>
                 ))}
@@ -618,14 +623,14 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
             <div className="flex items-center justify-between">
               <h4 className="font-medium">Activity Feed</h4>
               <Select defaultValue="all">
-                <SelectTrigger className="w-[120px]">
+                <SelectTrigger className="w-[120px] rounded-xl bg-muted/30">
                   <SelectValue placeholder="Filter" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="status">Status</SelectItem>
-                  <SelectItem value="assignment">Assignment</SelectItem>
-                  <SelectItem value="participant">Participant</SelectItem>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="all" className="rounded-lg">All</SelectItem>
+                  <SelectItem value="status" className="rounded-lg">Status</SelectItem>
+                  <SelectItem value="assignment" className="rounded-lg">Assignment</SelectItem>
+                  <SelectItem value="participant" className="rounded-lg">Participant</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -634,9 +639,9 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               {demoActivity.map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex items-start gap-3 p-2 border-l-2 border-muted"
+                  className="flex items-start gap-3 p-2 border-l-2 border-teal-500"
                 >
-                  <Clock className="h-4 w-4 text-muted-foreground mt-0.5" />
+                  <Clock className="h-4 w-4 text-teal-600 mt-0.5" />
                   <div className="flex-1">
                     <p className="text-sm">{activity.description}</p>
                     <div className="flex items-center gap-2 mt-1">
@@ -661,11 +666,11 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               {demoNotes.map((note) => (
                 <div
                   key={note.id}
-                  className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg"
+                  className="p-3 bg-gradient-to-r from-teal-500/10 to-teal-600/10 border border-teal-500/20 rounded-xl"
                 >
                   <p className="text-sm">{note.content}</p>
                   <div className="flex items-center gap-2 mt-2">
-                    <span className="text-xs font-medium">{note.author}</span>
+                    <span className="text-xs font-medium text-teal-600">{note.author}</span>
                     <span className="text-xs text-muted-foreground">
                       {new Date(note.timestamp).toLocaleString()}
                     </span>
@@ -679,9 +684,9 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                 placeholder="Add an internal note..."
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
-                className="min-h-[80px]"
+                className="min-h-[80px] rounded-xl bg-muted/30"
               />
-              <Button size="sm" disabled={!newNote.trim()}>
+              <Button size="sm" disabled={!newNote.trim()} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl disabled:opacity-50">
                 Add Note
               </Button>
             </div>

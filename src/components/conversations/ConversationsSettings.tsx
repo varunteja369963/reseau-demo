@@ -114,20 +114,20 @@ export const ConversationsSettings = () => {
       </div>
 
       <Tabs defaultValue="services">
-        <TabsList className="rounded-xl">
-          <TabsTrigger value="services" className="gap-2 rounded-xl">
+        <TabsList className="rounded-xl bg-muted/50 p-1">
+          <TabsTrigger value="services" className="gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white">
             <Settings className="h-4 w-4" />
             Services
           </TabsTrigger>
-          <TabsTrigger value="team" className="gap-2 rounded-xl">
+          <TabsTrigger value="team" className="gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white">
             <Users className="h-4 w-4" />
             Team & Roles
           </TabsTrigger>
-          <TabsTrigger value="webhooks" className="gap-2 rounded-xl">
+          <TabsTrigger value="webhooks" className="gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white">
             <Webhook className="h-4 w-4" />
             Webhooks
           </TabsTrigger>
-          <TabsTrigger value="retention" className="gap-2 rounded-xl">
+          <TabsTrigger value="retention" className="gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white">
             <Database className="h-4 w-4" />
             Data Retention
           </TabsTrigger>
@@ -138,11 +138,16 @@ export const ConversationsSettings = () => {
           <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Conversation Services</CardTitle>
-                  <CardDescription>
-                    Services are top-level containers for conversations and can be configured with webhooks
-                  </CardDescription>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-teal-500/20 to-teal-600/20 flex items-center justify-center">
+                    <Settings className="h-5 w-5 text-teal-600" />
+                  </div>
+                  <div>
+                    <CardTitle>Conversation Services</CardTitle>
+                    <CardDescription>
+                      Services are top-level containers for conversations and can be configured with webhooks
+                    </CardDescription>
+                  </div>
                 </div>
                 <Button className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
                   <Plus className="h-4 w-4" />
@@ -153,7 +158,7 @@ export const ConversationsSettings = () => {
             <CardContent>
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="hover:bg-transparent">
                     <TableHead>Service Name</TableHead>
                     <TableHead>Environment</TableHead>
                     <TableHead>Webhooks</TableHead>
@@ -163,12 +168,12 @@ export const ConversationsSettings = () => {
                 </TableHeader>
                 <TableBody>
                   {demoServices.map((service) => (
-                    <TableRow key={service.id}>
+                    <TableRow key={service.id} className="hover:bg-teal-500/5">
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{service.name}</span>
                           {service.isDefault && (
-                            <Badge variant="secondary">Default</Badge>
+                            <Badge variant="secondary" className="rounded-lg bg-teal-500/10 text-teal-600 border-0">Default</Badge>
                           )}
                         </div>
                       </TableCell>
@@ -179,13 +184,14 @@ export const ConversationsSettings = () => {
                               ? "default"
                               : "outline"
                           }
+                          className={`rounded-lg ${service.environment === "Production" ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white border-0" : "border-teal-500/30 text-teal-600"}`}
                         >
                           {service.environment}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         {service.webhooksConfigured ? (
-                          <Badge variant="secondary" className="gap-1">
+                          <Badge variant="secondary" className="gap-1 rounded-lg bg-green-500/10 text-green-600 border-0">
                             <Webhook className="h-3 w-3" />
                             Configured
                           </Badge>
@@ -201,6 +207,7 @@ export const ConversationsSettings = () => {
                           variant="ghost"
                           size="sm"
                           onClick={() => setSelectedService(service.id)}
+                          className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600"
                         >
                           <ExternalLink className="h-4 w-4" />
                         </Button>
@@ -214,44 +221,44 @@ export const ConversationsSettings = () => {
 
           {/* Service Detail Modal */}
           <Dialog open={!!selectedService} onOpenChange={() => setSelectedService(null)}>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-2xl rounded-2xl">
               <DialogHeader>
                 <DialogTitle>Service Configuration</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Service Name</Label>
-                  <Input defaultValue="Default Service" />
+                  <Input defaultValue="Default Service" className="rounded-xl bg-muted/30" />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Environment</Label>
                   <Select defaultValue="production">
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl bg-muted/30">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="development">Development</SelectItem>
-                      <SelectItem value="staging">Staging</SelectItem>
-                      <SelectItem value="production">Production</SelectItem>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="development" className="rounded-lg">Development</SelectItem>
+                      <SelectItem value="staging" className="rounded-lg">Staging</SelectItem>
+                      <SelectItem value="production" className="rounded-lg">Production</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
                   <Label>Service-Level Webhooks</Label>
-                  <div className="p-4 border rounded-lg space-y-3">
+                  <div className="p-4 border border-teal-500/20 rounded-xl bg-teal-500/5 space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-sm">https://api.example.com/conversations</span>
-                      <Badge>Active</Badge>
+                      <Badge className="rounded-lg bg-gradient-to-r from-teal-500 to-teal-600 text-white border-0">Active</Badge>
                     </div>
                     <div className="flex flex-wrap gap-1">
-                      <Badge variant="outline" className="text-[10px]">onConversationAdded</Badge>
-                      <Badge variant="outline" className="text-[10px]">onMessageAdded</Badge>
-                      <Badge variant="outline" className="text-[10px]">onParticipantAdded</Badge>
+                      <Badge variant="outline" className="text-[10px] rounded-lg border-teal-500/30 text-teal-600">onConversationAdded</Badge>
+                      <Badge variant="outline" className="text-[10px] rounded-lg border-teal-500/30 text-teal-600">onMessageAdded</Badge>
+                      <Badge variant="outline" className="text-[10px] rounded-lg border-teal-500/30 text-teal-600">onParticipantAdded</Badge>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm" className="gap-1">
+                  <Button variant="outline" size="sm" className="gap-1 rounded-xl border-teal-500/30 hover:bg-teal-500/10 hover:text-teal-600">
                     <Plus className="h-4 w-4" />
                     Add Webhook
                   </Button>
@@ -272,23 +279,23 @@ export const ConversationsSettings = () => {
                       "onParticipantRemoved",
                     ].map((event) => (
                       <div key={event} className="flex items-center gap-2">
-                        <input type="checkbox" id={event} defaultChecked className="rounded" />
+                        <input type="checkbox" id={event} defaultChecked className="rounded accent-teal-500" />
                         <label htmlFor={event}>{event}</label>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <Button variant="outline" className="gap-2">
+                <Button variant="outline" className="gap-2 rounded-xl border-teal-500/30 hover:bg-teal-500/10 hover:text-teal-600">
                   <Send className="h-4 w-4" />
                   Test Webhook
                 </Button>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setSelectedService(null)}>
+                <Button variant="outline" onClick={() => setSelectedService(null)} className="rounded-xl">
                   Cancel
                 </Button>
-                <Button>Save Changes</Button>
+                <Button className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">Save Changes</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -296,50 +303,55 @@ export const ConversationsSettings = () => {
 
         {/* Team & Roles Tab */}
         <TabsContent value="team" className="space-y-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Team Members</CardTitle>
-                  <CardDescription>
-                    Manage who has access to conversations
-                  </CardDescription>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-teal-500/20 to-teal-600/20 flex items-center justify-center">
+                    <Users className="h-5 w-5 text-teal-600" />
+                  </div>
+                  <div>
+                    <CardTitle>Team Members</CardTitle>
+                    <CardDescription>
+                      Manage who has access to conversations
+                    </CardDescription>
+                  </div>
                 </div>
                 <Dialog open={showInviteModal} onOpenChange={setShowInviteModal}>
                   <DialogTrigger asChild>
-                    <Button className="gap-2">
+                    <Button className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
                       <Plus className="h-4 w-4" />
                       Invite Member
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="rounded-2xl">
                     <DialogHeader>
                       <DialogTitle>Invite Team Member</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label>Email Address</Label>
-                        <Input placeholder="colleague@example.com" />
+                        <Input placeholder="colleague@example.com" className="rounded-xl bg-muted/30" />
                       </div>
                       <div className="space-y-2">
                         <Label>Role</Label>
                         <Select defaultValue="agent">
-                          <SelectTrigger>
+                          <SelectTrigger className="rounded-xl bg-muted/30">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="admin">Admin</SelectItem>
-                            <SelectItem value="agent">Agent</SelectItem>
-                            <SelectItem value="readonly">Read Only</SelectItem>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="admin" className="rounded-lg">Admin</SelectItem>
+                            <SelectItem value="agent" className="rounded-lg">Agent</SelectItem>
+                            <SelectItem value="readonly" className="rounded-lg">Read Only</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
                     <DialogFooter>
-                      <Button variant="outline" onClick={() => setShowInviteModal(false)}>
+                      <Button variant="outline" onClick={() => setShowInviteModal(false)} className="rounded-xl">
                         Cancel
                       </Button>
-                      <Button onClick={() => setShowInviteModal(false)}>
+                      <Button onClick={() => setShowInviteModal(false)} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
                         Send Invite
                       </Button>
                     </DialogFooter>
@@ -350,7 +362,7 @@ export const ConversationsSettings = () => {
             <CardContent>
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="hover:bg-transparent">
                     <TableHead>Name</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Role</TableHead>
@@ -359,25 +371,25 @@ export const ConversationsSettings = () => {
                 </TableHeader>
                 <TableBody>
                   {demoTeamMembers.map((member) => (
-                    <TableRow key={member.id}>
+                    <TableRow key={member.id} className="hover:bg-teal-500/5">
                       <TableCell className="font-medium">{member.name}</TableCell>
                       <TableCell>{member.email}</TableCell>
                       <TableCell>
                         <Select defaultValue={member.role.toLowerCase()}>
-                          <SelectTrigger className="w-[120px]">
+                          <SelectTrigger className="w-[120px] rounded-xl bg-muted/30">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="owner">Owner</SelectItem>
-                            <SelectItem value="admin">Admin</SelectItem>
-                            <SelectItem value="agent">Agent</SelectItem>
-                            <SelectItem value="readonly">Read Only</SelectItem>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="owner" className="rounded-lg">Owner</SelectItem>
+                            <SelectItem value="admin" className="rounded-lg">Admin</SelectItem>
+                            <SelectItem value="agent" className="rounded-lg">Agent</SelectItem>
+                            <SelectItem value="readonly" className="rounded-lg">Read Only</SelectItem>
                           </SelectContent>
                         </Select>
                       </TableCell>
                       <TableCell>
                         {member.role !== "Owner" && (
-                          <Button variant="ghost" size="icon" className="text-destructive">
+                          <Button variant="ghost" size="icon" className="text-destructive rounded-lg hover:bg-destructive/10">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         )}
@@ -389,7 +401,7 @@ export const ConversationsSettings = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <CardTitle>Role Permissions</CardTitle>
               <CardDescription>Overview of what each role can do</CardDescription>
@@ -397,7 +409,7 @@ export const ConversationsSettings = () => {
             <CardContent>
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="hover:bg-transparent">
                     <TableHead>Permission</TableHead>
                     <TableHead>Owner</TableHead>
                     <TableHead>Admin</TableHead>
@@ -416,12 +428,12 @@ export const ConversationsSettings = () => {
                     { perm: "Manage team", owner: true, admin: false, agent: false, readonly: false },
                     { perm: "Export data", owner: true, admin: true, agent: false, readonly: true },
                   ].map((row) => (
-                    <TableRow key={row.perm}>
+                    <TableRow key={row.perm} className="hover:bg-teal-500/5">
                       <TableCell>{row.perm}</TableCell>
-                      <TableCell>{row.owner ? "✓" : "—"}</TableCell>
-                      <TableCell>{row.admin ? "✓" : "—"}</TableCell>
-                      <TableCell>{row.agent ? "✓" : "—"}</TableCell>
-                      <TableCell>{row.readonly ? "✓" : "—"}</TableCell>
+                      <TableCell className={row.owner ? "text-teal-600" : "text-muted-foreground"}>{row.owner ? "✓" : "—"}</TableCell>
+                      <TableCell className={row.admin ? "text-teal-600" : "text-muted-foreground"}>{row.admin ? "✓" : "—"}</TableCell>
+                      <TableCell className={row.agent ? "text-teal-600" : "text-muted-foreground"}>{row.agent ? "✓" : "—"}</TableCell>
+                      <TableCell className={row.readonly ? "text-teal-600" : "text-muted-foreground"}>{row.readonly ? "✓" : "—"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -432,12 +444,19 @@ export const ConversationsSettings = () => {
 
         {/* Webhooks Tab */}
         <TabsContent value="webhooks" className="space-y-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
-              <CardTitle>Webhook Endpoint</CardTitle>
-              <CardDescription>
-                Your inbound webhook endpoint base URL
-              </CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-teal-500/20 to-teal-600/20 flex items-center justify-center">
+                  <Webhook className="h-5 w-5 text-teal-600" />
+                </div>
+                <div>
+                  <CardTitle>Webhook Endpoint</CardTitle>
+                  <CardDescription>
+                    Your inbound webhook endpoint base URL
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -446,7 +465,7 @@ export const ConversationsSettings = () => {
                   <Input
                     value="https://api.reseau.app/webhooks/conversations"
                     readOnly
-                    className="font-mono text-sm"
+                    className="font-mono text-sm rounded-xl bg-muted/30"
                   />
                   <Button
                     variant="outline"
@@ -457,6 +476,7 @@ export const ConversationsSettings = () => {
                         "Endpoint URL"
                       )
                     }
+                    className="rounded-xl hover:bg-teal-500/10 hover:text-teal-600 hover:border-teal-500/30"
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
@@ -469,12 +489,13 @@ export const ConversationsSettings = () => {
                   <Input
                     value={showSecret ? signingSecret : "••••••••••••••••"}
                     readOnly
-                    className="font-mono text-sm"
+                    className="font-mono text-sm rounded-xl bg-muted/30"
                   />
                   <Button
                     variant="outline"
                     size="icon"
                     onClick={() => setShowSecret(!showSecret)}
+                    className="rounded-xl hover:bg-teal-500/10 hover:text-teal-600 hover:border-teal-500/30"
                   >
                     {showSecret ? (
                       <EyeOff className="h-4 w-4" />
@@ -486,10 +507,11 @@ export const ConversationsSettings = () => {
                     variant="outline"
                     size="icon"
                     onClick={() => copyToClipboard(signingSecret, "Signing secret")}
+                    className="rounded-xl hover:bg-teal-500/10 hover:text-teal-600 hover:border-teal-500/30"
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="icon">
+                  <Button variant="outline" size="icon" className="rounded-xl hover:bg-amber-500/10 hover:text-amber-600 hover:border-amber-500/30">
                     <RefreshCw className="h-4 w-4" />
                   </Button>
                 </div>
@@ -498,7 +520,7 @@ export const ConversationsSettings = () => {
                 </p>
               </div>
 
-              <Button variant="outline" className="gap-2">
+              <Button variant="outline" className="gap-2 rounded-xl hover:bg-teal-500/10 hover:text-teal-600 hover:border-teal-500/30">
                 <ExternalLink className="h-4 w-4" />
                 View Webhook Delivery Logs
               </Button>
@@ -508,25 +530,32 @@ export const ConversationsSettings = () => {
 
         {/* Data Retention Tab */}
         <TabsContent value="retention" className="space-y-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
-              <CardTitle>Data Retention Policies</CardTitle>
-              <CardDescription>
-                Configure how long conversation data is stored
-              </CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-teal-500/20 to-teal-600/20 flex items-center justify-center">
+                  <Database className="h-5 w-5 text-teal-600" />
+                </div>
+                <div>
+                  <CardTitle>Data Retention Policies</CardTitle>
+                  <CardDescription>
+                    Configure how long conversation data is stored
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
                 <Label>Conversations</Label>
                 <Select defaultValue="forever">
-                  <SelectTrigger>
+                  <SelectTrigger className="rounded-xl bg-muted/30">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="30d">30 days</SelectItem>
-                    <SelectItem value="90d">90 days</SelectItem>
-                    <SelectItem value="1y">1 year</SelectItem>
-                    <SelectItem value="forever">Forever</SelectItem>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="30d" className="rounded-lg">30 days</SelectItem>
+                    <SelectItem value="90d" className="rounded-lg">90 days</SelectItem>
+                    <SelectItem value="1y" className="rounded-lg">1 year</SelectItem>
+                    <SelectItem value="forever" className="rounded-lg">Forever</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -534,14 +563,14 @@ export const ConversationsSettings = () => {
               <div className="space-y-2">
                 <Label>Messages</Label>
                 <Select defaultValue="forever">
-                  <SelectTrigger>
+                  <SelectTrigger className="rounded-xl bg-muted/30">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="30d">30 days</SelectItem>
-                    <SelectItem value="90d">90 days</SelectItem>
-                    <SelectItem value="1y">1 year</SelectItem>
-                    <SelectItem value="forever">Forever</SelectItem>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="30d" className="rounded-lg">30 days</SelectItem>
+                    <SelectItem value="90d" className="rounded-lg">90 days</SelectItem>
+                    <SelectItem value="1y" className="rounded-lg">1 year</SelectItem>
+                    <SelectItem value="forever" className="rounded-lg">Forever</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -549,14 +578,14 @@ export const ConversationsSettings = () => {
               <div className="space-y-2">
                 <Label>Media Attachments</Label>
                 <Select defaultValue="90d">
-                  <SelectTrigger>
+                  <SelectTrigger className="rounded-xl bg-muted/30">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="30d">30 days</SelectItem>
-                    <SelectItem value="90d">90 days</SelectItem>
-                    <SelectItem value="1y">1 year</SelectItem>
-                    <SelectItem value="forever">Forever</SelectItem>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="30d" className="rounded-lg">30 days</SelectItem>
+                    <SelectItem value="90d" className="rounded-lg">90 days</SelectItem>
+                    <SelectItem value="1y" className="rounded-lg">1 year</SelectItem>
+                    <SelectItem value="forever" className="rounded-lg">Forever</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -564,19 +593,19 @@ export const ConversationsSettings = () => {
               <div className="space-y-2">
                 <Label>Audit Logs</Label>
                 <Select defaultValue="1y">
-                  <SelectTrigger>
+                  <SelectTrigger className="rounded-xl bg-muted/30">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="30d">30 days</SelectItem>
-                    <SelectItem value="90d">90 days</SelectItem>
-                    <SelectItem value="1y">1 year</SelectItem>
-                    <SelectItem value="forever">Forever</SelectItem>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="30d" className="rounded-lg">30 days</SelectItem>
+                    <SelectItem value="90d" className="rounded-lg">90 days</SelectItem>
+                    <SelectItem value="1y" className="rounded-lg">1 year</SelectItem>
+                    <SelectItem value="forever" className="rounded-lg">Forever</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <Button>Save Retention Settings</Button>
+              <Button className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">Save Retention Settings</Button>
             </CardContent>
           </Card>
         </TabsContent>

@@ -96,7 +96,7 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
       case "sent":
         return <Check className="h-3 w-3 text-muted-foreground" />;
       case "delivered":
-        return <CheckCheck className="h-3 w-3 text-primary" />;
+        return <CheckCheck className="h-3 w-3 text-teal-500" />;
       case "failed":
         return <AlertCircle className="h-3 w-3 text-destructive" />;
       default:
@@ -127,14 +127,14 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
               {showDateSeparator && (
                 <div className="flex items-center gap-4 my-4">
                   <div className="flex-1 h-px bg-border" />
-                  <span className="text-xs text-muted-foreground">Today</span>
+                  <span className="text-xs text-muted-foreground bg-muted/50 px-3 py-1 rounded-full">Today</span>
                   <div className="flex-1 h-px bg-border" />
                 </div>
               )}
 
               {msg.type === "system" ? (
                 <div className="flex justify-center">
-                  <span className="text-xs text-muted-foreground bg-muted px-3 py-1 rounded-full">
+                  <span className="text-xs text-muted-foreground bg-muted/50 px-3 py-1 rounded-full">
                     {msg.content}
                   </span>
                 </div>
@@ -149,8 +149,8 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
                     className={cn(
                       "max-w-[70%] rounded-2xl px-4 py-2",
                       msg.type === "outbound"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted"
+                        ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white"
+                        : "bg-muted/50 border border-border"
                     )}
                   >
                     {msg.sender && (
@@ -171,12 +171,12 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
 
       {/* Composer */}
       {isConversationClosed ? (
-        <div className="p-4 border-t border-border bg-muted/50">
+        <div className="p-4 border-t border-border bg-muted/30">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">
               This conversation is closed
             </span>
-            <Button variant="outline" size="sm" className="gap-2">
+            <Button variant="outline" size="sm" className="gap-2 rounded-xl border-teal-500/30 hover:bg-teal-500/10 hover:text-teal-600">
               <RefreshCw className="h-4 w-4" />
               Reopen
             </Button>
@@ -190,7 +190,7 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
                 placeholder="Type a message..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="min-h-[80px] resize-none"
+                className="min-h-[80px] resize-none rounded-xl bg-muted/30 border-0 focus-visible:ring-teal-500/50"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -199,46 +199,50 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
                 }}
               />
               <div className="flex items-center gap-2 mt-2">
-                <Button variant="ghost" size="sm" className="gap-1">
+                <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                   <Paperclip className="h-4 w-4" />
                   Attach
                 </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="gap-1">
+                    <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                       <FileText className="h-4 w-4" />
                       Templates
                       <ChevronDown className="h-3 w-3" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem>Welcome Template</DropdownMenuItem>
-                    <DropdownMenuItem>Follow-up Template</DropdownMenuItem>
-                    <DropdownMenuItem>Closing Template</DropdownMenuItem>
+                  <DropdownMenuContent className="rounded-xl bg-card border-border shadow-soft">
+                    <DropdownMenuItem className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">Welcome Template</DropdownMenuItem>
+                    <DropdownMenuItem className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">Follow-up Template</DropdownMenuItem>
+                    <DropdownMenuItem className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">Closing Template</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="gap-1">
+                    <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                       Send as: {selectedChannel}
                       <ChevronDown className="h-3 w-3" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => setSelectedChannel("SMS")}>
+                  <DropdownMenuContent className="rounded-xl bg-card border-border shadow-soft">
+                    <DropdownMenuItem onClick={() => setSelectedChannel("SMS")} className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                       SMS
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setSelectedChannel("WhatsApp")}>
+                    <DropdownMenuItem onClick={() => setSelectedChannel("WhatsApp")} className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                       WhatsApp
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setSelectedChannel("Chat")}>
+                    <DropdownMenuItem onClick={() => setSelectedChannel("Chat")} className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                       Chat
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
             </div>
-            <Button onClick={handleSend} disabled={!message.trim()}>
+            <Button 
+              onClick={handleSend} 
+              disabled={!message.trim()}
+              className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft"
+            >
               <Send className="h-4 w-4" />
             </Button>
           </div>

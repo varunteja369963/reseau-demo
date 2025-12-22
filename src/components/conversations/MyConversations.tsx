@@ -99,10 +99,11 @@ export const MyConversations = () => {
               id="unread-only"
               checked={unreadOnly}
               onCheckedChange={setUnreadOnly}
+              className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-teal-500 data-[state=checked]:to-teal-600"
             />
             <Label htmlFor="unread-only">Unread only</Label>
           </div>
-          <Button variant="outline" className="gap-2 rounded-xl border-0 bg-card shadow-soft">
+          <Button variant="outline" className="gap-2 rounded-xl border-0 bg-card shadow-soft hover:bg-teal-500/10 hover:text-teal-600">
             <CheckCheck className="h-4 w-4" />
             Mark all as read
           </Button>
@@ -110,8 +111,8 @@ export const MyConversations = () => {
       </div>
 
       {/* Info banner */}
-      <div className="p-4 bg-muted/30 rounded-2xl flex items-start gap-3">
-        <div className="w-8 h-8 gradient-blue rounded-xl flex items-center justify-center shrink-0">
+      <div className="p-4 bg-gradient-to-r from-teal-500/10 to-teal-600/10 rounded-2xl flex items-start gap-3 border border-teal-500/20">
+        <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shrink-0">
           <Info className="h-4 w-4 text-white" />
         </div>
         <div>
@@ -125,10 +126,10 @@ export const MyConversations = () => {
       </div>
 
       {/* Table */}
-      <div className="border rounded-3xl bg-card shadow-soft overflow-hidden">
+      <div className="border-0 rounded-3xl bg-card shadow-soft overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="bg-muted/30 hover:bg-muted/30">
               <TableHead>Conversation</TableHead>
               <TableHead>Channels</TableHead>
               <TableHead>Unread</TableHead>
@@ -141,7 +142,9 @@ export const MyConversations = () => {
             {filteredConversations.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8">
-                  <MessageSquare className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-r from-teal-500/20 to-teal-600/20 flex items-center justify-center mx-auto mb-2">
+                    <MessageSquare className="h-6 w-6 text-teal-600" />
+                  </div>
                   <p className="text-muted-foreground">
                     {unreadOnly
                       ? "No unread conversations"
@@ -151,7 +154,7 @@ export const MyConversations = () => {
               </TableRow>
             ) : (
               filteredConversations.map((conversation) => (
-                <TableRow key={conversation.id}>
+                <TableRow key={conversation.id} className="hover:bg-teal-500/5">
                   <TableCell>
                     <div>
                       <p className="font-medium">{conversation.friendlyName}</p>
@@ -163,7 +166,7 @@ export const MyConversations = () => {
                   <TableCell>
                     <div className="flex gap-1">
                       {conversation.channels.map((channel) => (
-                        <Badge key={channel} variant="outline" className="text-[10px]">
+                        <Badge key={channel} variant="outline" className="text-[10px] rounded-lg border-teal-500/30 text-teal-600 bg-teal-500/10">
                           {channel}
                         </Badge>
                       ))}
@@ -171,7 +174,7 @@ export const MyConversations = () => {
                   </TableCell>
                   <TableCell>
                     {conversation.unreadCount > 0 ? (
-                      <Badge variant="destructive">
+                      <Badge className="bg-gradient-to-r from-teal-500 to-teal-600 text-white border-0 rounded-lg">
                         {conversation.unreadCount}
                       </Badge>
                     ) : (
@@ -185,7 +188,12 @@ export const MyConversations = () => {
                   </TableCell>
                   <TableCell>
                     <Badge
-                      variant={conversation.status === "open" ? "default" : "secondary"}
+                      variant="secondary"
+                      className={`rounded-lg border-0 ${
+                        conversation.status === "open" 
+                          ? "bg-green-500/10 text-green-600" 
+                          : "bg-muted text-muted-foreground"
+                      }`}
                     >
                       {conversation.status}
                     </Badge>
@@ -193,20 +201,20 @@ export const MyConversations = () => {
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" className="rounded-lg hover:bg-teal-500/10">
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem className="gap-2">
+                      <DropdownMenuContent align="end" className="rounded-xl bg-card border-border shadow-soft">
+                        <DropdownMenuItem className="gap-2 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                           <Eye className="h-4 w-4" />
                           View
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2">
+                        <DropdownMenuItem className="gap-2 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                           <CheckCheck className="h-4 w-4" />
                           Mark as read
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2">
+                        <DropdownMenuItem className="gap-2 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                           <Download className="h-4 w-4" />
                           Export transcript
                         </DropdownMenuItem>

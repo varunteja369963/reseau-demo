@@ -30,7 +30,7 @@ export const ConversationDetail = ({ conversationId, onClose }: ConversationDeta
       {/* Center: Thread */}
       <div className="flex-1 flex flex-col min-w-0 border-r border-border">
         {/* Thread header */}
-        <div className="p-4 border-b border-border bg-card flex items-center justify-between">
+        <div className="p-4 border-b border-border bg-gradient-to-r from-teal-500/5 to-teal-600/5 flex items-center justify-between">
           <div>
             <h2 className="font-semibold text-foreground">{conversation.friendlyName}</h2>
             <p className="text-sm text-muted-foreground">
@@ -38,7 +38,7 @@ export const ConversationDetail = ({ conversationId, onClose }: ConversationDeta
               {new Date(conversation.lastActivity).toLocaleString()}
             </p>
           </div>
-          <Button variant="ghost" size="icon" className="rounded-xl hover:bg-muted/50" onClick={onClose}>
+          <Button variant="ghost" size="icon" className="rounded-xl hover:bg-teal-500/10 hover:text-teal-600" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
         </div>
@@ -51,7 +51,7 @@ export const ConversationDetail = ({ conversationId, onClose }: ConversationDeta
           {showJumpToLatest && (
             <Button
               size="sm"
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 gap-2 shadow-lg"
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 gap-2 shadow-lg bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl"
               onClick={() => setShowJumpToLatest(false)}
             >
               <ArrowDown className="h-4 w-4" />
