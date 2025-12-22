@@ -96,7 +96,7 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
       case "sent":
         return <Check className="h-3 w-3 text-muted-foreground" />;
       case "delivered":
-        return <CheckCheck className="h-3 w-3 text-emerald-500" />;
+        return <CheckCheck className="h-3 w-3 text-[hsl(var(--teal))]" />;
       case "failed":
         return <AlertCircle className="h-3 w-3 text-destructive" />;
       default:
@@ -157,7 +157,7 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
                       {msg.sender && (
                         <p className={cn(
                           "text-xs mb-1.5 font-medium",
-                          msg.type === "outbound" ? "opacity-80" : "text-sky-600"
+                          msg.type === "outbound" ? "opacity-80" : "text-[hsl(var(--blue))]"
                         )}>{msg.sender}</p>
                       )}
                       <p className="text-sm leading-relaxed">{msg.content}</p>

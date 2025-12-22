@@ -67,7 +67,7 @@ export const ConversationsTopNav = ({ activeView, onViewChange }: ConversationsT
                   className={cn(
                     "px-2 md:px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-smooth flex items-center justify-center gap-2",
                     isActive
-                      ? "bg-white shadow-soft text-foreground"
+                      ? "bg-card shadow-soft text-foreground"
                       : "text-muted-foreground hover:text-foreground"
                   )}
                   title={item.label}
@@ -157,9 +157,9 @@ export const ConversationsTopNav = ({ activeView, onViewChange }: ConversationsT
                       "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
                       notification.type === 'lead' && "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]",
                       notification.type === 'message' && "bg-[hsl(var(--blue))]/10 text-[hsl(var(--blue))]",
-                      notification.type === 'alert' && "bg-orange-500/10 text-orange-500",
-                      notification.type === 'success' && "bg-green-500/10 text-green-500",
-                      notification.type === 'calendar' && "bg-purple-500/10 text-purple-500"
+                      notification.type === 'alert' && "bg-[hsl(var(--red))]/10 text-[hsl(var(--red))]",
+                      notification.type === 'success' && "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]",
+                      notification.type === 'calendar' && "bg-[hsl(var(--purple))]/10 text-[hsl(var(--purple))]"
                     )}>
                       <notification.icon className="w-4 h-4" />
                     </div>

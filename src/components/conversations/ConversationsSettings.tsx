@@ -191,7 +191,7 @@ export const ConversationsSettings = () => {
                       </TableCell>
                       <TableCell>
                         {service.webhooksConfigured ? (
-                          <Badge variant="secondary" className="gap-1 rounded-lg bg-green-500/10 text-green-600 border-0">
+                          <Badge variant="secondary" className="gap-1 rounded-lg bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))] border-0">
                             <Webhook className="h-3 w-3" />
                             Configured
                           </Badge>
@@ -511,7 +511,7 @@ export const ConversationsSettings = () => {
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="icon" className="rounded-xl hover:bg-amber-500/10 hover:text-amber-600 hover:border-amber-500/30">
+                  <Button variant="outline" size="icon" className="rounded-xl hover:bg-[hsl(var(--red))]/10 hover:text-[hsl(var(--red))] hover:border-[hsl(var(--red))]/30">
                     <RefreshCw className="h-4 w-4" />
                   </Button>
                 </div>
