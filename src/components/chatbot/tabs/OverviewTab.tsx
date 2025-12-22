@@ -95,15 +95,15 @@ export const OverviewTab = ({ chatbotState }: OverviewTabProps) => {
       </Card>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => (
-          <Card key={stat.label} className="shadow-soft">
+          <Card key={stat.label} className="shadow-soft min-w-0">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg bg-muted ${stat.color}`}><stat.icon className="h-5 w-5" /></div>
-                <div>
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <div className="text-xs text-muted-foreground">{stat.label}</div>
+                <div className={`p-2 rounded-lg bg-muted ${stat.color} flex-shrink-0`}><stat.icon className="h-5 w-5" /></div>
+                <div className="min-w-0">
+                  <div className="text-2xl font-bold truncate">{stat.value}</div>
+                  <div className="text-xs text-muted-foreground truncate">{stat.label}</div>
                 </div>
               </div>
             </CardContent>
