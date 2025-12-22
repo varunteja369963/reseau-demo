@@ -94,12 +94,12 @@ export const ChatbotSidebar = ({
   };
 
   return (
-    <div className="w-72 h-full flex flex-col bg-card border-r border-border">
+    <div className="h-full flex flex-col bg-card border-r border-border overflow-hidden">
       {/* Header */}
-      <div className="p-4 border-b border-border">
+      <div className="p-4 border-b border-border flex-shrink-0">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-semibold text-foreground flex items-center gap-2">
-            <Bot className="h-5 w-5 text-teal-500" />
+            <Bot className="h-5 w-5 text-[hsl(var(--teal))]" />
             Chatbots
           </h2>
           <div className="flex gap-1">
@@ -120,7 +120,7 @@ export const ChatbotSidebar = ({
             </Button>
             <Button
               size="sm"
-              className="h-8 gradient-teal text-white"
+              className="h-8 bg-[hsl(var(--teal))] hover:bg-[hsl(var(--teal))]/90 text-white"
               onClick={() => setShowCreateModal(true)}
             >
               <Plus className="h-4 w-4 mr-1" />
@@ -160,7 +160,7 @@ export const ChatbotSidebar = ({
       </div>
 
       {/* Bot List */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 min-h-0">
         <div className="p-2">
           {filteredBots.map((config) => (
             <button
@@ -169,7 +169,7 @@ export const ChatbotSidebar = ({
               className={cn(
                 'w-full text-left p-3 rounded-xl mb-2 transition-all',
                 selectedBotId === config.bot.id
-                  ? 'bg-teal-50 border border-teal-200'
+                  ? 'bg-[hsl(var(--teal))]/10 border border-[hsl(var(--teal))]/30'
                   : 'hover:bg-muted/50 border border-transparent'
               )}
             >
@@ -241,7 +241,7 @@ export const ChatbotSidebar = ({
             <Button variant="outline" onClick={() => setShowCreateModal(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCreate} className="gradient-teal text-white">
+            <Button onClick={handleCreate} className="bg-[hsl(var(--teal))] hover:bg-[hsl(var(--teal))]/90 text-white">
               Create Bot
             </Button>
           </DialogFooter>

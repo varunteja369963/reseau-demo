@@ -12,6 +12,7 @@ import { LiveChatTab } from './tabs/LiveChatTab';
 import { AIBotTab } from './tabs/AIBotTab';
 import { AutomationsTab } from './tabs/AutomationsTab';
 import { AnalyticsTab } from './tabs/AnalyticsTab';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ChatbotTabsProps {
   chatbotState: ReturnType<typeof useChatbotState>;
@@ -38,26 +39,28 @@ export const ChatbotTabs = ({ chatbotState, previewState, setPreviewState }: Cha
     <Tabs
       value={selectedTab}
       onValueChange={(v) => setSelectedTab(v as ChatbotTab)}
-      className="flex-1 flex flex-col h-full overflow-hidden"
+      className="flex-1 flex flex-col h-full min-h-0 overflow-hidden"
     >
       {/* Tab Header */}
-      <div className="border-b border-border bg-card px-4 py-3 flex items-center justify-between">
-        <TabsList className="bg-muted/50 p-1 h-auto flex-wrap gap-1">
-          {tabs.map((tab) => (
-            <TabsTrigger
-              key={tab.id}
-              value={tab.id}
-              className="data-[state=active]:bg-background data-[state=active]:shadow-sm px-3 py-1.5 text-sm"
-            >
-              {tab.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      <div className="border-b border-border bg-card px-4 py-3 flex items-center justify-between flex-shrink-0">
+        <ScrollArea className="max-w-full">
+          <TabsList className="bg-muted/50 p-1 h-auto inline-flex gap-1 w-max">
+            {tabs.map((tab) => (
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className="data-[state=active]:bg-background data-[state=active]:shadow-sm px-3 py-1.5 text-sm whitespace-nowrap"
+              >
+                {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </ScrollArea>
 
         {hasUnsaved && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0 ml-2">
             <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-              Unsaved changes
+              Unsaved
             </Badge>
             <Button
               variant="ghost"
@@ -73,29 +76,29 @@ export const ChatbotTabs = ({ chatbotState, previewState, setPreviewState }: Cha
       </div>
 
       {/* Tab Content */}
-      <div className="flex-1 overflow-auto">
-        <TabsContent value="overview" className="m-0 h-full">
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <TabsContent value="overview" className="m-0 h-full overflow-auto">
           <OverviewTab chatbotState={chatbotState} />
         </TabsContent>
-        <TabsContent value="install" className="m-0 h-full">
+        <TabsContent value="install" className="m-0 h-full overflow-auto">
           <InstallTab chatbotState={chatbotState} />
         </TabsContent>
-        <TabsContent value="appearance" className="m-0 h-full">
+        <TabsContent value="appearance" className="m-0 h-full overflow-auto">
           <AppearanceTab chatbotState={chatbotState} />
         </TabsContent>
-        <TabsContent value="prefed" className="m-0 h-full">
+        <TabsContent value="prefed" className="m-0 h-full overflow-auto">
           <PrefedFlowTab chatbotState={chatbotState} />
         </TabsContent>
-        <TabsContent value="livechat" className="m-0 h-full">
+        <TabsContent value="livechat" className="m-0 h-full overflow-auto">
           <LiveChatTab chatbotState={chatbotState} />
         </TabsContent>
-        <TabsContent value="aibot" className="m-0 h-full">
+        <TabsContent value="aibot" className="m-0 h-full overflow-auto">
           <AIBotTab chatbotState={chatbotState} />
         </TabsContent>
-        <TabsContent value="automations" className="m-0 h-full">
+        <TabsContent value="automations" className="m-0 h-full overflow-auto">
           <AutomationsTab chatbotState={chatbotState} />
         </TabsContent>
-        <TabsContent value="analytics" className="m-0 h-full">
+        <TabsContent value="analytics" className="m-0 h-full overflow-auto">
           <AnalyticsTab chatbotState={chatbotState} />
         </TabsContent>
       </div>

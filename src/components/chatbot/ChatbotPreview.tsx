@@ -46,9 +46,9 @@ export const ChatbotPreview = ({ bot, previewState, setPreviewState }: ChatbotPr
   const quickReplies = activeFlow?.jsonDefinition.find(n => n.type === 'buttons')?.data.buttons;
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col overflow-hidden">
       {/* Preview Header */}
-      <div className="p-4 border-b border-border bg-card">
+      <div className="p-4 border-b border-border bg-card flex-shrink-0">
         <h3 className="font-semibold text-foreground mb-3">Live Preview</h3>
         <Select value={previewState} onValueChange={(v) => setPreviewState(v as typeof previewState)}>
           <SelectTrigger className="h-9">
@@ -63,139 +63,140 @@ export const ChatbotPreview = ({ bot, previewState, setPreviewState }: ChatbotPr
       </div>
 
       {/* Preview Area */}
-      <div className="flex-1 p-4 flex items-end justify-end relative overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200">
+      <div className="flex-1 min-h-0 p-4 flex items-end justify-end relative bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
         {/* Chat Widget */}
         {isOpen ? (
           <div
             className={cn(
-              'w-full max-w-sm shadow-strong rounded-2xl overflow-hidden flex flex-col bg-card',
-              'absolute bottom-4',
+              'w-full max-w-[280px] shadow-strong rounded-2xl flex flex-col bg-card',
+              'absolute bottom-4 max-h-[calc(100%-2rem)]',
               appearanceSettings.launcherPosition === 'bottom-right' ? 'right-4' : 'left-4'
             )}
-            style={{ maxHeight: 'calc(100% - 2rem)' }}
           >
             {/* Widget Header */}
             <div
-              className="p-4 text-white flex items-center justify-between"
+              className="p-3 text-white flex items-center justify-between flex-shrink-0 rounded-t-2xl"
               style={{ backgroundColor: appearanceSettings.primaryColor }}
             >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                  <MessageSquare className="h-5 w-5" />
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                  <MessageSquare className="h-4 w-4" />
                 </div>
-                <div>
-                  <div className="font-semibold">{bot.bot.name}</div>
+                <div className="min-w-0">
+                  <div className="font-semibold text-sm truncate">{bot.bot.name}</div>
                   <div className="text-xs opacity-90">{getBotTypeLabel()}</div>
                 </div>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-white hover:bg-white/20"
+                className="text-white hover:bg-white/20 h-7 w-7 flex-shrink-0"
                 onClick={() => setIsOpen(false)}
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </Button>
             </div>
 
             {/* Chat Content */}
-            <ScrollArea className="flex-1 p-4" style={{ maxHeight: '300px' }}>
-              {previewState === 'offline' ? (
-                <div className="text-center py-6">
-                  <div className="w-12 h-12 rounded-full bg-muted mx-auto mb-3 flex items-center justify-center">
-                    <MessageSquare className="h-6 w-6 text-muted-foreground" />
+            <ScrollArea className="flex-1 min-h-0 max-h-[200px]">
+              <div className="p-3">
+                {previewState === 'offline' ? (
+                  <div className="text-center py-4">
+                    <div className="w-10 h-10 rounded-full bg-muted mx-auto mb-2 flex items-center justify-center">
+                      <MessageSquare className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      {appearanceSettings.offlineMessage}
+                    </p>
+                    <Button size="sm" style={{ backgroundColor: appearanceSettings.primaryColor }} className="text-white text-xs h-7">
+                      Leave a Message
+                    </Button>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {appearanceSettings.offlineMessage}
-                  </p>
-                  <Button size="sm" style={{ backgroundColor: appearanceSettings.primaryColor }} className="text-white">
-                    Leave a Message
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {sampleMessages.map((msg, idx) => (
-                    <div
-                      key={idx}
-                      className={cn(
-                        'flex',
-                        msg.sender === 'user' ? 'justify-end' : 'justify-start'
-                      )}
-                    >
+                ) : (
+                  <div className="space-y-2">
+                    {sampleMessages.map((msg, idx) => (
                       <div
+                        key={idx}
                         className={cn(
-                          'max-w-[80%] rounded-2xl px-4 py-2 text-sm',
-                          msg.sender === 'user'
-                            ? 'bg-muted text-foreground rounded-br-sm'
-                            : 'text-white rounded-bl-sm'
+                          'flex',
+                          msg.sender === 'user' ? 'justify-end' : 'justify-start'
                         )}
-                        style={msg.sender === 'bot' ? { backgroundColor: appearanceSettings.primaryColor } : {}}
                       >
-                        {msg.text}
-                      </div>
-                    </div>
-                  ))}
-
-                  {/* Quick Replies for Pre-fed bots */}
-                  {bot.bot.type === 'prefed' && quickReplies && (
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {quickReplies.map((btn) => (
-                        <Button
-                          key={btn.id}
-                          variant="outline"
-                          size="sm"
-                          className="rounded-full text-xs"
-                          style={{ borderColor: appearanceSettings.primaryColor, color: appearanceSettings.primaryColor }}
+                        <div
+                          className={cn(
+                            'max-w-[85%] rounded-xl px-3 py-1.5 text-xs',
+                            msg.sender === 'user'
+                              ? 'bg-muted text-foreground rounded-br-sm'
+                              : 'text-white rounded-bl-sm'
+                          )}
+                          style={msg.sender === 'bot' ? { backgroundColor: appearanceSettings.primaryColor } : {}}
                         >
-                          {btn.label}
-                        </Button>
-                      ))}
-                    </div>
-                  )}
+                          {msg.text}
+                        </div>
+                      </div>
+                    ))}
 
-                  {/* AI Bot hint */}
-                  {bot.bot.type === 'ai' && (
-                    <div className="text-xs text-center text-muted-foreground py-2">
-                      Ask me anything! 🤖
-                    </div>
-                  )}
-
-                  {/* Live Chat hint */}
-                  {bot.bot.type === 'live' && (
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground py-2">
-                      <div className="flex -space-x-2">
-                        {bot.liveChatSettings.agents.slice(0, 3).map((agent, i) => (
-                          <div
-                            key={agent.id}
-                            className="w-6 h-6 rounded-full bg-muted border-2 border-card flex items-center justify-center"
+                    {/* Quick Replies for Pre-fed bots */}
+                    {bot.bot.type === 'prefed' && quickReplies && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {quickReplies.slice(0, 2).map((btn) => (
+                          <Button
+                            key={btn.id}
+                            variant="outline"
+                            size="sm"
+                            className="rounded-full text-[10px] h-6 px-2"
+                            style={{ borderColor: appearanceSettings.primaryColor, color: appearanceSettings.primaryColor }}
                           >
-                            <User className="h-3 w-3" />
-                          </div>
+                            {btn.label}
+                          </Button>
                         ))}
                       </div>
-                      <span>Agent will reply shortly</span>
-                    </div>
-                  )}
-                </div>
-              )}
+                    )}
+
+                    {/* AI Bot hint */}
+                    {bot.bot.type === 'ai' && (
+                      <div className="text-[10px] text-center text-muted-foreground py-1">
+                        Ask me anything! 🤖
+                      </div>
+                    )}
+
+                    {/* Live Chat hint */}
+                    {bot.bot.type === 'live' && (
+                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground py-1">
+                        <div className="flex -space-x-1">
+                          {bot.liveChatSettings.agents.slice(0, 2).map((agent, i) => (
+                            <div
+                              key={agent.id}
+                              className="w-4 h-4 rounded-full bg-muted border border-card flex items-center justify-center"
+                            >
+                              <User className="h-2 w-2" />
+                            </div>
+                          ))}
+                        </div>
+                        <span>Agent will reply</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </ScrollArea>
 
             {/* Input Area */}
             {previewState !== 'offline' && (
-              <div className="p-3 border-t border-border">
-                <div className="flex gap-2">
+              <div className="p-2 border-t border-border flex-shrink-0">
+                <div className="flex gap-1">
                   <Input
                     placeholder={bot.bot.type === 'ai' ? 'Ask anything...' : 'Type a message...'}
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
-                    className="flex-1"
+                    className="flex-1 h-8 text-xs"
                   />
                   <Button
                     size="icon"
+                    className="h-8 w-8 flex-shrink-0"
                     style={{ backgroundColor: appearanceSettings.primaryColor }}
-                    className="text-white"
                   >
-                    <Send className="h-4 w-4" />
+                    <Send className="h-3 w-3 text-white" />
                   </Button>
                 </div>
               </div>
@@ -203,7 +204,7 @@ export const ChatbotPreview = ({ bot, previewState, setPreviewState }: ChatbotPr
 
             {/* Branding */}
             {appearanceSettings.showBranding && (
-              <div className="py-2 text-center text-xs text-muted-foreground border-t border-border">
+              <div className="py-1.5 text-center text-[10px] text-muted-foreground border-t border-border flex-shrink-0">
                 Powered by Reseau
               </div>
             )}
@@ -213,19 +214,19 @@ export const ChatbotPreview = ({ bot, previewState, setPreviewState }: ChatbotPr
           <button
             onClick={() => setIsOpen(true)}
             className={cn(
-              'w-14 h-14 rounded-full shadow-strong flex items-center justify-center text-white transition-transform hover:scale-110',
+              'w-12 h-12 rounded-full shadow-strong flex items-center justify-center text-white transition-transform hover:scale-110',
               'absolute bottom-4',
               appearanceSettings.launcherPosition === 'bottom-right' ? 'right-4' : 'left-4'
             )}
             style={{ backgroundColor: appearanceSettings.primaryColor }}
           >
-            <MessageSquare className="h-6 w-6" />
+            <MessageSquare className="h-5 w-5" />
           </button>
         )}
       </div>
 
       {/* Preview Info */}
-      <div className="p-4 bg-card border-t border-border">
+      <div className="p-3 bg-card border-t border-border flex-shrink-0">
         <div className="text-xs text-muted-foreground space-y-1">
           <div className="flex justify-between">
             <span>Position:</span>
@@ -235,7 +236,7 @@ export const ChatbotPreview = ({ bot, previewState, setPreviewState }: ChatbotPr
             <span>Primary Color:</span>
             <div className="flex items-center gap-2">
               <div
-                className="w-4 h-4 rounded-full border"
+                className="w-3 h-3 rounded-full border"
                 style={{ backgroundColor: appearanceSettings.primaryColor }}
               />
               <span className="font-medium">{appearanceSettings.primaryColor}</span>
@@ -243,7 +244,7 @@ export const ChatbotPreview = ({ bot, previewState, setPreviewState }: ChatbotPr
           </div>
           <div className="flex justify-between">
             <span>Bot Type:</span>
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="outline" className="text-[10px] h-5">
               {bot.bot.type === 'prefed' ? 'Pre-fed' : bot.bot.type === 'live' ? 'Live' : 'AI'}
             </Badge>
           </div>
