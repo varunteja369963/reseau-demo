@@ -12,7 +12,6 @@ import { LiveChatTab } from './tabs/LiveChatTab';
 import { AIBotTab } from './tabs/AIBotTab';
 import { AutomationsTab } from './tabs/AutomationsTab';
 import { AnalyticsTab } from './tabs/AnalyticsTab';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ChatbotTabsProps {
   chatbotState: ReturnType<typeof useChatbotState>;
@@ -42,8 +41,8 @@ export const ChatbotTabs = ({ chatbotState, previewState, setPreviewState }: Cha
       className="flex-1 flex flex-col h-full min-h-0 overflow-hidden"
     >
       {/* Tab Header */}
-      <div className="border-b border-border bg-card px-4 py-3 flex items-center justify-between flex-shrink-0">
-        <ScrollArea className="max-w-full">
+      <div className="border-b border-border bg-card px-4 py-3 flex items-center justify-between flex-shrink-0 gap-2">
+        <div className="flex-1 min-w-0 overflow-x-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
           <TabsList className="bg-muted/50 p-1 h-auto inline-flex gap-1 w-max">
             {tabs.map((tab) => (
               <TabsTrigger
@@ -55,11 +54,11 @@ export const ChatbotTabs = ({ chatbotState, previewState, setPreviewState }: Cha
               </TabsTrigger>
             ))}
           </TabsList>
-        </ScrollArea>
+        </div>
 
         {hasUnsaved && (
-          <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 hidden sm:inline-flex">
               Unsaved
             </Badge>
             <Button
@@ -68,8 +67,8 @@ export const ChatbotTabs = ({ chatbotState, previewState, setPreviewState }: Cha
               onClick={() => resetChanges(selectedBot?.bot.id || '')}
               className="h-8"
             >
-              <RotateCcw className="h-4 w-4 mr-1" />
-              Reset
+              <RotateCcw className="h-4 w-4 sm:mr-1" />
+              <span className="hidden sm:inline">Reset</span>
             </Button>
           </div>
         )}

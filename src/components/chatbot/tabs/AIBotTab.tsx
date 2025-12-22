@@ -56,7 +56,7 @@ export const AIBotTab = ({ chatbotState }: AIBotTabProps) => {
 
   return (
     <div className="p-6 space-y-6 overflow-auto h-full">
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Knowledge Sources */}
         <Card className="shadow-soft">
           <CardHeader><CardTitle className="flex items-center gap-2"><Brain className="h-5 w-5 text-teal-500" />Knowledge Sources</CardTitle></CardHeader>
@@ -97,10 +97,10 @@ export const AIBotTab = ({ chatbotState }: AIBotTabProps) => {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Tone</Label>
-              <RadioGroup value={aiSettings.tone} onValueChange={(v) => update({ tone: v as typeof aiSettings.tone })} className="flex gap-4">
-                <div className="flex items-center gap-2"><RadioGroupItem value="friendly" /><Label>Friendly</Label></div>
-                <div className="flex items-center gap-2"><RadioGroupItem value="professional" /><Label>Professional</Label></div>
-                <div className="flex items-center gap-2"><RadioGroupItem value="concise" /><Label>Concise</Label></div>
+              <RadioGroup value={aiSettings.tone} onValueChange={(v) => update({ tone: v as typeof aiSettings.tone })} className="flex flex-wrap gap-x-4 gap-y-2">
+                <div className="flex items-center gap-2"><RadioGroupItem value="friendly" id="tone-friendly" /><Label htmlFor="tone-friendly" className="text-sm">Friendly</Label></div>
+                <div className="flex items-center gap-2"><RadioGroupItem value="professional" id="tone-professional" /><Label htmlFor="tone-professional" className="text-sm">Professional</Label></div>
+                <div className="flex items-center gap-2"><RadioGroupItem value="concise" id="tone-concise" /><Label htmlFor="tone-concise" className="text-sm">Concise</Label></div>
               </RadioGroup>
             </div>
             <div className="space-y-2">
@@ -119,7 +119,7 @@ export const AIBotTab = ({ chatbotState }: AIBotTabProps) => {
         </Card>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Confidence & Escalation */}
         <Card className="shadow-soft">
           <CardHeader><CardTitle className="flex items-center gap-2"><Gauge className="h-5 w-5 text-teal-500" />Confidence & Escalation</CardTitle></CardHeader>
