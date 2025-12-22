@@ -125,14 +125,14 @@ export function SMSTemplates() {
           <h1 className="text-2xl font-bold">Templates</h1>
           <p className="text-muted-foreground">Create and manage SMS message templates</p>
         </div>
-        <Button onClick={() => openEditor()} className="gap-2">
+        <Button onClick={() => openEditor()} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
           <Plus className="h-4 w-4" />
           Create Template
         </Button>
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0 bg-card">
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
             <div className="relative flex-1 max-w-sm">
@@ -141,7 +141,7 @@ export function SMSTemplates() {
                 placeholder="Search templates..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 rounded-xl"
               />
             </div>
             <div className="flex gap-2">
@@ -151,6 +151,7 @@ export function SMSTemplates() {
                   variant={categoryFilter === category ? "secondary" : "ghost"}
                   size="sm"
                   onClick={() => setCategoryFilter(category)}
+                  className="rounded-xl"
                 >
                   {category}
                 </Button>
@@ -163,7 +164,7 @@ export function SMSTemplates() {
       {/* Templates Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredTemplates.map((template) => (
-          <Card key={template.id} className="hover:border-primary/50 transition-colors">
+          <Card key={template.id} className="rounded-3xl shadow-soft border-0 bg-card hover:shadow-md transition-all">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
                 <div>
@@ -172,11 +173,11 @@ export function SMSTemplates() {
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" className="rounded-xl">
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
+                  <DropdownMenuContent align="end" className="rounded-xl">
                     <DropdownMenuItem onClick={() => openEditor(template)}>
                       <Edit className="h-4 w-4 mr-2" />
                       Edit
@@ -195,7 +196,7 @@ export function SMSTemplates() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="bg-muted rounded-lg p-3 mb-3">
+              <div className="bg-muted/30 rounded-xl p-3 mb-3">
                 <p className="text-sm line-clamp-3">{template.preview}</p>
               </div>
               <p className="text-xs text-muted-foreground">

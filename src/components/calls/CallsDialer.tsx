@@ -116,7 +116,7 @@ export function CallsDialer() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Dialer Panel */}
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0 bg-card">
           <CardHeader>
             <CardTitle>Make a Call</CardTitle>
             <CardDescription>Configure and start an outbound call</CardDescription>
@@ -180,12 +180,12 @@ export function CallsDialer() {
             </div>
 
             {!isCallActive ? (
-              <Button onClick={handleCall} className="w-full" disabled={!toNumber}>
+              <Button onClick={handleCall} className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl" disabled={!toNumber}>
                 <Phone className="h-4 w-4 mr-2" />
                 Call
               </Button>
             ) : (
-              <Button onClick={handleHangUp} variant="destructive" className="w-full">
+              <Button onClick={handleHangUp} variant="destructive" className="w-full rounded-xl">
                 <PhoneOff className="h-4 w-4 mr-2" />
                 Hang Up
               </Button>
@@ -194,7 +194,7 @@ export function CallsDialer() {
         </Card>
 
         {/* Live Call Panel */}
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0 bg-card">
           <CardHeader>
             <CardTitle>Call Status</CardTitle>
             <CardDescription>Live call information</CardDescription>

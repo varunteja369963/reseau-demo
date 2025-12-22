@@ -127,14 +127,14 @@ export function CallsPorting() {
           <h1 className="text-2xl font-bold">Porting</h1>
           <p className="text-muted-foreground">Track port-in requests</p>
         </div>
-        <Button onClick={() => setCreateDialogOpen(true)} className="gap-2">
+        <Button onClick={() => setCreateDialogOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
           <Plus className="h-4 w-4" />
           New Port Request
         </Button>
       </div>
 
       {/* Search */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0 bg-card">
         <CardContent className="p-4">
           <div className="relative max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -142,14 +142,14 @@ export function CallsPorting() {
               placeholder="Search requests..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
+              className="pl-9 rounded-xl"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Requests Table */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0 bg-card">
         <CardContent className="p-0">
           <Table>
             <TableHeader>

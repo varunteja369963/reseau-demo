@@ -105,7 +105,7 @@ export function CallsRecordings() {
       </div>
 
       {/* Search */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0 bg-card">
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
             <div className="relative flex-1 max-w-sm">
@@ -114,10 +114,10 @@ export function CallsRecordings() {
                 placeholder="Search recordings..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 rounded-xl"
               />
             </div>
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 rounded-xl">
               <Calendar className="h-4 w-4" />
               Date Range
             </Button>
@@ -126,7 +126,7 @@ export function CallsRecordings() {
       </Card>
 
       {/* Recordings Table */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0 bg-card">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
