@@ -105,8 +105,8 @@ const automations = [
 
 const statusColors: Record<string, string> = {
   draft: "bg-muted text-muted-foreground",
-  active: "bg-green-500/10 text-green-500",
-  paused: "bg-orange-500/10 text-orange-500",
+  active: "bg-teal-500/10 text-teal-600",
+  paused: "bg-amber-500/10 text-amber-600",
 };
 
 const nodeTypes = [
@@ -138,17 +138,17 @@ export function SMSAutomations() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Automations</h1>
+          <h1 className="text-2xl font-bold text-foreground">Automations</h1>
           <p className="text-muted-foreground">Create automated SMS journeys and workflows</p>
         </div>
-        <Button onClick={() => setCreateDialogOpen(true)} className="gap-2">
+        <Button onClick={() => setCreateDialogOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
           <Plus className="h-4 w-4" />
           New Automation
         </Button>
       </div>
 
       {/* Search */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0 bg-card">
         <CardContent className="p-4">
           <div className="relative max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -156,18 +156,18 @@ export function SMSAutomations() {
               placeholder="Search automations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
+              className="pl-9 rounded-xl border-0 bg-muted/30"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Automations Table */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0 bg-card">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="border-b border-border/50">
                 <TableHead>Name</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Trigger</TableHead>
@@ -179,10 +179,10 @@ export function SMSAutomations() {
             </TableHeader>
             <TableBody>
               {filteredAutomations.map((automation) => (
-                <TableRow key={automation.id}>
+                <TableRow key={automation.id} className="border-b border-border/30">
                   <TableCell className="font-medium">{automation.name}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary" className={statusColors[automation.status]}>
+                    <Badge variant="secondary" className={`${statusColors[automation.status]} rounded-lg`}>
                       {automation.status}
                     </Badge>
                   </TableCell>
@@ -193,11 +193,11 @@ export function SMSAutomations() {
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" className="rounded-xl">
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent align="end" className="rounded-xl">
                         <DropdownMenuItem onClick={() => setBuilderOpen(true)}>
                           <Edit className="h-4 w-4 mr-2" />
                           Edit
@@ -234,7 +234,7 @@ export function SMSAutomations() {
 
       {/* Create Dialog */}
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent>
+        <DialogContent className="rounded-2xl">
           <DialogHeader>
             <DialogTitle>Create Automation</DialogTitle>
             <DialogDescription>
@@ -244,19 +244,19 @@ export function SMSAutomations() {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label>Name</Label>
-              <Input placeholder="Enter automation name" />
+              <Input placeholder="Enter automation name" className="rounded-xl" />
             </div>
             <div className="space-y-2">
               <Label>Description</Label>
-              <Textarea placeholder="Describe what this automation does" />
+              <Textarea placeholder="Describe what this automation does" className="rounded-xl" />
             </div>
             <div className="space-y-2">
               <Label>Trigger Type</Label>
               <Select>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl">
                   <SelectValue placeholder="Select trigger" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl">
                   <SelectItem value="list">Contact joins list</SelectItem>
                   <SelectItem value="optin">Contact opted-in</SelectItem>
                   <SelectItem value="click">Link clicked</SelectItem>
@@ -268,10 +268,10 @@ export function SMSAutomations() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setCreateDialogOpen(false)} className="rounded-xl">
               Cancel
             </Button>
-            <Button onClick={() => { setCreateDialogOpen(false); setBuilderOpen(true); }}>
+            <Button onClick={() => { setCreateDialogOpen(false); setBuilderOpen(true); }} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
               Create & Edit
             </Button>
           </DialogFooter>
@@ -280,7 +280,7 @@ export function SMSAutomations() {
 
       {/* Flow Builder Dialog */}
       <Dialog open={builderOpen} onOpenChange={setBuilderOpen}>
-        <DialogContent className="max-w-5xl h-[80vh]">
+        <DialogContent className="max-w-5xl h-[80vh] rounded-2xl">
           <DialogHeader>
             <DialogTitle>Automation Builder</DialogTitle>
             <DialogDescription>
@@ -289,37 +289,41 @@ export function SMSAutomations() {
           </DialogHeader>
           <div className="flex flex-1 gap-4 h-full min-h-0">
             {/* Node Palette */}
-            <div className="w-64 border rounded-lg p-4 overflow-y-auto">
-              <p className="font-medium mb-3">Triggers</p>
+            <div className="w-64 border-0 bg-muted/30 rounded-2xl p-4 overflow-y-auto">
+              <p className="font-medium mb-3 text-foreground">Triggers</p>
               <div className="space-y-2 mb-4">
                 {nodeTypes.filter(n => n.category === "trigger").map((node) => {
                   const Icon = node.icon;
                   return (
                     <Card 
                       key={node.id} 
-                      className="cursor-pointer hover:border-primary transition-colors"
+                      className="cursor-pointer hover:border-teal-500 transition-colors rounded-xl border-0 bg-card shadow-soft"
                       draggable
                     >
                       <CardContent className="p-3 flex items-center gap-2">
-                        <Icon className="h-4 w-4 text-primary" />
+                        <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-teal-500/20 to-teal-600/20 flex items-center justify-center">
+                          <Icon className="h-4 w-4 text-teal-500" />
+                        </div>
                         <span className="text-sm">{node.label}</span>
                       </CardContent>
                     </Card>
                   );
                 })}
               </div>
-              <p className="font-medium mb-3">Actions</p>
+              <p className="font-medium mb-3 text-foreground">Actions</p>
               <div className="space-y-2">
                 {nodeTypes.filter(n => n.category === "action").map((node) => {
                   const Icon = node.icon;
                   return (
                     <Card 
                       key={node.id} 
-                      className="cursor-pointer hover:border-primary transition-colors"
+                      className="cursor-pointer hover:border-purple-500 transition-colors rounded-xl border-0 bg-card shadow-soft"
                       draggable
                     >
                       <CardContent className="p-3 flex items-center gap-2">
-                        <Icon className="h-4 w-4 text-muted-foreground" />
+                        <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center">
+                          <Icon className="h-4 w-4 text-purple-500" />
+                        </div>
                         <span className="text-sm">{node.label}</span>
                       </CardContent>
                     </Card>
@@ -329,34 +333,40 @@ export function SMSAutomations() {
             </div>
 
             {/* Canvas */}
-            <div className="flex-1 border rounded-lg bg-muted/30 p-4 overflow-auto">
+            <div className="flex-1 border-0 rounded-2xl bg-muted/30 p-4 overflow-auto">
               <div className="flex flex-col items-center gap-4 min-h-full">
                 {/* Start Node */}
-                <Card className="w-48 border-primary">
+                <Card className="w-48 border-teal-500/50 rounded-xl shadow-soft bg-card">
                   <CardContent className="p-4 text-center">
-                    <Zap className="h-6 w-6 mx-auto mb-2 text-primary" />
+                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-teal-500/20 to-teal-600/20 flex items-center justify-center mx-auto mb-2">
+                      <Zap className="h-5 w-5 text-teal-500" />
+                    </div>
                     <p className="font-medium">Trigger</p>
                     <p className="text-xs text-muted-foreground">Contact joins list</p>
                   </CardContent>
                 </Card>
                 
-                <div className="h-8 w-0.5 bg-border" />
+                <div className="h-8 w-0.5 bg-gradient-to-b from-teal-500/50 to-purple-500/50" />
                 
                 {/* Action Node */}
-                <Card className="w-48">
+                <Card className="w-48 rounded-xl shadow-soft border-0 bg-card">
                   <CardContent className="p-4 text-center">
-                    <Clock className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
+                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/20 flex items-center justify-center mx-auto mb-2">
+                      <Clock className="h-5 w-5 text-amber-500" />
+                    </div>
                     <p className="font-medium">Wait</p>
                     <p className="text-xs text-muted-foreground">1 hour</p>
                   </CardContent>
                 </Card>
                 
-                <div className="h-8 w-0.5 bg-border" />
+                <div className="h-8 w-0.5 bg-gradient-to-b from-purple-500/50 to-teal-500/50" />
                 
                 {/* SMS Node */}
-                <Card className="w-48">
+                <Card className="w-48 rounded-xl shadow-soft border-0 bg-card">
                   <CardContent className="p-4 text-center">
-                    <MessageSquare className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
+                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center mx-auto mb-2">
+                      <MessageSquare className="h-5 w-5 text-purple-500" />
+                    </div>
                     <p className="font-medium">Send SMS</p>
                     <p className="text-xs text-muted-foreground">Welcome message</p>
                   </CardContent>
@@ -365,23 +375,23 @@ export function SMSAutomations() {
                 <div className="h-8 w-0.5 bg-border" />
                 
                 {/* Add Node Button */}
-                <Button variant="outline" size="sm" className="rounded-full">
+                <Button variant="outline" size="sm" className="rounded-full border-dashed border-2 hover:border-teal-500 hover:text-teal-500">
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
             </div>
 
             {/* Config Panel */}
-            <div className="w-72 border rounded-lg p-4 overflow-y-auto">
-              <p className="font-medium mb-4">Node Configuration</p>
+            <div className="w-72 border-0 bg-muted/30 rounded-2xl p-4 overflow-y-auto">
+              <p className="font-medium mb-4 text-foreground">Node Configuration</p>
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Template</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl border-0 bg-card">
                       <SelectValue placeholder="Choose template" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-xl">
                       <SelectItem value="welcome">Welcome Template</SelectItem>
                       <SelectItem value="promo">Promo Template</SelectItem>
                       <SelectItem value="custom">Custom Message</SelectItem>
@@ -391,18 +401,18 @@ export function SMSAutomations() {
                 <div className="space-y-2">
                   <Label>Sender</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl border-0 bg-card">
                       <SelectValue placeholder="Select sender" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-xl">
                       <SelectItem value="+15550100">+1 555-0100</SelectItem>
                       <SelectItem value="+15550200">+1 555-0200</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <Card className="bg-muted/50">
+                <Card className="bg-amber-500/10 border-0 rounded-xl">
                   <CardContent className="p-3">
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-amber-600">
                       <strong>Note:</strong> Messages will be blocked if contact has opted out.
                     </p>
                   </CardContent>
@@ -411,9 +421,9 @@ export function SMSAutomations() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline">Test with Contact</Button>
-            <Button variant="outline">View Runs</Button>
-            <Button>Save & Enable</Button>
+            <Button variant="outline" className="rounded-xl">Test with Contact</Button>
+            <Button variant="outline" className="rounded-xl">View Runs</Button>
+            <Button className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">Save & Enable</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

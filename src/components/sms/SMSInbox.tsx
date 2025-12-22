@@ -98,9 +98,9 @@ const messages = [
 ];
 
 const statusColors: Record<string, string> = {
-  subscribed: "bg-green-500/10 text-green-500",
+  subscribed: "bg-teal-500/10 text-teal-600",
   unsubscribed: "bg-red-500/10 text-red-500",
-  suppressed: "bg-orange-500/10 text-orange-500",
+  suppressed: "bg-amber-500/10 text-amber-600",
 };
 
 export function SMSInbox() {
@@ -131,8 +131,8 @@ export function SMSInbox() {
 
       <div className="grid grid-cols-12 gap-4 h-full">
         {/* Conversation List */}
-        <div className="col-span-3 border rounded-3xl flex flex-col bg-card shadow-soft">
-          <div className="p-3 border-b space-y-3">
+        <div className="col-span-3 rounded-3xl flex flex-col bg-card shadow-soft border-0">
+          <div className="p-3 border-b border-border/30 space-y-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -159,20 +159,20 @@ export function SMSInbox() {
             {filteredConversations.map((conv) => (
               <div
                 key={conv.id}
-                className={`p-3 border-b cursor-pointer hover:bg-muted/50 transition-colors ${
-                  selectedConversation.id === conv.id ? "bg-muted" : ""
+                className={`p-3 border-b border-border/20 cursor-pointer hover:bg-muted/50 transition-colors ${
+                  selectedConversation.id === conv.id ? "bg-teal-500/5 border-l-2 border-l-teal-500" : ""
                 }`}
                 onClick={() => setSelectedConversation(conv)}
               >
                 <div className="flex items-start gap-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarFallback>
+                  <Avatar className="h-10 w-10 border-0">
+                    <AvatarFallback className="bg-gradient-to-br from-teal-500/20 to-teal-600/20 text-teal-600">
                       {conv.name.split(" ").map((n) => n[0]).join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <p className={`font-medium text-sm truncate ${conv.unread ? "" : "text-muted-foreground"}`}>
+                      <p className={`font-medium text-sm truncate ${conv.unread ? "text-foreground" : "text-muted-foreground"}`}>
                         {conv.name}
                       </p>
                       <span className="text-xs text-muted-foreground whitespace-nowrap">
@@ -180,12 +180,12 @@ export function SMSInbox() {
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground">{conv.phone}</p>
-                    <p className={`text-sm truncate ${conv.unread ? "font-medium" : "text-muted-foreground"}`}>
+                    <p className={`text-sm truncate ${conv.unread ? "font-medium text-foreground" : "text-muted-foreground"}`}>
                       {conv.lastMessage}
                     </p>
                   </div>
                   {conv.unread && (
-                    <div className="h-2 w-2 rounded-full bg-primary shrink-0 mt-2" />
+                    <div className="h-2 w-2 rounded-full bg-teal-500 shrink-0 mt-2" />
                   )}
                 </div>
               </div>
@@ -194,36 +194,36 @@ export function SMSInbox() {
         </div>
 
         {/* Conversation Thread */}
-        <div className="col-span-6 border rounded-3xl flex flex-col bg-card shadow-soft">
+        <div className="col-span-6 rounded-3xl flex flex-col bg-card shadow-soft border-0">
           {/* Thread Header */}
-          <div className="p-4 border-b flex items-center justify-between">
+          <div className="p-4 border-b border-border/30 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10">
-                <AvatarFallback>
+              <Avatar className="h-10 w-10 border-0">
+                <AvatarFallback className="bg-gradient-to-br from-teal-500/20 to-teal-600/20 text-teal-600">
                   {selectedConversation.name.split(" ").map((n) => n[0]).join("")}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-medium">{selectedConversation.name}</p>
+                <p className="font-medium text-foreground">{selectedConversation.name}</p>
                 <p className="text-sm text-muted-foreground">{selectedConversation.phone}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="secondary" className={statusColors[selectedConversation.status]}>
+              <Badge variant="secondary" className={`${statusColors[selectedConversation.status]} rounded-lg`}>
                 {selectedConversation.status}
               </Badge>
               <Select defaultValue="unassigned">
-                <SelectTrigger className="w-[150px]">
+                <SelectTrigger className="w-[150px] rounded-xl border-0 bg-muted/30">
                   <SelectValue placeholder="Assign" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl">
                   <SelectItem value="unassigned">Unassigned</SelectItem>
                   <SelectItem value="me">Assign to me</SelectItem>
                   <SelectItem value="john">John Doe</SelectItem>
                   <SelectItem value="jane">Jane Smith</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="rounded-xl border-0 bg-muted/30">
                 Mark Resolved
               </Button>
             </div>
@@ -238,10 +238,10 @@ export function SMSInbox() {
                   className={`flex ${message.type === "outbound" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[70%] rounded-lg p-3 ${
+                    className={`max-w-[70%] rounded-2xl p-3 ${
                       message.type === "outbound"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted"
+                        ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white"
+                        : "bg-muted/50"
                     }`}
                   >
                     <p className="text-sm">{message.content}</p>
@@ -249,12 +249,12 @@ export function SMSInbox() {
                       message.type === "outbound" ? "justify-end" : ""
                     }`}>
                       <span className={`text-xs ${
-                        message.type === "outbound" ? "text-primary-foreground/70" : "text-muted-foreground"
+                        message.type === "outbound" ? "text-white/70" : "text-muted-foreground"
                       }`}>
                         {message.time}
                       </span>
                       {message.type === "outbound" && message.status && (
-                        <Check className="h-3 w-3" />
+                        <Check className="h-3 w-3 text-white/70" />
                       )}
                     </div>
                   </div>
@@ -264,10 +264,10 @@ export function SMSInbox() {
           </ScrollArea>
 
           {/* Composer */}
-          <div className="p-4 border-t">
+          <div className="p-4 border-t border-border/30">
             {!canSend && (
-              <div className="mb-3 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
-                <p className="text-sm text-destructive">
+              <div className="mb-3 p-3 bg-red-500/10 border-0 rounded-xl">
+                <p className="text-sm text-red-500">
                   Messaging blocked: contact has opted out
                 </p>
               </div>
@@ -277,7 +277,7 @@ export function SMSInbox() {
                 placeholder={canSend ? "Type your message..." : "Cannot send to opted-out contact"}
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                className="min-h-[80px] resize-none"
+                className="min-h-[80px] resize-none rounded-xl border-0 bg-muted/30"
                 disabled={!canSend}
               />
             </div>
@@ -285,11 +285,11 @@ export function SMSInbox() {
               <div className="flex items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" disabled={!canSend}>
+                    <Button variant="outline" size="sm" disabled={!canSend} className="rounded-xl border-0 bg-muted/30">
                       Insert Template
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="rounded-xl">
                     <DropdownMenuItem>Appointment Confirmation</DropdownMenuItem>
                     <DropdownMenuItem>Reschedule Options</DropdownMenuItem>
                     <DropdownMenuItem>Thank You</DropdownMenuItem>
@@ -299,7 +299,7 @@ export function SMSInbox() {
                   {newMessage.length}/160 characters
                 </span>
               </div>
-              <Button disabled={!canSend || !newMessage.trim()} className="gap-2">
+              <Button disabled={!canSend || !newMessage.trim()} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
                 <Send className="h-4 w-4" />
                 Send
               </Button>
@@ -308,17 +308,17 @@ export function SMSInbox() {
         </div>
 
         {/* Contact Panel */}
-        <div className="col-span-3 border rounded-3xl overflow-hidden bg-card shadow-soft">
-          <div className="p-4 border-b">
+        <div className="col-span-3 rounded-3xl overflow-hidden bg-card shadow-soft border-0">
+          <div className="p-4 border-b border-border/30">
             <div className="flex items-center justify-between">
-              <p className="font-medium">Contact Info</p>
+              <p className="font-medium text-foreground">Contact Info</p>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" className="rounded-xl">
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="rounded-xl">
                   <DropdownMenuItem>View Full Profile</DropdownMenuItem>
                   <DropdownMenuItem>Edit Contact</DropdownMenuItem>
                   <DropdownMenuItem className="text-destructive">Suppress Contact</DropdownMenuItem>
@@ -330,25 +330,29 @@ export function SMSInbox() {
             <div className="p-4 space-y-6">
               {/* Contact Summary */}
               <div className="text-center">
-                <Avatar className="h-16 w-16 mx-auto mb-3">
-                  <AvatarFallback className="text-lg">
+                <Avatar className="h-16 w-16 mx-auto mb-3 border-0">
+                  <AvatarFallback className="text-lg bg-gradient-to-br from-teal-500/20 to-teal-600/20 text-teal-600">
                     {selectedConversation.name.split(" ").map((n) => n[0]).join("")}
                   </AvatarFallback>
                 </Avatar>
-                <p className="font-medium">{selectedConversation.name}</p>
-                <Badge variant="secondary" className={`mt-1 ${statusColors[selectedConversation.status]}`}>
+                <p className="font-medium text-foreground">{selectedConversation.name}</p>
+                <Badge variant="secondary" className={`mt-1 ${statusColors[selectedConversation.status]} rounded-lg`}>
                   {selectedConversation.status}
                 </Badge>
               </div>
 
               {/* Contact Details */}
               <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
+                <div className="flex items-center gap-3 p-2 rounded-xl bg-muted/30">
+                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-teal-500/20 to-teal-600/20 flex items-center justify-center">
+                    <Phone className="h-4 w-4 text-teal-500" />
+                  </div>
                   <span className="text-sm">{selectedConversation.phone}</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <User className="h-4 w-4 text-muted-foreground" />
+                <div className="flex items-center gap-3 p-2 rounded-xl bg-muted/30">
+                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center">
+                    <User className="h-4 w-4 text-purple-500" />
+                  </div>
                   <span className="text-sm">john.smith@email.com</span>
                 </div>
               </div>
@@ -357,12 +361,12 @@ export function SMSInbox() {
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <Tag className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">Tags</span>
+                  <span className="text-sm font-medium text-foreground">Tags</span>
                 </div>
                 <div className="flex flex-wrap gap-1">
-                  <Badge variant="outline">VIP</Badge>
-                  <Badge variant="outline">Customer</Badge>
-                  <Button variant="ghost" size="sm" className="h-6 px-2 text-xs">
+                  <Badge variant="outline" className="rounded-lg bg-amber-500/10 text-amber-600 border-0">VIP</Badge>
+                  <Badge variant="outline" className="rounded-lg bg-teal-500/10 text-teal-600 border-0">Customer</Badge>
+                  <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-teal-500 hover:text-teal-600">
                     + Add
                   </Button>
                 </div>
@@ -372,21 +376,21 @@ export function SMSInbox() {
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <ListTree className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">Lists</span>
+                  <span className="text-sm font-medium text-foreground">Lists</span>
                 </div>
                 <div className="flex flex-wrap gap-1">
-                  <Badge variant="secondary">Newsletter</Badge>
-                  <Badge variant="secondary">Promotions</Badge>
+                  <Badge variant="secondary" className="rounded-lg bg-purple-500/10 text-purple-600 border-0">Newsletter</Badge>
+                  <Badge variant="secondary" className="rounded-lg bg-purple-500/10 text-purple-600 border-0">Promotions</Badge>
                 </div>
               </div>
 
               {/* Quick Actions */}
               <div className="space-y-2">
-                <Button variant="outline" className="w-full justify-start gap-2" size="sm">
+                <Button variant="outline" className="w-full justify-start gap-2 rounded-xl border-0 bg-muted/30" size="sm">
                   <Tag className="h-4 w-4" />
                   Add Tag
                 </Button>
-                <Button variant="outline" className="w-full justify-start gap-2 text-destructive" size="sm">
+                <Button variant="outline" className="w-full justify-start gap-2 rounded-xl border-0 bg-red-500/10 text-red-500 hover:bg-red-500/20" size="sm">
                   <X className="h-4 w-4" />
                   Suppress Contact
                 </Button>
@@ -394,9 +398,9 @@ export function SMSInbox() {
 
               {/* Add Note */}
               <div>
-                <p className="text-sm font-medium mb-2">Add Note</p>
-                <Textarea placeholder="Type a note..." className="min-h-[80px]" />
-                <Button size="sm" className="mt-2">Save Note</Button>
+                <p className="text-sm font-medium mb-2 text-foreground">Add Note</p>
+                <Textarea placeholder="Type a note..." className="min-h-[80px] rounded-xl border-0 bg-muted/30" />
+                <Button size="sm" className="mt-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">Save Note</Button>
               </div>
             </div>
           </ScrollArea>
