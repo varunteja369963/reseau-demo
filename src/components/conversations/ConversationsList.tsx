@@ -219,7 +219,7 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
                       <Badge
                         key={channel}
                         variant="secondary"
-                        className="text-[10px] px-1.5 py-0 h-5 gap-1 rounded-lg bg-[hsl(var(--blue))]/10 text-[hsl(var(--blue))] border-0"
+                        className="text-[10px] px-1.5 py-0 h-5 gap-1 rounded-lg bg-sky-500/15 text-sky-600 border-0 font-medium"
                       >
                         {getChannelIcon(channel)}
                         {channel}
