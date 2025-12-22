@@ -114,16 +114,28 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
     }
   };
 
-  const getChannelIcon = (channel: string) => {
+  const getChannelStyles = (channel: string) => {
     switch (channel) {
       case "SMS":
-        return <MessageSquare className="h-3 w-3" />;
+        return {
+          icon: <MessageSquare className="h-3 w-3" />,
+          className: "bg-gradient-to-r from-violet-500/20 to-purple-500/20 text-violet-600 dark:text-violet-400 border-violet-500/30"
+        };
       case "WhatsApp":
-        return <Phone className="h-3 w-3" />;
+        return {
+          icon: <Phone className="h-3 w-3" />,
+          className: "bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+        };
       case "Chat":
-        return <Users className="h-3 w-3" />;
+        return {
+          icon: <Users className="h-3 w-3" />,
+          className: "bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30"
+        };
       default:
-        return <MessageSquare className="h-3 w-3" />;
+        return {
+          icon: <MessageSquare className="h-3 w-3" />,
+          className: "bg-gradient-to-r from-slate-500/20 to-gray-500/20 text-slate-600 dark:text-slate-400 border-slate-500/30"
+        };
     }
   };
 
@@ -145,7 +157,7 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
   }
 
   return (
-    <div className="w-full max-w-md border-r border-border flex flex-col bg-card rounded-l-3xl shadow-soft">
+    <div className="w-full max-w-md border-r border-border flex flex-col bg-card rounded-l-3xl shadow-soft h-full overflow-hidden">
       {/* Bulk actions bar */}
       {selectedItems.length > 0 && (
         <div className="p-3 border-b border-border bg-[hsl(var(--blue))]/5 flex items-center gap-2 rounded-tl-3xl">
@@ -214,17 +226,23 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
                       {conversation.participantCount}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    {conversation.channels.map((channel) => (
-                      <Badge
-                        key={channel}
-                        variant="secondary"
-                        className="text-[10px] px-1.5 py-0 h-5 gap-1 rounded-lg bg-[hsl(var(--blue))]/12 text-[hsl(var(--blue))] border border-[hsl(var(--blue))]/20 font-medium"
-                      >
-                        {getChannelIcon(channel)}
-                        {channel}
-                      </Badge>
-                    ))}
+                  <div className="flex items-center gap-1.5">
+                    {conversation.channels.map((channel) => {
+                      const styles = getChannelStyles(channel);
+                      return (
+                        <Badge
+                          key={channel}
+                          variant="secondary"
+                          className={cn(
+                            "text-[10px] px-2 py-0.5 h-5 gap-1 rounded-full border font-semibold shadow-sm",
+                            styles.className
+                          )}
+                        >
+                          {styles.icon}
+                          {channel}
+                        </Badge>
+                      );
+                    })}
                   </div>
                 </div>
 

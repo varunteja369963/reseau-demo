@@ -42,9 +42,9 @@ const Conversations = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="h-screen bg-background flex overflow-hidden">
       <Sidebar />
-      <div className="flex-1 lg:ml-24 flex flex-col">
+      <div className="flex-1 lg:ml-24 flex flex-col h-screen overflow-hidden">
         <ConversationsTopNav activeView={activeView} onViewChange={setActiveView} />
         <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
           {renderContent()}
