@@ -10,7 +10,7 @@ import {
   PhoneOutgoing,
   Wrench,
   ArrowRight,
-  TrendingUp,
+  ChevronDown,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,19 +23,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useState } from "react";
 import type { CallsTab } from "@/pages/Calls";
 
 interface CallsDashboardProps {
   onNavigate: (tab: CallsTab) => void;
 }
 
-const kpiData = [
-  { label: "Owned Numbers", value: "12", icon: Phone, color: "text-blue-500", bg: "bg-blue-500/10" },
-  { label: "Active Call Flows", value: "5", icon: GitBranch, color: "text-green-500", bg: "bg-green-500/10" },
-  { label: "Calls (7d)", value: "1,234", icon: PhoneCall, color: "text-purple-500", bg: "bg-purple-500/10" },
-  { label: "Recording Minutes (7d)", value: "456", icon: FileAudio, color: "text-orange-500", bg: "bg-orange-500/10" },
-  { label: "Compliance Alerts", value: "2", icon: AlertTriangle, color: "text-red-500", bg: "bg-red-500/10" },
-  { label: "Porting In Progress", value: "1", icon: ArrowRightLeft, color: "text-cyan-500", bg: "bg-cyan-500/10" },
+interface KpiStat {
+  label: string;
+  value: string;
+  icon: React.ElementType;
+  gradient: string;
+}
+
+const kpiData: KpiStat[] = [
+  { label: "Owned Numbers", value: "12", icon: Phone, gradient: "gradient-teal" },
+  { label: "Active Call Flows", value: "5", icon: GitBranch, gradient: "gradient-blue" },
+  { label: "Calls (7d)", value: "1,234", icon: PhoneCall, gradient: "gradient-purple" },
+  { label: "Recording Minutes", value: "456", icon: FileAudio, gradient: "gradient-teal" },
+  { label: "Compliance Alerts", value: "2", icon: AlertTriangle, gradient: "gradient-red" },
+  { label: "Porting In Progress", value: "1", icon: ArrowRightLeft, gradient: "gradient-blue" },
 ];
 
 const recentCalls = [
@@ -47,103 +56,129 @@ const recentCalls = [
 ];
 
 const statusColors: Record<string, string> = {
-  completed: "bg-green-500/10 text-green-500",
-  missed: "bg-red-500/10 text-red-500",
-  voicemail: "bg-yellow-500/10 text-yellow-500",
+  completed: "bg-green-500/10 text-green-600",
+  missed: "bg-red-500/10 text-red-600",
+  voicemail: "bg-yellow-500/10 text-yellow-600",
   failed: "bg-destructive/10 text-destructive",
-  "in-progress": "bg-blue-500/10 text-blue-500",
+  "in-progress": "bg-blue-500/10 text-blue-600",
 };
 
 export function CallsDashboard({ onNavigate }: CallsDashboardProps) {
+  const [isStatsOpen, setIsStatsOpen] = useState(true);
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
         <p className="text-muted-foreground">Overview of your phone system</p>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {kpiData.map((kpi) => {
-          const Icon = kpi.icon;
-          return (
-            <Card key={kpi.label}>
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className={`h-10 w-10 rounded-lg ${kpi.bg} flex items-center justify-center`}>
-                    <Icon className={`h-5 w-5 ${kpi.color}`} />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold">{kpi.value}</p>
-                    <p className="text-xs text-muted-foreground">{kpi.label}</p>
+      {/* KPI Cards - CRM Style */}
+      <Collapsible open={isStatsOpen} onOpenChange={setIsStatsOpen}>
+        <CollapsibleTrigger asChild>
+          <button className="w-full flex items-center justify-end gap-1.5 mb-3 py-1.5 hover:bg-muted/30 rounded-lg transition-smooth group">
+            <span className="text-xs font-medium text-muted-foreground/70 group-hover:text-muted-foreground transition-smooth">
+              {isStatsOpen ? 'Hide' : 'Show Overview'}
+            </span>
+            <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground/70 group-hover:text-muted-foreground transition-all ${isStatsOpen ? 'rotate-180' : ''}`} />
+          </button>
+        </CollapsibleTrigger>
+        
+        <CollapsibleContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+            {kpiData.map((kpi) => {
+              const Icon = kpi.icon;
+              return (
+                <div
+                  key={kpi.label}
+                  className="bg-card rounded-3xl p-4 md:p-5 shadow-soft hover:shadow-medium transition-smooth text-left group overflow-hidden relative"
+                >
+                  <div className="relative">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 ${kpi.gradient} rounded-2xl flex items-center justify-center shadow-soft`}>
+                        <Icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-foreground">{kpi.value}</div>
+                        <div className="text-xs text-muted-foreground">{kpi.label}</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+              );
+            })}
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
 
       {/* Quick Actions */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0">
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+          <CardTitle className="text-lg">Quick Actions</CardTitle>
           <CardDescription>Common tasks to get started</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Button
               variant="outline"
-              className="h-auto py-4 flex flex-col items-center gap-2"
+              className="h-auto py-5 flex flex-col items-center gap-2 rounded-2xl bg-card border-0 shadow-soft hover:shadow-medium"
               onClick={() => onNavigate("buy")}
             >
-              <ShoppingCart className="h-6 w-6" />
-              <span>Buy a Number</span>
+              <div className="w-10 h-10 gradient-teal rounded-xl flex items-center justify-center">
+                <ShoppingCart className="h-5 w-5 text-white" />
+              </div>
+              <span className="font-medium">Buy a Number</span>
             </Button>
             <Button
               variant="outline"
-              className="h-auto py-4 flex flex-col items-center gap-2"
+              className="h-auto py-5 flex flex-col items-center gap-2 rounded-2xl bg-card border-0 shadow-soft hover:shadow-medium"
               onClick={() => onNavigate("flows")}
             >
-              <Plus className="h-6 w-6" />
-              <span>Create Call Flow</span>
+              <div className="w-10 h-10 gradient-blue rounded-xl flex items-center justify-center">
+                <Plus className="h-5 w-5 text-white" />
+              </div>
+              <span className="font-medium">Create Call Flow</span>
             </Button>
             <Button
               variant="outline"
-              className="h-auto py-4 flex flex-col items-center gap-2"
+              className="h-auto py-5 flex flex-col items-center gap-2 rounded-2xl bg-card border-0 shadow-soft hover:shadow-medium"
               onClick={() => onNavigate("dialer")}
             >
-              <PhoneOutgoing className="h-6 w-6" />
-              <span>Start a Call</span>
+              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center">
+                <PhoneOutgoing className="h-5 w-5 text-white" />
+              </div>
+              <span className="font-medium">Start a Call</span>
             </Button>
             <Button
               variant="outline"
-              className="h-auto py-4 flex flex-col items-center gap-2"
+              className="h-auto py-5 flex flex-col items-center gap-2 rounded-2xl bg-card border-0 shadow-soft hover:shadow-medium"
               onClick={() => onNavigate("compliance")}
             >
-              <Wrench className="h-6 w-6" />
-              <span>Fix Compliance</span>
+              <div className="w-10 h-10 gradient-red rounded-xl flex items-center justify-center">
+                <Wrench className="h-5 w-5 text-white" />
+              </div>
+              <span className="font-medium">Fix Compliance</span>
             </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Recent Calls */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Recent Activity</CardTitle>
+            <CardTitle className="text-lg">Recent Activity</CardTitle>
             <CardDescription>Last 10 calls</CardDescription>
           </div>
-          <Button variant="ghost" size="sm" className="gap-1" onClick={() => onNavigate("calls")}>
+          <Button variant="ghost" size="sm" className="gap-1 text-[hsl(var(--teal))]" onClick={() => onNavigate("calls")}>
             View all <ArrowRight className="h-4 w-4" />
           </Button>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="border-muted">
                 <TableHead>Date/Time</TableHead>
                 <TableHead>From</TableHead>
                 <TableHead>To</TableHead>
@@ -153,12 +188,12 @@ export function CallsDashboard({ onNavigate }: CallsDashboardProps) {
             </TableHeader>
             <TableBody>
               {recentCalls.map((call) => (
-                <TableRow key={call.id}>
+                <TableRow key={call.id} className="border-muted hover:bg-muted/30">
                   <TableCell className="text-muted-foreground">{call.date}</TableCell>
                   <TableCell className="font-mono">{call.from}</TableCell>
                   <TableCell className="font-mono">{call.to}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary" className={statusColors[call.status]}>
+                    <Badge variant="secondary" className={`${statusColors[call.status]} rounded-lg`}>
                       {call.status}
                     </Badge>
                   </TableCell>

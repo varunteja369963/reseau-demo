@@ -9,6 +9,7 @@ import {
   TrendingDown,
   Calendar,
   ArrowRight,
+  ChevronDown,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,13 +40,22 @@ import {
   BarChart,
   Bar,
 } from "recharts";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-const kpiData = [
-  { label: "Sent (7d)", value: "12,450", change: "+12%", trend: "up", icon: Send },
-  { label: "Delivered (7d)", value: "12,128", change: "+11%", trend: "up", icon: CheckCircle2 },
-  { label: "Replies (7d)", value: "856", change: "+24%", trend: "up", icon: MessageSquare },
-  { label: "Opt-outs (7d)", value: "23", change: "-8%", trend: "down", icon: UserMinus },
-  { label: "Clicks (7d)", value: "1,234", change: "+18%", trend: "up", icon: MousePointerClick },
+interface KpiStat {
+  label: string;
+  value: string;
+  change: string;
+  trend: "up" | "down";
+  icon: React.ElementType;
+  gradient: string;
+}
+
+const kpiData: KpiStat[] = [
+  { label: "Sent (7d)", value: "12,450", change: "+12%", trend: "up", icon: Send, gradient: "gradient-teal" },
+  { label: "Delivered (7d)", value: "12,128", change: "+11%", trend: "up", icon: CheckCircle2, gradient: "gradient-blue" },
+  { label: "Replies (7d)", value: "856", change: "+24%", trend: "up", icon: MessageSquare, gradient: "gradient-purple" },
+  { label: "Opt-outs (7d)", value: "23", change: "-8%", trend: "down", icon: UserMinus, gradient: "gradient-red" },
 ];
 
 const deliveryTrendData = [
@@ -83,78 +93,94 @@ const recentInbox = [
 
 const statusColors: Record<string, string> = {
   draft: "bg-muted text-muted-foreground",
-  scheduled: "bg-blue-500/10 text-blue-500",
-  sending: "bg-yellow-500/10 text-yellow-500",
-  paused: "bg-orange-500/10 text-orange-500",
-  completed: "bg-green-500/10 text-green-500",
+  scheduled: "bg-blue-500/10 text-blue-600",
+  sending: "bg-yellow-500/10 text-yellow-600",
+  paused: "bg-orange-500/10 text-orange-600",
+  completed: "bg-green-500/10 text-green-600",
   failed: "bg-destructive/10 text-destructive",
 };
 
 export function SMSDashboard() {
   const [dateRange, setDateRange] = useState("7d");
+  const [isStatsOpen, setIsStatsOpen] = useState(true);
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
           <p className="text-muted-foreground">Overview of your SMS marketing performance</p>
         </div>
         <div className="flex items-center gap-3">
           <Select value={dateRange} onValueChange={setDateRange}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[140px] rounded-xl border-0 bg-card shadow-soft">
               <Calendar className="h-4 w-4 mr-2" />
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               <SelectItem value="24h">Last 24 hours</SelectItem>
               <SelectItem value="7d">Last 7 days</SelectItem>
               <SelectItem value="30d">Last 30 days</SelectItem>
               <SelectItem value="90d">Last 90 days</SelectItem>
             </SelectContent>
           </Select>
-          <Button>Create Campaign</Button>
+          <Button className="gradient-teal text-white border-0 rounded-xl">Create Campaign</Button>
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {kpiData.map((kpi) => {
-          const Icon = kpi.icon;
-          return (
-            <Card key={kpi.label}>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <div className={`flex items-center gap-1 text-sm ${
-                    kpi.trend === "up" ? "text-green-500" : "text-red-500"
-                  }`}>
-                    {kpi.trend === "up" ? (
-                      <TrendingUp className="h-4 w-4" />
-                    ) : (
-                      <TrendingDown className="h-4 w-4" />
-                    )}
-                    {kpi.change}
+      {/* KPI Cards - CRM Style */}
+      <Collapsible open={isStatsOpen} onOpenChange={setIsStatsOpen}>
+        <CollapsibleTrigger asChild>
+          <button className="w-full flex items-center justify-end gap-1.5 mb-3 py-1.5 hover:bg-muted/30 rounded-lg transition-smooth group">
+            <span className="text-xs font-medium text-muted-foreground/70 group-hover:text-muted-foreground transition-smooth">
+              {isStatsOpen ? 'Hide' : 'Show Overview'}
+            </span>
+            <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground/70 group-hover:text-muted-foreground transition-all ${isStatsOpen ? 'rotate-180' : ''}`} />
+          </button>
+        </CollapsibleTrigger>
+        
+        <CollapsibleContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {kpiData.map((kpi) => {
+              const Icon = kpi.icon;
+              return (
+                <div
+                  key={kpi.label}
+                  className="bg-card rounded-3xl p-4 md:p-6 shadow-soft hover:shadow-medium transition-smooth text-left group overflow-hidden relative"
+                >
+                  <div className="relative">
+                    <div className="flex items-center justify-between mb-3 md:mb-4">
+                      <div className={`w-10 h-10 ${kpi.gradient} rounded-2xl flex items-center justify-center shadow-soft`}>
+                        <Icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="text-muted-foreground text-xs md:text-sm font-medium">{kpi.label}</div>
+                    </div>
+                    
+                    <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">{kpi.value}</div>
+                    
+                    <div className={`flex items-center gap-1 ${kpi.trend === "up" ? "text-green-500" : "text-red-500"}`}>
+                      {kpi.trend === "up" ? (
+                        <TrendingUp className="h-3 w-3" />
+                      ) : (
+                        <TrendingDown className="h-3 w-3" />
+                      )}
+                      <span className="text-xs font-medium">{kpi.change}</span>
+                      <span className="text-xs text-muted-foreground">vs last week</span>
+                    </div>
                   </div>
                 </div>
-                <div className="mt-3">
-                  <p className="text-2xl font-bold">{kpi.value}</p>
-                  <p className="text-sm text-muted-foreground">{kpi.label}</p>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+              );
+            })}
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0">
           <CardHeader>
-            <CardTitle>Delivery Trend</CardTitle>
+            <CardTitle className="text-lg">Delivery Trend</CardTitle>
             <CardDescription>Messages sent vs delivered over time</CardDescription>
           </CardHeader>
           <CardContent>
@@ -167,21 +193,22 @@ export function SMSDashboard() {
                   <Tooltip 
                     contentStyle={{ 
                       backgroundColor: 'hsl(var(--card))', 
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px'
+                      border: 'none',
+                      borderRadius: '16px',
+                      boxShadow: 'var(--shadow-medium)'
                     }} 
                   />
                   <Line 
                     type="monotone" 
                     dataKey="sent" 
-                    stroke="hsl(var(--primary))" 
+                    stroke="hsl(var(--teal))" 
                     strokeWidth={2}
                     dot={false}
                   />
                   <Line 
                     type="monotone" 
                     dataKey="delivered" 
-                    stroke="hsl(var(--chart-2))" 
+                    stroke="hsl(var(--blue))" 
                     strokeWidth={2}
                     dot={false}
                   />
@@ -191,9 +218,9 @@ export function SMSDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0">
           <CardHeader>
-            <CardTitle>Clicks by Campaign</CardTitle>
+            <CardTitle className="text-lg">Clicks by Campaign</CardTitle>
             <CardDescription>Top performing campaigns by link clicks</CardDescription>
           </CardHeader>
           <CardContent>
@@ -206,11 +233,12 @@ export function SMSDashboard() {
                   <Tooltip 
                     contentStyle={{ 
                       backgroundColor: 'hsl(var(--card))', 
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px'
+                      border: 'none',
+                      borderRadius: '16px',
+                      boxShadow: 'var(--shadow-medium)'
                     }} 
                   />
-                  <Bar dataKey="clicks" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="clicks" fill="hsl(var(--teal))" radius={[0, 8, 8, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -220,20 +248,20 @@ export function SMSDashboard() {
 
       {/* Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Recent Campaigns</CardTitle>
+              <CardTitle className="text-lg">Recent Campaigns</CardTitle>
               <CardDescription>Last 10 campaigns</CardDescription>
             </div>
-            <Button variant="ghost" size="sm" className="gap-1">
+            <Button variant="ghost" size="sm" className="gap-1 text-[hsl(var(--teal))]">
               View all <ArrowRight className="h-4 w-4" />
             </Button>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
-                <TableRow>
+                <TableRow className="border-muted">
                   <TableHead>Campaign</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Sent</TableHead>
@@ -242,10 +270,10 @@ export function SMSDashboard() {
               </TableHeader>
               <TableBody>
                 {recentCampaigns.map((campaign) => (
-                  <TableRow key={campaign.id}>
+                  <TableRow key={campaign.id} className="border-muted hover:bg-muted/30">
                     <TableCell className="font-medium">{campaign.name}</TableCell>
                     <TableCell>
-                      <Badge variant="secondary" className={statusColors[campaign.status]}>
+                      <Badge variant="secondary" className={`${statusColors[campaign.status]} rounded-lg`}>
                         {campaign.status}
                       </Badge>
                     </TableCell>
@@ -258,22 +286,22 @@ export function SMSDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Inbox Activity</CardTitle>
+              <CardTitle className="text-lg">Inbox Activity</CardTitle>
               <CardDescription>Recent inbound messages</CardDescription>
             </div>
-            <Button variant="ghost" size="sm" className="gap-1">
+            <Button variant="ghost" size="sm" className="gap-1 text-[hsl(var(--teal))]">
               View Inbox <ArrowRight className="h-4 w-4" />
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {recentInbox.map((message) => (
-                <div key={message.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    <MessageSquare className="h-5 w-5 text-primary" />
+                <div key={message.id} className="flex items-start gap-3 p-3 bg-muted/30 rounded-2xl hover:bg-muted/50 transition-smooth">
+                  <div className="h-10 w-10 rounded-xl gradient-blue flex items-center justify-center shrink-0">
+                    <MessageSquare className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">

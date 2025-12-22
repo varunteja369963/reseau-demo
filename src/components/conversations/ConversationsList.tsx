@@ -143,22 +143,22 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
   }
 
   return (
-    <div className="w-full max-w-md border-r border-border flex flex-col bg-card">
+    <div className="w-full max-w-md border-r border-border flex flex-col bg-card rounded-l-3xl shadow-soft">
       {/* Bulk actions bar */}
       {selectedItems.length > 0 && (
-        <div className="p-3 border-b border-border bg-muted/50 flex items-center gap-2">
+        <div className="p-3 border-b border-border bg-muted/30 flex items-center gap-2 rounded-tl-3xl">
           <span className="text-sm text-muted-foreground">
             {selectedItems.length} selected
           </span>
-          <Button variant="outline" size="sm" className="gap-1">
+          <Button variant="outline" size="sm" className="gap-1 rounded-xl border-0 bg-card shadow-soft">
             <UserPlus className="h-3 w-3" />
             Assign
           </Button>
-          <Button variant="outline" size="sm" className="gap-1">
+          <Button variant="outline" size="sm" className="gap-1 rounded-xl border-0 bg-card shadow-soft">
             <X className="h-3 w-3" />
             Close
           </Button>
-          <Button variant="outline" size="sm" className="gap-1">
+          <Button variant="outline" size="sm" className="gap-1 rounded-xl border-0 bg-card shadow-soft">
             <Download className="h-3 w-3" />
             Export
           </Button>
@@ -166,7 +166,7 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
       )}
 
       {/* Header */}
-      <div className="p-3 border-b border-border flex items-center gap-2">
+      <div className={`p-3 border-b border-border flex items-center gap-2 ${selectedItems.length === 0 ? 'rounded-tl-3xl' : ''}`}>
         <Checkbox
           checked={selectedItems.length === demoConversations.length}
           onCheckedChange={toggleSelectAll}
@@ -182,8 +182,8 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
           <div
             key={conversation.id}
             className={cn(
-              "p-4 border-b border-border cursor-pointer hover:bg-muted/50 transition-colors",
-              selectedId === conversation.id && "bg-muted"
+              "p-4 border-b border-border cursor-pointer hover:bg-muted/30 transition-smooth",
+              selectedId === conversation.id && "bg-muted/50"
             )}
             onClick={() => onSelectConversation(conversation.id)}
           >
@@ -215,7 +215,7 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
                       <Badge
                         key={channel}
                         variant="secondary"
-                        className="text-[10px] px-1.5 py-0 h-5 gap-1"
+                        className="text-[10px] px-1.5 py-0 h-5 gap-1 rounded-lg bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]"
                       >
                         {getChannelIcon(channel)}
                         {channel}
@@ -231,8 +231,12 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Badge
-                      variant={conversation.status === "open" ? "default" : "secondary"}
-                      className="text-[10px]"
+                      variant="secondary"
+                      className={`text-[10px] rounded-lg ${
+                        conversation.status === "open" 
+                          ? "bg-green-500/10 text-green-600" 
+                          : "bg-muted text-muted-foreground"
+                      }`}
                     >
                       {conversation.status === "open" ? (
                         <CheckCircle2 className="h-3 w-3 mr-1" />
@@ -242,7 +246,7 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
                       {conversation.status}
                     </Badge>
                     {conversation.unreadCount > 0 && (
-                      <Badge variant="destructive" className="text-[10px]">
+                      <Badge className="text-[10px] rounded-lg gradient-red text-white border-0">
                         {conversation.unreadCount} unread
                       </Badge>
                     )}
