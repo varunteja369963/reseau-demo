@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Send, StickyNote, User, Tag, Clock } from 'lucide-react';
+import { Search, Send, StickyNote, User, Tag, Clock, PanelRightOpen, PanelRightClose } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +24,7 @@ export const LiveChatTab = ({ chatbotState }: LiveChatTabProps) => {
   const [newMessage, setNewMessage] = useState('');
   const [isNote, setIsNote] = useState(false);
   const [newTag, setNewTag] = useState('');
+  const [showDetailsPanel, setShowDetailsPanel] = useState(false);
 
   if (!selectedBot) return null;
   const { conversations, liveChatSettings } = selectedBot;
@@ -90,14 +91,25 @@ export const LiveChatTab = ({ chatbotState }: LiveChatTabProps) => {
                 <h3 className="font-semibold truncate">{selectedConv.customerName}</h3>
                 <p className="text-xs text-muted-foreground truncate">{selectedConv.customerEmail}</p>
               </div>
-              <Select value={selectedConv.status} onValueChange={(v) => updateConversation(selectedBot.bot.id, selectedConv.id, { status: v as typeof selectedConv.status })}>
-                <SelectTrigger className="w-28 h-8 flex-shrink-0"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="open">Open</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="closed">Closed</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Select value={selectedConv.status} onValueChange={(v) => updateConversation(selectedBot.bot.id, selectedConv.id, { status: v as typeof selectedConv.status })}>
+                  <SelectTrigger className="w-28 h-8"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="open">Open</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="closed">Closed</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowDetailsPanel(!showDetailsPanel)}
+                  className="h-8 w-8"
+                  title={showDetailsPanel ? 'Hide details' : 'Show details'}
+                >
+                  {showDetailsPanel ? <PanelRightClose className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}
+                </Button>
+              </div>
             </div>
             <ScrollArea className="flex-1 p-4 min-h-0">
               {selectedConv.messages.map((msg) => (
@@ -129,7 +141,7 @@ export const LiveChatTab = ({ chatbotState }: LiveChatTabProps) => {
       </div>
 
       {/* Customer Panel */}
-      {selectedConv && (
+      {selectedConv && showDetailsPanel && (
         <ScrollArea className="w-64 min-w-[200px] max-w-[280px] border-l border-border flex-shrink-0">
           <div className="p-4 space-y-4">
             <Card className="shadow-soft">
