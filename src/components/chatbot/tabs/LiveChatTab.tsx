@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Send, StickyNote, User, Tag, Clock, PanelRightOpen, PanelRightClose } from 'lucide-react';
+import { Search, Send, StickyNote, User, Tag, Clock, MessageSquare, Users } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -24,7 +24,7 @@ export const LiveChatTab = ({ chatbotState }: LiveChatTabProps) => {
   const [newMessage, setNewMessage] = useState('');
   const [isNote, setIsNote] = useState(false);
   const [newTag, setNewTag] = useState('');
-  const [showDetailsPanel, setShowDetailsPanel] = useState(false);
+  const [showPanel, setShowPanel] = useState<'chats' | 'details'>('chats');
 
   if (!selectedBot) return null;
   const { conversations, liveChatSettings } = selectedBot;
@@ -56,30 +56,116 @@ export const LiveChatTab = ({ chatbotState }: LiveChatTabProps) => {
 
   return (
     <div className="h-full flex min-h-0 overflow-hidden">
-      {/* Conversation List */}
+      {/* Left Panel - Toggle between Conversation List and Customer Details */}
       <div className="w-64 min-w-[200px] max-w-[280px] border-r border-border flex flex-col flex-shrink-0 min-h-0">
-        <div className="p-3 border-b border-border space-y-2 flex-shrink-0">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search..." className="pl-9 h-9" />
-          </div>
-          <div className="flex gap-1">
-            {(['all', 'open', 'pending', 'closed'] as const).map((s) => (
-              <Button key={s} variant={statusFilter === s ? 'default' : 'ghost'} size="sm" onClick={() => setStatusFilter(s)} className="flex-1 text-xs capitalize px-1">{s}</Button>
-            ))}
-          </div>
+        {/* Toggle Header */}
+        <div className="p-2 border-b border-border flex gap-1 flex-shrink-0">
+          <Button
+            variant={showPanel === 'chats' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setShowPanel('chats')}
+            className="flex-1 text-xs gap-1"
+          >
+            <MessageSquare className="h-3 w-3" />
+            Chats
+          </Button>
+          <Button
+            variant={showPanel === 'details' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setShowPanel('details')}
+            className="flex-1 text-xs gap-1"
+            disabled={!selectedConv}
+          >
+            <Users className="h-3 w-3" />
+            Details
+          </Button>
         </div>
-        <ScrollArea className="flex-1 min-h-0">
-          {filteredConvs.map((conv) => (
-            <button key={conv.id} onClick={() => setSelectedConvId(conv.id)} className={cn('w-full text-left p-3 border-b border-border hover:bg-muted/50', selectedConvId === conv.id && 'bg-teal-50')}>
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-medium text-sm truncate">{conv.customerName}</span>
-                {conv.unreadCount > 0 && <Badge className="bg-teal-500 text-xs flex-shrink-0">{conv.unreadCount}</Badge>}
+
+        {/* Chats Panel */}
+        {showPanel === 'chats' && (
+          <>
+            <div className="p-3 border-b border-border space-y-2 flex-shrink-0">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search..." className="pl-9 h-9" />
               </div>
-              <p className="text-xs text-muted-foreground truncate">{conv.lastMessage}</p>
-            </button>
-          ))}
-        </ScrollArea>
+              <div className="flex gap-1">
+                {(['all', 'open', 'pending', 'closed'] as const).map((s) => (
+                  <Button key={s} variant={statusFilter === s ? 'default' : 'ghost'} size="sm" onClick={() => setStatusFilter(s)} className="flex-1 text-xs capitalize px-1">{s}</Button>
+                ))}
+              </div>
+            </div>
+            <ScrollArea className="flex-1 min-h-0">
+              {filteredConvs.map((conv) => (
+                <button key={conv.id} onClick={() => setSelectedConvId(conv.id)} className={cn('w-full text-left p-3 border-b border-border hover:bg-muted/50', selectedConvId === conv.id && 'bg-teal-50')}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-medium text-sm truncate">{conv.customerName}</span>
+                    {conv.unreadCount > 0 && <Badge className="bg-teal-500 text-xs flex-shrink-0">{conv.unreadCount}</Badge>}
+                  </div>
+                  <p className="text-xs text-muted-foreground truncate">{conv.lastMessage}</p>
+                </button>
+              ))}
+            </ScrollArea>
+          </>
+        )}
+
+        {/* Details Panel */}
+        {showPanel === 'details' && selectedConv && (
+          <ScrollArea className="flex-1 min-h-0">
+            <div className="p-4 space-y-4">
+              <Card className="shadow-soft">
+                <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><User className="h-4 w-4" />Customer</CardTitle></CardHeader>
+                <CardContent className="text-sm space-y-1">
+                  <p className="truncate"><span className="text-muted-foreground">Email:</span> {selectedConv.customerEmail}</p>
+                  <p className="truncate"><span className="text-muted-foreground">Phone:</span> {selectedConv.customerPhone}</p>
+                  {selectedConv.vehicleInterest && <p className="truncate"><span className="text-muted-foreground">Interest:</span> {selectedConv.vehicleInterest}</p>}
+                </CardContent>
+              </Card>
+              <Card className="shadow-soft">
+                <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><Tag className="h-4 w-4" />Tags</CardTitle></CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {selectedConv.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="cursor-pointer text-xs" onClick={() => removeTag(tag)}>{tag} ×</Badge>
+                    ))}
+                  </div>
+                  <div className="flex gap-1">
+                    <Input value={newTag} onChange={(e) => setNewTag(e.target.value)} placeholder="Add tag" className="h-8 text-xs min-w-0" />
+                    <Button size="sm" onClick={addTag} className="flex-shrink-0">Add</Button>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="shadow-soft">
+                <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><User className="h-4 w-4" />Assignment</CardTitle></CardHeader>
+                <CardContent>
+                  <Select value={selectedConv.assignedAgentId || ''} onValueChange={(v) => updateConversation(selectedBot.bot.id, selectedConv.id, { assignedAgentId: v })}>
+                    <SelectTrigger className="h-8"><SelectValue placeholder="Assign agent" /></SelectTrigger>
+                    <SelectContent>
+                      {liveChatSettings.agents.map((agent) => (
+                        <SelectItem key={agent.id} value={agent.id}>{agent.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </CardContent>
+              </Card>
+              <Card className="shadow-soft">
+                <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><Clock className="h-4 w-4" />Settings</CardTitle></CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs">Away Mode</Label>
+                    <Switch checked={liveChatSettings.awayMode} onCheckedChange={(v) => updateLiveChatSettings(selectedBot.bot.id, { awayMode: v })} />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </ScrollArea>
+        )}
+
+        {showPanel === 'details' && !selectedConv && (
+          <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm p-4 text-center">
+            Select a conversation to view details
+          </div>
+        )}
       </div>
 
       {/* Conversation View */}
@@ -91,25 +177,14 @@ export const LiveChatTab = ({ chatbotState }: LiveChatTabProps) => {
                 <h3 className="font-semibold truncate">{selectedConv.customerName}</h3>
                 <p className="text-xs text-muted-foreground truncate">{selectedConv.customerEmail}</p>
               </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <Select value={selectedConv.status} onValueChange={(v) => updateConversation(selectedBot.bot.id, selectedConv.id, { status: v as typeof selectedConv.status })}>
-                  <SelectTrigger className="w-28 h-8"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="open">Open</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="closed">Closed</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowDetailsPanel(!showDetailsPanel)}
-                  className="h-8 w-8"
-                  title={showDetailsPanel ? 'Hide details' : 'Show details'}
-                >
-                  {showDetailsPanel ? <PanelRightClose className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}
-                </Button>
-              </div>
+              <Select value={selectedConv.status} onValueChange={(v) => updateConversation(selectedBot.bot.id, selectedConv.id, { status: v as typeof selectedConv.status })}>
+                <SelectTrigger className="w-28 h-8 flex-shrink-0"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="open">Open</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="closed">Closed</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <ScrollArea className="flex-1 p-4 min-h-0">
               {selectedConv.messages.map((msg) => (
@@ -139,58 +214,6 @@ export const LiveChatTab = ({ chatbotState }: LiveChatTabProps) => {
           <div className="flex-1 flex items-center justify-center text-muted-foreground">Select a conversation</div>
         )}
       </div>
-
-      {/* Customer Panel */}
-      {selectedConv && showDetailsPanel && (
-        <ScrollArea className="w-64 min-w-[200px] max-w-[280px] border-l border-border flex-shrink-0">
-          <div className="p-4 space-y-4">
-            <Card className="shadow-soft">
-              <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><User className="h-4 w-4" />Customer</CardTitle></CardHeader>
-              <CardContent className="text-sm space-y-1">
-                <p className="truncate"><span className="text-muted-foreground">Email:</span> {selectedConv.customerEmail}</p>
-                <p className="truncate"><span className="text-muted-foreground">Phone:</span> {selectedConv.customerPhone}</p>
-                {selectedConv.vehicleInterest && <p className="truncate"><span className="text-muted-foreground">Interest:</span> {selectedConv.vehicleInterest}</p>}
-              </CardContent>
-            </Card>
-            <Card className="shadow-soft">
-              <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><Tag className="h-4 w-4" />Tags</CardTitle></CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-1 mb-2">
-                  {selectedConv.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="cursor-pointer text-xs" onClick={() => removeTag(tag)}>{tag} ×</Badge>
-                  ))}
-                </div>
-                <div className="flex gap-1">
-                  <Input value={newTag} onChange={(e) => setNewTag(e.target.value)} placeholder="Add tag" className="h-8 text-xs min-w-0" />
-                  <Button size="sm" onClick={addTag} className="flex-shrink-0">Add</Button>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="shadow-soft">
-              <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><User className="h-4 w-4" />Assignment</CardTitle></CardHeader>
-              <CardContent>
-                <Select value={selectedConv.assignedAgentId || ''} onValueChange={(v) => updateConversation(selectedBot.bot.id, selectedConv.id, { assignedAgentId: v })}>
-                  <SelectTrigger className="h-8"><SelectValue placeholder="Assign agent" /></SelectTrigger>
-                  <SelectContent>
-                    {liveChatSettings.agents.map((agent) => (
-                      <SelectItem key={agent.id} value={agent.id}>{agent.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </CardContent>
-            </Card>
-            <Card className="shadow-soft">
-              <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><Clock className="h-4 w-4" />Settings</CardTitle></CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs">Away Mode</Label>
-                  <Switch checked={liveChatSettings.awayMode} onCheckedChange={(v) => updateLiveChatSettings(selectedBot.bot.id, { awayMode: v })} />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </ScrollArea>
-      )}
     </div>
   );
 };
