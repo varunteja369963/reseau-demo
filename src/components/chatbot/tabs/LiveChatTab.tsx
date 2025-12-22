@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Send, StickyNote, User, Tag, Clock, MessageSquare, Users } from 'lucide-react';
+import { Search, Send, StickyNote, User, Tag, Clock, Users } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -58,26 +58,20 @@ export const LiveChatTab = ({ chatbotState }: LiveChatTabProps) => {
     <div className="h-full flex min-h-0 overflow-hidden">
       {/* Left Panel - Toggle between Conversation List and Customer Details */}
       <div className="w-64 min-w-[200px] max-w-[280px] border-r border-border flex flex-col flex-shrink-0 min-h-0">
-        {/* Toggle Header */}
-        <div className="p-2 border-b border-border flex gap-1 flex-shrink-0">
-          <Button
-            variant={showPanel === 'chats' ? 'default' : 'ghost'}
-            size="sm"
-            onClick={() => setShowPanel('chats')}
-            className="flex-1 text-xs gap-1"
-          >
-            <MessageSquare className="h-3 w-3" />
-            Chats
-          </Button>
+        {/* Header with username and toggle */}
+        <div className="p-3 border-b border-border flex items-center justify-between flex-shrink-0">
+          <span className="font-medium text-sm truncate">
+            {selectedConv ? selectedConv.customerName : 'Conversations'}
+          </span>
           <Button
             variant={showPanel === 'details' ? 'default' : 'ghost'}
             size="sm"
-            onClick={() => setShowPanel('details')}
-            className="flex-1 text-xs gap-1"
+            onClick={() => setShowPanel(showPanel === 'chats' ? 'details' : 'chats')}
+            className="text-xs gap-1 flex-shrink-0"
             disabled={!selectedConv}
           >
             <Users className="h-3 w-3" />
-            Details
+            {showPanel === 'details' ? 'Chats' : 'Details'}
           </Button>
         </div>
 
