@@ -96,7 +96,7 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
       case "sent":
         return <Check className="h-3 w-3 text-muted-foreground" />;
       case "delivered":
-        return <CheckCheck className="h-3 w-3 text-teal-500" />;
+        return <CheckCheck className="h-3 w-3 text-emerald-500" />;
       case "failed":
         return <AlertCircle className="h-3 w-3 text-destructive" />;
       default:
@@ -112,66 +112,74 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
   };
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {demoMessages.map((msg, index) => {
-          // Check for date separators
-          const showDateSeparator =
-            index === 0 ||
-            demoMessages[index - 1].timestamp.split(" ")[0] !==
-              msg.timestamp.split(" ")[0];
+    <div className="flex flex-col h-full bg-gradient-to-b from-muted/20 to-background">
+      {/* Messages - flex-col-reverse for auto-scroll to bottom */}
+      <div className="flex-1 overflow-y-auto p-4 flex flex-col-reverse">
+        <div className="space-y-3">
+          {demoMessages.map((msg, index) => {
+            // Check for date separators
+            const showDateSeparator =
+              index === 0 ||
+              demoMessages[index - 1].timestamp.split(" ")[0] !==
+                msg.timestamp.split(" ")[0];
 
-          return (
-            <div key={msg.id}>
-              {showDateSeparator && (
-                <div className="flex items-center gap-4 my-4">
-                  <div className="flex-1 h-px bg-border" />
-                  <span className="text-xs text-muted-foreground bg-muted/50 px-3 py-1 rounded-full">Today</span>
-                  <div className="flex-1 h-px bg-border" />
-                </div>
-              )}
+            return (
+              <div key={msg.id} className="animate-fade-in">
+                {showDateSeparator && (
+                  <div className="flex items-center gap-4 my-6">
+                    <div className="flex-1 h-px bg-border/50" />
+                    <span className="text-xs text-muted-foreground bg-card px-4 py-1.5 rounded-full shadow-soft border border-border/50 font-medium">Today</span>
+                    <div className="flex-1 h-px bg-border/50" />
+                  </div>
+                )}
 
-              {msg.type === "system" ? (
-                <div className="flex justify-center">
-                  <span className="text-xs text-muted-foreground bg-muted/50 px-3 py-1 rounded-full">
-                    {msg.content}
-                  </span>
-                </div>
-              ) : (
-                <div
-                  className={cn(
-                    "flex",
-                    msg.type === "outbound" ? "justify-end" : "justify-start"
-                  )}
-                >
+                {msg.type === "system" ? (
+                  <div className="flex justify-center my-2">
+                    <span className="text-xs text-muted-foreground bg-muted/70 px-4 py-1.5 rounded-full">
+                      {msg.content}
+                    </span>
+                  </div>
+                ) : (
                   <div
                     className={cn(
-                      "max-w-[70%] rounded-2xl px-4 py-2",
-                      msg.type === "outbound"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted/50 border border-border"
+                      "flex",
+                      msg.type === "outbound" ? "justify-end" : "justify-start"
                     )}
                   >
-                    {msg.sender && (
-                      <p className="text-xs opacity-70 mb-1">{msg.sender}</p>
-                    )}
-                    <p className="text-sm">{msg.content}</p>
-                    <div className="flex items-center justify-end gap-1 mt-1">
-                      <span className="text-[10px] opacity-70">{msg.timestamp}</span>
-                      {msg.type === "outbound" && getStatusIcon(msg.status)}
+                    <div
+                      className={cn(
+                        "max-w-[70%] rounded-2xl px-4 py-3 shadow-soft",
+                        msg.type === "outbound"
+                          ? "bg-primary text-primary-foreground rounded-br-md"
+                          : "bg-card border border-border rounded-bl-md"
+                      )}
+                    >
+                      {msg.sender && (
+                        <p className={cn(
+                          "text-xs mb-1.5 font-medium",
+                          msg.type === "outbound" ? "opacity-80" : "text-sky-600"
+                        )}>{msg.sender}</p>
+                      )}
+                      <p className="text-sm leading-relaxed">{msg.content}</p>
+                      <div className="flex items-center justify-end gap-1.5 mt-2">
+                        <span className={cn(
+                          "text-[10px]",
+                          msg.type === "outbound" ? "opacity-70" : "text-muted-foreground"
+                        )}>{msg.timestamp}</span>
+                        {msg.type === "outbound" && getStatusIcon(msg.status)}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Composer */}
       {isConversationClosed ? (
-        <div className="p-4 border-t border-border bg-muted/30">
+        <div className="p-4 border-t border-border bg-card/80 backdrop-blur-sm">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">
               This conversation is closed
@@ -183,14 +191,14 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
           </div>
         </div>
       ) : (
-        <div className="p-4 border-t border-border bg-card">
-          <div className="flex items-end gap-2">
+        <div className="p-4 border-t border-border bg-card/80 backdrop-blur-sm">
+          <div className="flex items-end gap-3">
             <div className="flex-1">
               <Textarea
                 placeholder="Type a message..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="min-h-[80px] resize-none rounded-xl bg-muted/30 border-0 focus-visible:ring-ring"
+                className="min-h-[80px] resize-none rounded-xl bg-background border border-border/50 focus-visible:ring-ring shadow-soft"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -198,14 +206,14 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
                   }
                 }}
               />
-              <div className="flex items-center gap-2 mt-2">
-                <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-muted">
+              <div className="flex items-center gap-1 mt-2">
+                <Button variant="ghost" size="sm" className="gap-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground">
                   <Paperclip className="h-4 w-4" />
                   Attach
                 </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-muted">
+                    <Button variant="ghost" size="sm" className="gap-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground">
                       <FileText className="h-4 w-4" />
                       Templates
                       <ChevronDown className="h-3 w-3" />
@@ -219,8 +227,8 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
                 </DropdownMenu>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-muted">
-                      Send as: {selectedChannel}
+                    <Button variant="ghost" size="sm" className="gap-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground">
+                      Send as: <span className="text-foreground font-medium">{selectedChannel}</span>
                       <ChevronDown className="h-3 w-3" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -241,7 +249,8 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
             <Button 
               onClick={handleSend} 
               disabled={!message.trim()}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl shadow-soft"
+              size="icon"
+              className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl shadow-soft disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
             </Button>
