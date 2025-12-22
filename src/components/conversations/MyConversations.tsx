@@ -88,7 +88,7 @@ export const MyConversations = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold">My Conversations</h2>
+          <h2 className="text-2xl font-semibold text-foreground">My Conversations</h2>
           <p className="text-muted-foreground">
             Conversations assigned to you • {totalUnread} unread
           </p>
@@ -102,7 +102,7 @@ export const MyConversations = () => {
             />
             <Label htmlFor="unread-only">Unread only</Label>
           </div>
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2 rounded-xl border-0 bg-card shadow-soft">
             <CheckCheck className="h-4 w-4" />
             Mark all as read
           </Button>
@@ -110,10 +110,12 @@ export const MyConversations = () => {
       </div>
 
       {/* Info banner */}
-      <div className="p-4 bg-muted rounded-lg flex items-start gap-3">
-        <Info className="h-5 w-5 text-muted-foreground mt-0.5" />
+      <div className="p-4 bg-muted/30 rounded-2xl flex items-start gap-3">
+        <div className="w-8 h-8 gradient-blue rounded-xl flex items-center justify-center shrink-0">
+          <Info className="h-4 w-4 text-white" />
+        </div>
         <div>
-          <p className="text-sm">
+          <p className="text-sm text-foreground">
             Unread count may cap at a maximum value for display purposes.
           </p>
           <p className="text-xs text-muted-foreground mt-1">
@@ -123,7 +125,7 @@ export const MyConversations = () => {
       </div>
 
       {/* Table */}
-      <div className="border rounded-lg">
+      <div className="border rounded-3xl bg-card shadow-soft overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>

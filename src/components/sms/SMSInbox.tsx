@@ -124,14 +124,14 @@ export function SMSInbox() {
     <div className="h-[calc(100vh-180px)]">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h1 className="text-2xl font-bold">Inbox</h1>
+          <h1 className="text-2xl font-bold text-foreground">Inbox</h1>
           <p className="text-muted-foreground">Two-way SMS conversations</p>
         </div>
       </div>
 
       <div className="grid grid-cols-12 gap-4 h-full">
         {/* Conversation List */}
-        <div className="col-span-3 border rounded-lg flex flex-col">
+        <div className="col-span-3 border rounded-3xl flex flex-col bg-card shadow-soft">
           <div className="p-3 border-b space-y-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -139,15 +139,15 @@ export function SMSInbox() {
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 rounded-xl border-0 bg-muted/30"
               />
             </div>
             <Select value={filterValue} onValueChange={setFilterValue}>
-              <SelectTrigger>
+              <SelectTrigger className="rounded-xl border-0 bg-muted/30">
                 <Filter className="h-4 w-4 mr-2" />
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 <SelectItem value="all">All Conversations</SelectItem>
                 <SelectItem value="unread">Unread</SelectItem>
                 <SelectItem value="assigned">Assigned to me</SelectItem>
@@ -194,7 +194,7 @@ export function SMSInbox() {
         </div>
 
         {/* Conversation Thread */}
-        <div className="col-span-6 border rounded-lg flex flex-col">
+        <div className="col-span-6 border rounded-3xl flex flex-col bg-card shadow-soft">
           {/* Thread Header */}
           <div className="p-4 border-b flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -308,7 +308,7 @@ export function SMSInbox() {
         </div>
 
         {/* Contact Panel */}
-        <div className="col-span-3 border rounded-lg overflow-hidden">
+        <div className="col-span-3 border rounded-3xl overflow-hidden bg-card shadow-soft">
           <div className="p-4 border-b">
             <div className="flex items-center justify-between">
               <p className="font-medium">Contact Info</p>

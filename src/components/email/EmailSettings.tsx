@@ -11,22 +11,22 @@ export const EmailSettings = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Email Settings</h2>
+        <h2 className="text-2xl font-bold text-foreground">Email Settings</h2>
         <p className="text-muted-foreground">Configure your email marketing settings</p>
       </div>
 
       <Tabs defaultValue="sender" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="sender">Sender Info</TabsTrigger>
-          <TabsTrigger value="domain">Domain & DNS</TabsTrigger>
-          <TabsTrigger value="integrations">Integrations</TabsTrigger>
-          <TabsTrigger value="preferences">Preferences</TabsTrigger>
+        <TabsList className="bg-card shadow-soft rounded-2xl p-1">
+          <TabsTrigger value="sender" className="rounded-xl">Sender Info</TabsTrigger>
+          <TabsTrigger value="domain" className="rounded-xl">Domain & DNS</TabsTrigger>
+          <TabsTrigger value="integrations" className="rounded-xl">Integrations</TabsTrigger>
+          <TabsTrigger value="preferences" className="rounded-xl">Preferences</TabsTrigger>
         </TabsList>
 
         <TabsContent value="sender" className="space-y-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
-              <CardTitle>Default Sender Information</CardTitle>
+              <CardTitle className="text-lg">Default Sender Information</CardTitle>
               <CardDescription>
                 This information will be used as the default for all campaigns
               </CardDescription>
@@ -34,17 +34,17 @@ export const EmailSettings = () => {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="from-name">From Name</Label>
-                <Input id="from-name" placeholder="Your Company Name" defaultValue="Reseau" />
+                <Input id="from-name" placeholder="Your Company Name" defaultValue="Reseau" className="rounded-xl" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="from-email">From Email</Label>
-                <Input id="from-email" type="email" placeholder="noreply@example.com" defaultValue="noreply@reseau.com" />
+                <Input id="from-email" type="email" placeholder="noreply@example.com" defaultValue="noreply@reseau.com" className="rounded-xl" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="reply-to">Reply-To Email</Label>
-                <Input id="reply-to" type="email" placeholder="support@example.com" defaultValue="support@reseau.com" />
+                <Input id="reply-to" type="email" placeholder="support@example.com" defaultValue="support@reseau.com" className="rounded-xl" />
               </div>
-              <Button>Save Changes</Button>
+              <Button className="gradient-teal text-white border-0 rounded-xl">Save Changes</Button>
             </CardContent>
           </Card>
 

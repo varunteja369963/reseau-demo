@@ -53,51 +53,51 @@ export const EmailAnalytics = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Analytics</h2>
+        <h2 className="text-2xl font-bold text-foreground">Analytics</h2>
         <p className="text-muted-foreground">Track and analyze your email marketing performance</p>
       </div>
 
       {/* Overall Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {overallStats.map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  <p className="text-3xl font-bold">{stat.value}</p>
-                  <div className="flex items-center gap-1">
-                    {stat.trend === "up" ? (
-                      <TrendingUp className="w-3 h-3 text-green-500" />
-                    ) : (
-                      <TrendingDown className="w-3 h-3 text-red-500" />
-                    )}
-                    <span className={`text-xs font-medium ${stat.trend === "up" ? "text-green-500" : "text-red-500"}`}>
-                      {stat.change}
-                    </span>
-                    <span className="text-xs text-muted-foreground">vs last month</span>
-                  </div>
+        {overallStats.map((stat, idx) => (
+          <div key={stat.label} className="bg-card rounded-3xl p-5 shadow-soft">
+            <div className="flex items-start justify-between">
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">{stat.label}</p>
+                <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                <div className="flex items-center gap-1">
+                  {stat.trend === "up" ? (
+                    <TrendingUp className="w-3 h-3 text-green-500" />
+                  ) : (
+                    <TrendingDown className="w-3 h-3 text-red-500" />
+                  )}
+                  <span className={`text-xs font-medium ${stat.trend === "up" ? "text-green-500" : "text-red-500"}`}>
+                    {stat.change}
+                  </span>
+                  <span className="text-xs text-muted-foreground">vs last month</span>
                 </div>
-                <stat.icon className="w-8 h-8 text-muted-foreground" />
               </div>
-            </CardContent>
-          </Card>
+              <div className={`w-10 h-10 ${idx === 0 ? 'gradient-teal' : idx === 1 ? 'gradient-blue' : idx === 2 ? 'gradient-purple' : 'gradient-red'} rounded-2xl flex items-center justify-center`}>
+                <stat.icon className="w-5 h-5 text-white" />
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Main Analytics */}
       <Tabs defaultValue="campaigns" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="campaigns">Campaign Performance</TabsTrigger>
-          <TabsTrigger value="audience">Audience Insights</TabsTrigger>
-          <TabsTrigger value="engagement">Engagement</TabsTrigger>
+        <TabsList className="bg-card shadow-soft rounded-2xl p-1">
+          <TabsTrigger value="campaigns" className="rounded-xl">Campaign Performance</TabsTrigger>
+          <TabsTrigger value="audience" className="rounded-xl">Audience Insights</TabsTrigger>
+          <TabsTrigger value="engagement" className="rounded-xl">Engagement</TabsTrigger>
         </TabsList>
 
         <TabsContent value="campaigns" className="space-y-4">
           {/* Top Performing Campaigns */}
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
-              <CardTitle>Top Performing Campaigns</CardTitle>
+              <CardTitle className="text-lg">Top Performing Campaigns</CardTitle>
               <CardDescription>Campaigns with the highest engagement rates</CardDescription>
             </CardHeader>
             <CardContent>

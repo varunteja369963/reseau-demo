@@ -93,31 +93,33 @@ export const EmailAutomations = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Automations</h2>
+          <h2 className="text-2xl font-bold text-foreground">Automations</h2>
           <p className="text-muted-foreground">Create automated email workflows and sequences</p>
         </div>
-        <Button>
+        <Button className="gradient-teal text-white border-0 rounded-xl">
           <Plus className="w-4 h-4 mr-2" />
           Create Automation
         </Button>
       </div>
 
       {/* Quick Start Templates */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0">
         <CardContent className="p-6">
-          <h3 className="font-semibold mb-4">Popular Automation Workflows</h3>
+          <h3 className="font-semibold mb-4 text-foreground">Popular Automation Workflows</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {workflows.map((workflow, idx) => (
               <Button
                 key={idx}
                 variant="outline"
-                className="h-auto py-4 justify-start text-left"
+                className="h-auto py-4 justify-start text-left rounded-2xl bg-card border-0 shadow-soft hover:shadow-medium"
               >
-                <Workflow className="w-5 h-5 mr-3 flex-shrink-0" />
+                <div className={`w-8 h-8 ${idx % 4 === 0 ? 'gradient-teal' : idx % 4 === 1 ? 'gradient-blue' : idx % 4 === 2 ? 'gradient-purple' : 'gradient-red'} rounded-xl flex items-center justify-center mr-3`}>
+                  <Workflow className="w-4 h-4 text-white" />
+                </div>
                 <div className="flex-1">
                   <div className="font-medium">{workflow.name}</div>
                   {workflow.popular && (
-                    <Badge variant="secondary" className="text-xs mt-1">Popular</Badge>
+                    <Badge variant="secondary" className="text-xs mt-1 rounded-lg">Popular</Badge>
                   )}
                 </div>
               </Button>
@@ -129,7 +131,7 @@ export const EmailAutomations = () => {
       {/* Active Automations */}
       <div className="space-y-4">
         {automations.map((automation) => (
-          <Card key={automation.id}>
+          <Card key={automation.id} className="rounded-3xl shadow-soft border-0">
             <CardContent className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
