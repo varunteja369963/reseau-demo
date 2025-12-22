@@ -104,7 +104,7 @@ export function CallsBuyNumbers() {
             <div className="space-y-2">
               <Label>Country</Label>
               <Select value={country} onValueChange={setCountry}>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl bg-muted/30">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -119,10 +119,10 @@ export function CallsBuyNumbers() {
             <div className="space-y-2">
               <Label>Number Type</Label>
               <Tabs value={numberType} onValueChange={setNumberType}>
-                <TabsList className="w-full">
-                  <TabsTrigger value="local" className="flex-1">Local</TabsTrigger>
-                  <TabsTrigger value="tollfree" className="flex-1">Toll-Free</TabsTrigger>
-                  <TabsTrigger value="mobile" className="flex-1">Mobile</TabsTrigger>
+                <TabsList className="w-full rounded-xl bg-muted/50">
+                  <TabsTrigger value="local" className="flex-1 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white">Local</TabsTrigger>
+                  <TabsTrigger value="tollfree" className="flex-1 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white">Toll-Free</TabsTrigger>
+                  <TabsTrigger value="mobile" className="flex-1 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white">Mobile</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
@@ -155,6 +155,7 @@ export function CallsBuyNumbers() {
                 placeholder="e.g., 555"
                 value={containsSearch}
                 onChange={(e) => setContainsSearch(e.target.value)}
+                className="rounded-xl bg-muted/30"
               />
             </div>
 
@@ -164,6 +165,7 @@ export function CallsBuyNumbers() {
                 placeholder="e.g., 415"
                 value={areaCode}
                 onChange={(e) => setAreaCode(e.target.value)}
+                className="rounded-xl bg-muted/30"
               />
             </div>
 
@@ -176,11 +178,11 @@ export function CallsBuyNumbers() {
               <CollapsibleContent className="space-y-4 pt-4">
                 <div className="space-y-2">
                   <Label>Near Address</Label>
-                  <Input placeholder="Enter address" />
+                  <Input placeholder="Enter address" className="rounded-xl bg-muted/30" />
                 </div>
                 <div className="space-y-2">
                   <Label>Distance (miles)</Label>
-                  <Input type="number" placeholder="25" />
+                  <Input type="number" placeholder="25" className="rounded-xl bg-muted/30" />
                 </div>
               </CollapsibleContent>
             </Collapsible>
@@ -188,7 +190,7 @@ export function CallsBuyNumbers() {
             <div className="space-y-2">
               <Label>Results Limit</Label>
               <Select value={resultLimit} onValueChange={setResultLimit}>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl bg-muted/30">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -224,20 +226,20 @@ export function CallsBuyNumbers() {
 
               <div className="space-y-3">
                 {searchResults.map((result, index) => (
-                  <Card key={index}>
+                  <Card key={index} className="rounded-2xl shadow-soft border-0 bg-card hover:shadow-md transition-shadow">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
                           <p className="font-mono text-lg font-medium">{result.number}</p>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <MapPin className="h-3 w-3" />
+                            <MapPin className="h-3 w-3 text-teal-500" />
                             {result.locality}
                           </div>
                           <div className="flex items-center gap-1 mt-2">
                             {result.capabilities.map((cap) => {
                               const CapIcon = capabilityIcons[cap]?.icon;
                               return CapIcon ? (
-                                <Badge key={cap} variant="secondary" className="gap-1">
+                                <Badge key={cap} variant="secondary" className="gap-1 bg-teal-500/10 text-teal-600 rounded-lg">
                                   <CapIcon className="h-3 w-3" />
                                   {capabilityIcons[cap].label}
                                 </Badge>
@@ -246,8 +248,8 @@ export function CallsBuyNumbers() {
                           </div>
                         </div>
                         <div className="text-right space-y-2">
-                          <p className="font-medium">{result.price}</p>
-                          <Button onClick={() => handleBuy(result)}>
+                          <p className="font-medium text-teal-600">{result.price}</p>
+                          <Button onClick={() => handleBuy(result)} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
                             <ShoppingCart className="h-4 w-4 mr-2" />
                             Buy
                           </Button>
@@ -259,9 +261,11 @@ export function CallsBuyNumbers() {
               </div>
             </>
           ) : (
-            <Card>
+            <Card className="rounded-3xl shadow-soft border-0 bg-card">
               <CardContent className="p-12 text-center">
-                <Search className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r from-teal-500/20 to-teal-600/20 flex items-center justify-center">
+                  <Search className="h-8 w-8 text-teal-500" />
+                </div>
                 <h3 className="text-lg font-semibold mb-2">Search for Numbers</h3>
                 <p className="text-muted-foreground">
                   Configure your filters and click Search to find available numbers
@@ -274,7 +278,7 @@ export function CallsBuyNumbers() {
 
       {/* Buy Dialog */}
       <Dialog open={buyDialogOpen} onOpenChange={setBuyDialogOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg rounded-2xl">
           <DialogHeader>
             <DialogTitle>Provision Number</DialogTitle>
             <DialogDescription>
@@ -282,27 +286,27 @@ export function CallsBuyNumbers() {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <Card className="bg-muted/50">
+            <Card className="bg-gradient-to-r from-teal-500/10 to-teal-600/10 border-0 rounded-2xl">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-mono text-lg font-medium">{selectedNumber?.number}</p>
                     <p className="text-sm text-muted-foreground">{selectedNumber?.locality}</p>
                   </div>
-                  <p className="font-medium">{selectedNumber?.price}</p>
+                  <p className="font-medium text-teal-600">{selectedNumber?.price}</p>
                 </div>
               </CardContent>
             </Card>
 
             <div className="space-y-2">
               <Label>Friendly Name</Label>
-              <Input placeholder="e.g., Main Sales Line" />
+              <Input placeholder="e.g., Main Sales Line" className="rounded-xl bg-muted/30" />
             </div>
 
             <div className="space-y-2">
               <Label>Assign Call Flow</Label>
               <Select>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl bg-muted/30">
                   <SelectValue placeholder="Select a call flow" />
                 </SelectTrigger>
                 <SelectContent>
@@ -324,15 +328,15 @@ export function CallsBuyNumbers() {
               <CollapsibleContent className="space-y-4 pt-4">
                 <div className="space-y-2">
                   <Label>Voice Webhook URL</Label>
-                  <Input placeholder="https://your-server.com/voice" />
+                  <Input placeholder="https://your-server.com/voice" className="rounded-xl bg-muted/30" />
                 </div>
                 <div className="space-y-2">
                   <Label>Messaging Webhook URL</Label>
-                  <Input placeholder="https://your-server.com/sms" />
+                  <Input placeholder="https://your-server.com/sms" className="rounded-xl bg-muted/30" />
                 </div>
                 <div className="space-y-2">
                   <Label>Status Callback URL</Label>
-                  <Input placeholder="https://your-server.com/status" />
+                  <Input placeholder="https://your-server.com/status" className="rounded-xl bg-muted/30" />
                 </div>
                 <div className="flex items-center justify-between">
                   <Label className="font-normal">Record inbound calls</Label>
@@ -345,21 +349,21 @@ export function CallsBuyNumbers() {
               </CollapsibleContent>
             </Collapsible>
 
-            <Alert>
-              <AlertTriangle className="h-4 w-4" />
+            <Alert className="rounded-xl border-amber-500/30 bg-amber-500/10">
+              <AlertTriangle className="h-4 w-4 text-amber-500" />
               <AlertDescription>
                 This country may require documentation for regulatory compliance.{" "}
-                <Button variant="link" className="h-auto p-0">
+                <Button variant="link" className="h-auto p-0 text-teal-500">
                   View Compliance requirements
                 </Button>
               </AlertDescription>
             </Alert>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setBuyDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setBuyDialogOpen(false)} className="rounded-xl">
               Cancel
             </Button>
-            <Button onClick={() => setBuyDialogOpen(false)}>
+            <Button onClick={() => setBuyDialogOpen(false)} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
               <Check className="h-4 w-4 mr-2" />
               Provision Number
             </Button>

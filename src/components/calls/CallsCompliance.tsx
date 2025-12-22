@@ -106,14 +106,14 @@ export function CallsCompliance() {
       </div>
 
       <Tabs defaultValue="requirements">
-        <TabsList>
-          <TabsTrigger value="requirements">Country Requirements</TabsTrigger>
-          <TabsTrigger value="bundles">Compliance Bundles</TabsTrigger>
-          <TabsTrigger value="emergency">Emergency Addresses</TabsTrigger>
+        <TabsList className="rounded-xl bg-muted/50">
+          <TabsTrigger value="requirements" className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white">Country Requirements</TabsTrigger>
+          <TabsTrigger value="bundles" className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white">Compliance Bundles</TabsTrigger>
+          <TabsTrigger value="emergency" className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white">Emergency Addresses</TabsTrigger>
         </TabsList>
 
         <TabsContent value="requirements" className="space-y-4 mt-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <CardTitle>Country Requirements Viewer</CardTitle>
               <CardDescription>View regulatory requirements by country</CardDescription>
@@ -122,7 +122,7 @@ export function CallsCompliance() {
               <div className="space-y-2">
                 <Label>Select Country</Label>
                 <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                  <SelectTrigger className="w-[200px]">
+                  <SelectTrigger className="w-[200px] rounded-xl bg-muted/30">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -135,14 +135,14 @@ export function CallsCompliance() {
               </div>
 
               {requirements && (
-                <Card className="bg-muted/50">
+                <Card className="bg-gradient-to-r from-teal-500/5 to-teal-600/5 border-0 rounded-2xl">
                   <CardContent className="p-4 space-y-4">
                     <div>
                       <p className="font-medium mb-2">Required Documents</p>
                       <ul className="space-y-1">
                         {requirements.documents.map((doc, i) => (
                           <li key={i} className="flex items-center gap-2 text-sm">
-                            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                            <CheckCircle2 className="h-4 w-4 text-teal-500" />
                             {doc}
                           </li>
                         ))}
@@ -150,12 +150,12 @@ export function CallsCompliance() {
                     </div>
                     <div>
                       <p className="font-medium mb-2">Address Requirements</p>
-                      <Badge variant={requirements.addressRequired ? "default" : "secondary"}>
+                      <Badge variant={requirements.addressRequired ? "default" : "secondary"} className={requirements.addressRequired ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white border-0 rounded-lg" : "rounded-lg"}>
                         {requirements.addressRequired ? "Required" : "Not Required"}
                       </Badge>
                     </div>
-                    <Alert>
-                      <AlertTriangle className="h-4 w-4" />
+                    <Alert className="rounded-xl border-amber-500/30 bg-amber-500/10">
+                      <AlertTriangle className="h-4 w-4 text-amber-500" />
                       <AlertDescription>{requirements.notes}</AlertDescription>
                     </Alert>
                   </CardContent>
@@ -167,13 +167,13 @@ export function CallsCompliance() {
 
         <TabsContent value="bundles" className="space-y-4 mt-4">
           <div className="flex items-center justify-end">
-            <Button onClick={() => setUploadDialogOpen(true)} className="gap-2">
+            <Button onClick={() => setUploadDialogOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
               <Upload className="h-4 w-4" />
               Upload Documents
             </Button>
           </div>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -191,7 +191,7 @@ export function CallsCompliance() {
                       <TableRow key={bundle.id}>
                         <TableCell className="font-medium">{bundle.country}</TableCell>
                         <TableCell>
-                          <Badge variant="secondary" className={statusConfig[bundle.status].color}>
+                          <Badge variant="secondary" className={`${statusConfig[bundle.status].color} rounded-lg`}>
                             <StatusIcon className="h-3 w-3 mr-1" />
                             {statusConfig[bundle.status].label}
                           </Badge>
@@ -201,12 +201,12 @@ export function CallsCompliance() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
                               <Eye className="h-4 w-4 mr-1" />
                               View
                             </Button>
                             {bundle.status === "rejected" && (
-                              <Button variant="ghost" size="sm">
+                              <Button variant="ghost" size="sm" className="rounded-lg hover:bg-amber-500/10 hover:text-amber-600">
                                 <RefreshCw className="h-4 w-4 mr-1" />
                                 Resubmit
                               </Button>
@@ -224,8 +224,8 @@ export function CallsCompliance() {
 
         <TabsContent value="emergency" className="space-y-4 mt-4">
           {numbersNeedingAddress.length > 0 && (
-            <Alert className="border-yellow-500/50 bg-yellow-500/10">
-              <AlertTriangle className="h-4 w-4 text-yellow-500" />
+            <Alert className="border-amber-500/30 bg-amber-500/10 rounded-xl">
+              <AlertTriangle className="h-4 w-4 text-amber-500" />
               <AlertDescription>
                 {numbersNeedingAddress.length} number(s) need an emergency address assigned.
               </AlertDescription>
@@ -233,13 +233,13 @@ export function CallsCompliance() {
           )}
 
           <div className="flex items-center justify-end">
-            <Button onClick={() => setAddressDialogOpen(true)} className="gap-2">
+            <Button onClick={() => setAddressDialogOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
               <Plus className="h-4 w-4" />
               Add Address
             </Button>
           </div>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -255,9 +255,11 @@ export function CallsCompliance() {
                     <TableRow key={addr.id}>
                       <TableCell className="font-medium">{addr.name}</TableCell>
                       <TableCell className="text-muted-foreground">{addr.address}</TableCell>
-                      <TableCell className="text-right">{addr.numbers}</TableCell>
+                      <TableCell className="text-right">
+                        <Badge className="bg-teal-500/10 text-teal-600 rounded-lg">{addr.numbers}</Badge>
+                      </TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm">Edit</Button>
+                        <Button variant="ghost" size="sm" className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">Edit</Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -267,7 +269,7 @@ export function CallsCompliance() {
           </Card>
 
           {numbersNeedingAddress.length > 0 && (
-            <Card>
+            <Card className="rounded-3xl shadow-soft border-0 bg-card">
               <CardHeader>
                 <CardTitle className="text-base">Numbers Needing Address</CardTitle>
               </CardHeader>
@@ -285,11 +287,13 @@ export function CallsCompliance() {
                     {numbersNeedingAddress.map((num, i) => (
                       <TableRow key={i}>
                         <TableCell className="font-mono">{num.number}</TableCell>
-                        <TableCell>{num.type}</TableCell>
+                        <TableCell>
+                          <Badge className="bg-teal-500/10 text-teal-600 rounded-lg">{num.type}</Badge>
+                        </TableCell>
                         <TableCell>{num.country}</TableCell>
                         <TableCell>
                           <Select>
-                            <SelectTrigger className="w-[200px]">
+                            <SelectTrigger className="w-[200px] rounded-xl bg-muted/30">
                               <SelectValue placeholder="Select address" />
                             </SelectTrigger>
                             <SelectContent>
@@ -313,7 +317,7 @@ export function CallsCompliance() {
 
       {/* Upload Documents Dialog */}
       <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
-        <DialogContent>
+        <DialogContent className="rounded-2xl">
           <DialogHeader>
             <DialogTitle>Upload Documents</DialogTitle>
             <DialogDescription>
@@ -324,7 +328,7 @@ export function CallsCompliance() {
             <div className="space-y-2">
               <Label>Document Type</Label>
               <Select>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl bg-muted/30">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -335,30 +339,32 @@ export function CallsCompliance() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="border-2 border-dashed rounded-lg p-8 text-center">
-              <Upload className="h-10 w-10 mx-auto mb-4 text-muted-foreground" />
+            <div className="border-2 border-dashed border-teal-500/30 rounded-2xl p-8 text-center bg-teal-500/5 hover:bg-teal-500/10 transition-colors cursor-pointer">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-r from-teal-500/20 to-teal-600/20 flex items-center justify-center">
+                <Upload className="h-7 w-7 text-teal-500" />
+              </div>
               <p className="text-sm text-muted-foreground mb-2">
                 Drag and drop your file here, or click to browse
               </p>
-              <Button variant="outline">Select File</Button>
+              <Button variant="outline" className="rounded-xl">Select File</Button>
             </div>
             <div className="space-y-2">
               <Label>Notes</Label>
-              <Textarea placeholder="Additional notes..." />
+              <Textarea placeholder="Additional notes..." className="rounded-xl bg-muted/30" />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setUploadDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setUploadDialogOpen(false)} className="rounded-xl">
               Cancel
             </Button>
-            <Button onClick={() => setUploadDialogOpen(false)}>Submit</Button>
+            <Button onClick={() => setUploadDialogOpen(false)} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">Submit</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Add Address Dialog */}
       <Dialog open={addressDialogOpen} onOpenChange={setAddressDialogOpen}>
-        <DialogContent>
+        <DialogContent className="rounded-2xl">
           <DialogHeader>
             <DialogTitle>Add Emergency Address</DialogTitle>
             <DialogDescription>
@@ -368,31 +374,31 @@ export function CallsCompliance() {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label>Friendly Name</Label>
-              <Input placeholder="e.g., HQ Office" />
+              <Input placeholder="e.g., HQ Office" className="rounded-xl bg-muted/30" />
             </div>
             <div className="space-y-2">
               <Label>Street Address</Label>
-              <Input placeholder="123 Main St" />
+              <Input placeholder="123 Main St" className="rounded-xl bg-muted/30" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>City</Label>
-                <Input placeholder="San Francisco" />
+                <Input placeholder="San Francisco" className="rounded-xl bg-muted/30" />
               </div>
               <div className="space-y-2">
                 <Label>State/Province</Label>
-                <Input placeholder="CA" />
+                <Input placeholder="CA" className="rounded-xl bg-muted/30" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Postal Code</Label>
-                <Input placeholder="94105" />
+                <Input placeholder="94105" className="rounded-xl bg-muted/30" />
               </div>
               <div className="space-y-2">
                 <Label>Country</Label>
                 <Select defaultValue="US">
-                  <SelectTrigger>
+                  <SelectTrigger className="rounded-xl bg-muted/30">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -405,10 +411,10 @@ export function CallsCompliance() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAddressDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setAddressDialogOpen(false)} className="rounded-xl">
               Cancel
             </Button>
-            <Button onClick={() => setAddressDialogOpen(false)}>
+            <Button onClick={() => setAddressDialogOpen(false)} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
               Create Address
             </Button>
           </DialogFooter>

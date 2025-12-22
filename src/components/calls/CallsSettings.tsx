@@ -255,8 +255,15 @@ export function CallsSettings() {
         <TabsContent value="webhooks" className="space-y-4 mt-4">
           <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
-              <CardTitle>Webhook Endpoint</CardTitle>
-              <CardDescription>Your inbound webhook base URL</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-teal-500/20 to-teal-600/20 flex items-center justify-center">
+                  <Webhook className="h-5 w-5 text-teal-500" />
+                </div>
+                <div>
+                  <CardTitle>Webhook Endpoint</CardTitle>
+                  <CardDescription>Your inbound webhook base URL</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -265,9 +272,9 @@ export function CallsSettings() {
                   <Input
                     readOnly
                     value="https://hooks.reseau.app/v1/workspace/abc123"
-                    className="font-mono"
+                    className="font-mono rounded-xl bg-muted/30"
                   />
-                  <Button variant="outline" size="icon">
+                  <Button variant="outline" size="icon" className="rounded-xl hover:bg-teal-500/10 hover:text-teal-600 hover:border-teal-500/30">
                     <Copy className="h-4 w-4" />
                   </Button>
                 </div>
@@ -279,21 +286,22 @@ export function CallsSettings() {
                     type={showSigningSecret ? "text" : "password"}
                     readOnly
                     value="whsec_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                    className="font-mono"
+                    className="font-mono rounded-xl bg-muted/30"
                   />
                   <Button
                     variant="outline"
                     size="icon"
                     onClick={() => setShowSigningSecret(!showSigningSecret)}
+                    className="rounded-xl hover:bg-teal-500/10 hover:text-teal-600 hover:border-teal-500/30"
                   >
                     {showSigningSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
-                  <Button variant="outline" size="icon">
+                  <Button variant="outline" size="icon" className="rounded-xl hover:bg-teal-500/10 hover:text-teal-600 hover:border-teal-500/30">
                     <Copy className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
-              <Button variant="outline" className="gap-2">
+              <Button variant="outline" className="gap-2 rounded-xl hover:bg-amber-500/10 hover:text-amber-600 hover:border-amber-500/30">
                 <RefreshCw className="h-4 w-4" />
                 Rotate Secret
               </Button>
