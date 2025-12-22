@@ -114,20 +114,20 @@ export const ConversationsSettings = () => {
       </div>
 
       <Tabs defaultValue="services">
-        <TabsList className="rounded-xl bg-muted/50 p-1">
-          <TabsTrigger value="services" className="gap-2 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+        <TabsList className="rounded-full bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-800 dark:to-slate-900 p-1.5 shadow-sm border border-slate-200/50 dark:border-slate-700/50">
+          <TabsTrigger value="services" className="gap-2 rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-500 data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200">
             <Settings className="h-4 w-4" />
             Services
           </TabsTrigger>
-          <TabsTrigger value="team" className="gap-2 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+          <TabsTrigger value="team" className="gap-2 rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-teal-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200">
             <Users className="h-4 w-4" />
             Team & Roles
           </TabsTrigger>
-          <TabsTrigger value="webhooks" className="gap-2 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+          <TabsTrigger value="webhooks" className="gap-2 rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200">
             <Webhook className="h-4 w-4" />
             Webhooks
           </TabsTrigger>
-          <TabsTrigger value="retention" className="gap-2 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+          <TabsTrigger value="retention" className="gap-2 rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200">
             <Database className="h-4 w-4" />
             Data Retention
           </TabsTrigger>
@@ -139,8 +139,8 @@ export const ConversationsSettings = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[hsl(var(--blue))]/10 flex items-center justify-center">
-                    <Settings className="h-5 w-5 text-[hsl(var(--blue))]" />
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center">
+                    <Settings className="h-5 w-5 text-violet-600 dark:text-violet-400" />
                   </div>
                   <div>
                     <CardTitle>Conversation Services</CardTitle>
@@ -149,7 +149,7 @@ export const ConversationsSettings = () => {
                     </CardDescription>
                   </div>
                 </div>
-                <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl shadow-soft">
+                <Button className="gap-2 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white border-0 rounded-full shadow-md">
                   <Plus className="h-4 w-4" />
                   New Service
                 </Button>
@@ -173,7 +173,7 @@ export const ConversationsSettings = () => {
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{service.name}</span>
                           {service.isDefault && (
-                            <Badge variant="secondary" className="rounded-lg bg-[hsl(var(--blue))]/10 text-[hsl(var(--blue))] border-0">Default</Badge>
+                            <Badge variant="secondary" className="rounded-full bg-gradient-to-r from-violet-500/20 to-purple-500/20 text-violet-600 dark:text-violet-400 border border-violet-500/30 shadow-sm">Default</Badge>
                           )}
                         </div>
                       </TableCell>
@@ -184,14 +184,14 @@ export const ConversationsSettings = () => {
                               ? "default"
                               : "outline"
                           }
-                          className={`rounded-lg ${service.environment === "Production" ? "bg-primary text-primary-foreground border-0" : "border-border"}`}
+                          className={`rounded-full shadow-sm ${service.environment === "Production" ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0" : "border-border"}`}
                         >
                           {service.environment}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         {service.webhooksConfigured ? (
-                          <Badge variant="secondary" className="gap-1 rounded-lg bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))] border-0">
+                          <Badge variant="secondary" className="gap-1 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 shadow-sm">
                             <Webhook className="h-3 w-3" />
                             Configured
                           </Badge>
@@ -250,7 +250,7 @@ export const ConversationsSettings = () => {
                   <div className="p-4 border border-border rounded-xl bg-muted/30 space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-sm">https://api.example.com/conversations</span>
-                      <Badge className="rounded-lg bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))] border-0">Active</Badge>
+                      <Badge className="rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 shadow-sm">Active</Badge>
                     </div>
                     <div className="flex flex-wrap gap-1">
                       <Badge variant="outline" className="text-[10px] rounded-lg border-border">onConversationAdded</Badge>
@@ -295,7 +295,7 @@ export const ConversationsSettings = () => {
                 <Button variant="outline" onClick={() => setSelectedService(null)} className="rounded-xl">
                   Cancel
                 </Button>
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl">Save Changes</Button>
+                <Button className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white border-0 rounded-full shadow-md">Save Changes</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -307,8 +307,8 @@ export const ConversationsSettings = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[hsl(var(--purple))]/10 flex items-center justify-center">
-                    <Users className="h-5 w-5 text-[hsl(var(--purple))]" />
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
+                    <Users className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   <div>
                     <CardTitle>Team Members</CardTitle>
@@ -319,7 +319,7 @@ export const ConversationsSettings = () => {
                 </div>
                 <Dialog open={showInviteModal} onOpenChange={setShowInviteModal}>
                   <DialogTrigger asChild>
-                    <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl shadow-soft">
+                    <Button className="gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white border-0 rounded-full shadow-md">
                       <Plus className="h-4 w-4" />
                       Invite Member
                     </Button>
@@ -351,7 +351,7 @@ export const ConversationsSettings = () => {
                       <Button variant="outline" onClick={() => setShowInviteModal(false)} className="rounded-xl">
                         Cancel
                       </Button>
-                      <Button onClick={() => setShowInviteModal(false)} className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl">
+                      <Button onClick={() => setShowInviteModal(false)} className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white border-0 rounded-full shadow-md">
                         Send Invite
                       </Button>
                     </DialogFooter>
@@ -430,10 +430,10 @@ export const ConversationsSettings = () => {
                   ].map((row) => (
                     <TableRow key={row.perm} className="hover:bg-muted/50">
                       <TableCell>{row.perm}</TableCell>
-                      <TableCell className={row.owner ? "text-[hsl(var(--teal))]" : "text-muted-foreground"}>{row.owner ? "✓" : "—"}</TableCell>
-                      <TableCell className={row.admin ? "text-[hsl(var(--teal))]" : "text-muted-foreground"}>{row.admin ? "✓" : "—"}</TableCell>
-                      <TableCell className={row.agent ? "text-[hsl(var(--teal))]" : "text-muted-foreground"}>{row.agent ? "✓" : "—"}</TableCell>
-                      <TableCell className={row.readonly ? "text-[hsl(var(--teal))]" : "text-muted-foreground"}>{row.readonly ? "✓" : "—"}</TableCell>
+                      <TableCell className={row.owner ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-muted-foreground"}>{row.owner ? "✓" : "—"}</TableCell>
+                      <TableCell className={row.admin ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-muted-foreground"}>{row.admin ? "✓" : "—"}</TableCell>
+                      <TableCell className={row.agent ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-muted-foreground"}>{row.agent ? "✓" : "—"}</TableCell>
+                      <TableCell className={row.readonly ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-muted-foreground"}>{row.readonly ? "✓" : "—"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -447,8 +447,8 @@ export const ConversationsSettings = () => {
           <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[hsl(var(--blue))]/10 flex items-center justify-center">
-                  <Webhook className="h-5 w-5 text-[hsl(var(--blue))]" />
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center">
+                  <Webhook className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
                   <CardTitle>Webhook Endpoint</CardTitle>
@@ -511,7 +511,7 @@ export const ConversationsSettings = () => {
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="icon" className="rounded-xl hover:bg-[hsl(var(--red))]/10 hover:text-[hsl(var(--red))] hover:border-[hsl(var(--red))]/30">
+                  <Button variant="outline" size="icon" className="rounded-xl hover:bg-gradient-to-r hover:from-rose-500/10 hover:to-pink-500/10 hover:text-rose-600 hover:border-rose-500/30">
                     <RefreshCw className="h-4 w-4" />
                   </Button>
                 </div>
@@ -533,8 +533,8 @@ export const ConversationsSettings = () => {
           <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[hsl(var(--purple))]/10 flex items-center justify-center">
-                  <Database className="h-5 w-5 text-[hsl(var(--purple))]" />
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center">
+                  <Database className="h-5 w-5 text-rose-600 dark:text-rose-400" />
                 </div>
                 <div>
                   <CardTitle>Data Retention Policies</CardTitle>
@@ -605,7 +605,7 @@ export const ConversationsSettings = () => {
                 </Select>
               </div>
 
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl shadow-soft">Save Retention Settings</Button>
+              <Button className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white border-0 rounded-full shadow-md">Save Retention Settings</Button>
             </CardContent>
           </Card>
         </TabsContent>
