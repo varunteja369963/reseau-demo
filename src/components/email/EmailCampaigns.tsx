@@ -266,13 +266,13 @@ export const EmailCampaigns = () => {
         {/* Scheduled Campaigns */}
         <TabsContent value="scheduled" className="space-y-4">
           {campaigns.scheduled.map((campaign) => (
-            <Card key={campaign.id}>
+            <Card key={campaign.id} className="rounded-3xl shadow-soft border-0">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="text-lg font-semibold">{campaign.name}</h3>
-                      <Badge variant="secondary">Scheduled</Badge>
+                      <Badge variant="secondary" className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">Scheduled</Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mb-2">{campaign.subject}</p>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -287,7 +287,7 @@ export const EmailCampaigns = () => {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="rounded-xl border-0 bg-muted/50 hover:bg-muted">
                       <Pause className="w-4 h-4 mr-1" />
                       Pause
                     </Button>
@@ -314,13 +314,13 @@ export const EmailCampaigns = () => {
         {/* Draft Campaigns */}
         <TabsContent value="draft" className="space-y-4">
           {campaigns.draft.map((campaign) => (
-            <Card key={campaign.id}>
+            <Card key={campaign.id} className="rounded-3xl shadow-soft border-0">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="text-lg font-semibold">{campaign.name}</h3>
-                      <Badge variant="outline">Draft</Badge>
+                      <Badge variant="outline" className="border-muted-foreground/30">Draft</Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mb-2">{campaign.subject}</p>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -328,7 +328,7 @@ export const EmailCampaigns = () => {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm">
+                    <Button size="sm" className="gradient-teal text-white border-0 rounded-xl">
                       Continue Editing
                     </Button>
                     <DropdownMenu>

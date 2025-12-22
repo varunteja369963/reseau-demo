@@ -297,27 +297,32 @@ export const EmailContacts = () => {
         </TabsContent>
 
         <TabsContent value="lists" className="space-y-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle>Email Lists</CardTitle>
                   <CardDescription>Static subscriber lists for targeting</CardDescription>
                 </div>
-                <Button>Create List</Button>
+                <Button className="gradient-teal text-white border-0 rounded-xl">Create List</Button>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {lists.map((list) => (
-                  <div key={list.id} className="p-4 border rounded-lg hover:bg-muted/50 transition-smooth">
+                {lists.map((list, idx) => (
+                  <div key={list.id} className="p-4 bg-muted/30 rounded-2xl hover:bg-muted/50 transition-smooth">
                     <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-semibold">{list.name}</h4>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 ${idx % 4 === 0 ? 'gradient-teal' : idx % 4 === 1 ? 'gradient-purple' : idx % 4 === 2 ? 'bg-gradient-to-br from-amber-500 to-amber-400' : 'gradient-red'} rounded-xl flex items-center justify-center`}>
+                          <Users className="w-4 h-4 text-white" />
+                        </div>
+                        <h4 className="font-semibold">{list.name}</h4>
+                      </div>
                       <Button variant="ghost" size="icon">
                         <MoreVertical className="w-4 h-4" />
                       </Button>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between ml-11">
                       <span className="text-2xl font-bold">{list.count.toLocaleString()}</span>
                       <span className="text-sm text-green-500 flex items-center gap-1">
                         <TrendingUp className="w-3 h-3" />
@@ -332,30 +337,35 @@ export const EmailContacts = () => {
         </TabsContent>
 
         <TabsContent value="segments" className="space-y-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle>Smart Segments</CardTitle>
                   <CardDescription>Dynamic audience segments based on conditions</CardDescription>
                 </div>
-                <Button>Create Segment</Button>
+                <Button className="gradient-teal text-white border-0 rounded-xl">Create Segment</Button>
               </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {segments.map((segment) => (
-                  <div key={segment.id} className="p-4 border rounded-lg hover:bg-muted/50 transition-smooth">
+                {segments.map((segment, idx) => (
+                  <div key={segment.id} className="p-4 bg-muted/30 rounded-2xl hover:bg-muted/50 transition-smooth">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-semibold">{segment.name}</h4>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 ${idx % 4 === 0 ? 'gradient-teal' : idx % 4 === 1 ? 'gradient-purple' : idx % 4 === 2 ? 'bg-gradient-to-br from-amber-500 to-amber-400' : 'gradient-red'} rounded-xl flex items-center justify-center`}>
+                          <Filter className="w-4 h-4 text-white" />
+                        </div>
+                        <h4 className="font-semibold">{segment.name}</h4>
+                      </div>
                       <div className="flex items-center gap-2">
-                        <Badge>{segment.count.toLocaleString()} contacts</Badge>
+                        <Badge className="bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400">{segment.count.toLocaleString()} contacts</Badge>
                         <Button variant="ghost" size="icon">
                           <MoreVertical className="w-4 h-4" />
                         </Button>
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">{segment.conditions}</p>
+                    <p className="text-sm text-muted-foreground ml-11">{segment.conditions}</p>
                   </div>
                 ))}
               </div>
@@ -364,21 +374,23 @@ export const EmailContacts = () => {
         </TabsContent>
 
         <TabsContent value="tags" className="space-y-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle>Contact Tags</CardTitle>
                   <CardDescription>Organize contacts with custom tags</CardDescription>
                 </div>
-                <Button>Create Tag</Button>
+                <Button className="gradient-teal text-white border-0 rounded-xl">Create Tag</Button>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                 {tags.map((tag) => (
-                  <div key={tag.id} className="p-3 border rounded-lg text-center hover:bg-muted/50 transition-smooth">
-                    <Tag className="w-5 h-5 mx-auto mb-2" style={{ color: tag.color }} />
+                  <div key={tag.id} className="p-4 bg-muted/30 rounded-2xl text-center hover:bg-muted/50 transition-smooth">
+                    <div className={`w-10 h-10 mx-auto mb-2 rounded-xl flex items-center justify-center ${tag.color === 'purple' ? 'bg-purple-100 dark:bg-purple-900/30' : tag.color === 'blue' ? 'bg-blue-100 dark:bg-blue-900/30' : tag.color === 'green' ? 'bg-green-100 dark:bg-green-900/30' : tag.color === 'orange' ? 'bg-orange-100 dark:bg-orange-900/30' : 'bg-yellow-100 dark:bg-yellow-900/30'}`}>
+                      <Tag className={`w-5 h-5 ${tag.color === 'purple' ? 'text-purple-600 dark:text-purple-400' : tag.color === 'blue' ? 'text-blue-600 dark:text-blue-400' : tag.color === 'green' ? 'text-green-600 dark:text-green-400' : tag.color === 'orange' ? 'text-orange-600 dark:text-orange-400' : 'text-yellow-600 dark:text-yellow-400'}`} />
+                    </div>
                     <div className="font-medium text-sm">{tag.name}</div>
                     <div className="text-xs text-muted-foreground">{tag.count} contacts</div>
                   </div>

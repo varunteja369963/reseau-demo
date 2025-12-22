@@ -117,6 +117,7 @@ export const EmailTemplates = () => {
         <div className="flex gap-2">
           <Button 
             variant="outline"
+            className="rounded-xl border-0 bg-card shadow-soft"
             onClick={() => {
               setEditingTemplate(null);
               setBuilderOpen(true);
@@ -126,6 +127,7 @@ export const EmailTemplates = () => {
             AI Template
           </Button>
           <Button
+            className="gradient-teal text-white border-0 rounded-xl"
             onClick={() => {
               setEditingTemplate(null);
               setBuilderOpen(true);
@@ -144,17 +146,17 @@ export const EmailTemplates = () => {
           placeholder="Search templates..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
+          className="pl-10 rounded-xl border-0 bg-card shadow-soft"
         />
       </div>
 
       {/* Template Tabs */}
       <Tabs defaultValue="system" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="system">
+        <TabsList className="bg-card shadow-soft rounded-2xl p-1">
+          <TabsTrigger value="system" className="rounded-xl">
             System Templates ({systemTemplates.length})
           </TabsTrigger>
-          <TabsTrigger value="custom">
+          <TabsTrigger value="custom" className="rounded-xl">
             My Templates ({customTemplates.length})
           </TabsTrigger>
         </TabsList>
@@ -162,19 +164,19 @@ export const EmailTemplates = () => {
         {/* System Templates */}
         <TabsContent value="system">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {systemTemplates.map((template) => (
-              <Card key={template.id} className="overflow-hidden hover:shadow-md transition-smooth group">
+            {systemTemplates.map((template, idx) => (
+              <Card key={template.id} className="overflow-hidden rounded-3xl shadow-soft border-0 hover:shadow-medium transition-smooth group">
                 <CardContent className="p-0">
                   {/* Template Preview */}
-                  <div className="h-48 bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center relative overflow-hidden">
-                    <template.icon className="w-16 h-16 text-muted-foreground/20" />
+                  <div className={`h-48 ${idx % 4 === 0 ? 'bg-gradient-to-br from-teal-500/10 to-teal-500/5' : idx % 4 === 1 ? 'bg-gradient-to-br from-purple-500/10 to-purple-500/5' : idx % 4 === 2 ? 'bg-gradient-to-br from-amber-500/10 to-amber-500/5' : 'bg-gradient-to-br from-rose-500/10 to-rose-500/5'} flex items-center justify-center relative overflow-hidden`}>
+                    <template.icon className={`w-16 h-16 ${idx % 4 === 0 ? 'text-teal-500/30' : idx % 4 === 1 ? 'text-purple-500/30' : idx % 4 === 2 ? 'text-amber-500/30' : 'text-rose-500/30'}`} />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                       <div className="flex gap-2">
-                        <Button size="sm" variant="secondary">
+                        <Button size="sm" variant="secondary" className="rounded-xl">
                           <Eye className="w-4 h-4 mr-1" />
                           Preview
                         </Button>
-                        <Button size="sm" variant="secondary">
+                        <Button size="sm" className="gradient-teal text-white border-0 rounded-xl">
                           <Copy className="w-4 h-4 mr-1" />
                           Use
                         </Button>
@@ -223,19 +225,19 @@ export const EmailTemplates = () => {
         {/* Custom Templates */}
         <TabsContent value="custom">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {customTemplates.map((template) => (
-              <Card key={template.id} className="overflow-hidden hover:shadow-md transition-smooth group">
+            {customTemplates.map((template, idx) => (
+              <Card key={template.id} className="overflow-hidden rounded-3xl shadow-soft border-0 hover:shadow-medium transition-smooth group">
                 <CardContent className="p-0">
                   {/* Template Preview */}
-                  <div className="h-48 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center relative overflow-hidden">
-                    <Layout className="w-16 h-16 text-primary/20" />
+                  <div className={`h-48 ${idx % 3 === 0 ? 'bg-gradient-to-br from-teal-500/10 to-teal-500/5' : idx % 3 === 1 ? 'bg-gradient-to-br from-purple-500/10 to-purple-500/5' : 'bg-gradient-to-br from-amber-500/10 to-amber-500/5'} flex items-center justify-center relative overflow-hidden`}>
+                    <Layout className={`w-16 h-16 ${idx % 3 === 0 ? 'text-teal-500/30' : idx % 3 === 1 ? 'text-purple-500/30' : 'text-amber-500/30'}`} />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                       <div className="flex gap-2">
-                        <Button size="sm" variant="secondary">
+                        <Button size="sm" variant="secondary" className="rounded-xl">
                           <Eye className="w-4 h-4 mr-1" />
                           Preview
                         </Button>
-                        <Button size="sm" variant="secondary">
+                        <Button size="sm" className="gradient-teal text-white border-0 rounded-xl">
                           Edit
                         </Button>
                       </div>
@@ -290,10 +292,12 @@ export const EmailTemplates = () => {
             ))}
 
             {/* Create New Template Card */}
-            <Card className="overflow-hidden border-dashed hover:border-primary hover:bg-primary/5 transition-smooth cursor-pointer">
+            <Card className="overflow-hidden border-dashed rounded-3xl hover:border-teal-500 hover:bg-teal-500/5 transition-smooth cursor-pointer">
               <CardContent className="p-0">
                 <div className="h-48 flex flex-col items-center justify-center gap-3">
-                  <Plus className="w-12 h-12 text-muted-foreground" />
+                  <div className="w-12 h-12 gradient-teal rounded-2xl flex items-center justify-center">
+                    <Plus className="w-6 h-6 text-white" />
+                  </div>
                   <div className="text-center">
                     <p className="font-medium">Create New Template</p>
                     <p className="text-xs text-muted-foreground">Start from scratch</p>
