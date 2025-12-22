@@ -138,17 +138,22 @@ export const EmailAnalytics = () => {
           </Card>
 
           {/* Device Breakdown */}
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <CardTitle>Device Breakdown</CardTitle>
               <CardDescription>How subscribers read your emails</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {deviceBreakdown.map((device) => (
+                {deviceBreakdown.map((device, idx) => (
                   <div key={device.device} className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium">{device.device}</span>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 ${idx === 0 ? 'gradient-teal' : idx === 1 ? 'gradient-purple' : 'bg-gradient-to-br from-amber-500 to-amber-400'} rounded-xl flex items-center justify-center`}>
+                          <BarChart3 className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="font-medium">{device.device}</span>
+                      </div>
                       <span className="text-sm text-muted-foreground">
                         {device.count.toLocaleString()} ({device.percentage}%)
                       </span>
@@ -163,7 +168,7 @@ export const EmailAnalytics = () => {
 
         <TabsContent value="audience" className="space-y-4">
           {/* Audience Growth */}
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <CardTitle>Audience Growth</CardTitle>
               <CardDescription>Subscriber count over time</CardDescription>
@@ -185,7 +190,7 @@ export const EmailAnalytics = () => {
                   </div>
                 ))}
               </div>
-              <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+              <div className="mt-6 p-4 bg-muted/30 rounded-2xl">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Net Growth (6 months)</p>
@@ -193,7 +198,7 @@ export const EmailAnalytics = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">Growth Rate</p>
-                    <p className="text-2xl font-bold text-green-500">+47.4%</p>
+                    <p className="text-2xl font-bold text-teal-500">+47.4%</p>
                   </div>
                 </div>
               </div>
@@ -203,21 +208,26 @@ export const EmailAnalytics = () => {
 
         <TabsContent value="engagement" className="space-y-4">
           {/* Engagement by Segment */}
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <CardTitle>Engagement by Segment</CardTitle>
               <CardDescription>Performance across different audience segments</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {engagementBySegment.map((segment) => (
-                  <div key={segment.segment} className="space-y-3">
+                {engagementBySegment.map((segment, idx) => (
+                  <div key={segment.segment} className="space-y-3 p-4 bg-muted/30 rounded-2xl">
                     <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-semibold">{segment.segment}</h4>
-                        <p className="text-sm text-muted-foreground">
-                          {segment.contacts.toLocaleString()} contacts
-                        </p>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 ${idx === 0 ? 'gradient-teal' : idx === 1 ? 'gradient-purple' : idx === 2 ? 'bg-gradient-to-br from-amber-500 to-amber-400' : 'gradient-red'} rounded-xl flex items-center justify-center`}>
+                          <Users className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold">{segment.segment}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {segment.contacts.toLocaleString()} contacts
+                          </p>
+                        </div>
                       </div>
                       <div className="text-right">
                         <div className="flex items-center gap-2">

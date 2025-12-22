@@ -48,7 +48,7 @@ export const EmailSettings = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <CardTitle>Company Information</CardTitle>
               <CardDescription>
@@ -58,19 +58,19 @@ export const EmailSettings = () => {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="company-name">Company Name</Label>
-                <Input id="company-name" placeholder="Company Name" />
+                <Input id="company-name" placeholder="Company Name" className="rounded-xl" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="address">Physical Address</Label>
-                <Input id="address" placeholder="123 Main St, City, State, ZIP" />
+                <Input id="address" placeholder="123 Main St, City, State, ZIP" className="rounded-xl" />
               </div>
-              <Button>Save Changes</Button>
+              <Button className="gradient-teal text-white border-0 rounded-xl">Save Changes</Button>
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="domain" className="space-y-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <CardTitle>Custom Domain Setup</CardTitle>
               <CardDescription>
@@ -80,13 +80,13 @@ export const EmailSettings = () => {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="domain">Domain</Label>
-                <Input id="domain" placeholder="mail.yourdomain.com" />
+                <Input id="domain" placeholder="mail.yourdomain.com" className="rounded-xl" />
               </div>
-              <Button>Verify Domain</Button>
+              <Button className="gradient-teal text-white border-0 rounded-xl">Verify Domain</Button>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <CardTitle>DNS Records</CardTitle>
               <CardDescription>
@@ -95,30 +95,30 @@ export const EmailSettings = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="p-4 border rounded-lg space-y-2">
+                <div className="p-4 bg-muted/30 rounded-2xl space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">SPF Record</span>
-                    <span className="text-xs text-green-500">✓ Verified</span>
+                    <span className="text-xs text-teal-500 font-medium">✓ Verified</span>
                   </div>
-                  <code className="text-xs bg-muted p-2 rounded block overflow-x-auto">
+                  <code className="text-xs bg-muted p-2 rounded-xl block overflow-x-auto">
                     v=spf1 include:_spf.example.com ~all
                   </code>
                 </div>
-                <div className="p-4 border rounded-lg space-y-2">
+                <div className="p-4 bg-muted/30 rounded-2xl space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">DKIM Record</span>
-                    <span className="text-xs text-yellow-500">⚠ Pending</span>
+                    <span className="text-xs text-amber-500 font-medium">⚠ Pending</span>
                   </div>
-                  <code className="text-xs bg-muted p-2 rounded block overflow-x-auto">
+                  <code className="text-xs bg-muted p-2 rounded-xl block overflow-x-auto">
                     k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC...
                   </code>
                 </div>
-                <div className="p-4 border rounded-lg space-y-2">
+                <div className="p-4 bg-muted/30 rounded-2xl space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">DMARC Record</span>
-                    <span className="text-xs text-red-500">✗ Not Set</span>
+                    <span className="text-xs text-red-500 font-medium">✗ Not Set</span>
                   </div>
-                  <code className="text-xs bg-muted p-2 rounded block overflow-x-auto">
+                  <code className="text-xs bg-muted p-2 rounded-xl block overflow-x-auto">
                     v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com
                   </code>
                 </div>
@@ -128,7 +128,7 @@ export const EmailSettings = () => {
         </TabsContent>
 
         <TabsContent value="integrations" className="space-y-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <CardTitle>Email Service Provider</CardTitle>
               <CardDescription>
@@ -136,9 +136,9 @@ export const EmailSettings = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 gradient-teal rounded-xl flex items-center justify-center">
                     📧
                   </div>
                   <div>
@@ -146,11 +146,11 @@ export const EmailSettings = () => {
                     <p className="text-sm text-muted-foreground">Email delivery service</p>
                   </div>
                 </div>
-                <Button variant="outline">Connect</Button>
+                <Button variant="outline" className="rounded-xl border-0 bg-card shadow-soft">Connect</Button>
               </div>
-              <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 gradient-purple rounded-xl flex items-center justify-center">
                     📮
                   </div>
                   <div>
@@ -158,12 +158,12 @@ export const EmailSettings = () => {
                     <p className="text-sm text-muted-foreground">Alternative provider</p>
                   </div>
                 </div>
-                <Button variant="outline">Connect</Button>
+                <Button variant="outline" className="rounded-xl border-0 bg-card shadow-soft">Connect</Button>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <CardTitle>CRM Integration</CardTitle>
               <CardDescription>
@@ -171,9 +171,9 @@ export const EmailSettings = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-400 rounded-xl flex items-center justify-center">
                     👥
                   </div>
                   <div>
@@ -181,14 +181,14 @@ export const EmailSettings = () => {
                     <p className="text-sm text-muted-foreground">Sync with main CRM</p>
                   </div>
                 </div>
-                <Button>Configure</Button>
+                <Button className="gradient-teal text-white border-0 rounded-xl">Configure</Button>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="preferences" className="space-y-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <CardTitle>Email Preferences</CardTitle>
               <CardDescription>
@@ -238,7 +238,7 @@ export const EmailSettings = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0">
             <CardHeader>
               <CardTitle>Unsubscribe Settings</CardTitle>
               <CardDescription>
@@ -252,6 +252,7 @@ export const EmailSettings = () => {
                   id="unsub-message" 
                   placeholder="You've been unsubscribed" 
                   defaultValue="You've been successfully unsubscribed from our emails."
+                  className="rounded-xl"
                 />
               </div>
               <div className="flex items-center justify-between">
