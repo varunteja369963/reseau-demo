@@ -1,4 +1,4 @@
-import { ChevronDown, Building2, Building, Settings, History } from "lucide-react";
+import { ChevronDown, Building2, Building, Settings, History, Bell, UserPlus, MessageSquare, AlertCircle, CheckCircle, Calendar } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
@@ -7,6 +7,15 @@ interface TopNavbarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
 }
+
+const notifications = [
+  { id: 1, type: 'lead', icon: UserPlus, title: 'New lead assigned', message: 'John Smith was assigned to you', time: '2 min ago', read: false },
+  { id: 2, type: 'message', icon: MessageSquare, title: 'New message received', message: 'Sarah Connor replied to your inquiry', time: '15 min ago', read: false },
+  { id: 3, type: 'alert', icon: AlertCircle, title: 'Follow-up reminder', message: 'Call back Mike Johnson - 2024 Civic inquiry', time: '1 hour ago', read: false },
+  { id: 4, type: 'success', icon: CheckCircle, title: 'Deal closed', message: 'Emma Davis purchased 2024 Accord', time: '3 hours ago', read: true },
+  { id: 5, type: 'calendar', icon: Calendar, title: 'Appointment scheduled', message: 'Test drive with Alex Brown tomorrow at 2 PM', time: '5 hours ago', read: true },
+  { id: 6, type: 'message', icon: MessageSquare, title: 'SMS delivery confirmed', message: 'Your campaign reached 156 contacts', time: 'Yesterday', read: true },
+];
 
 export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
   const [selectedDealership, setSelectedDealership] = useState<string>('Reseau (Org)');
@@ -17,6 +26,8 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
     'Reseau Kia Penticton',
     'Reseau Honda Vernon'
   ];
+
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
     <nav className="bg-card border-b border-border shadow-soft sticky top-0 z-50 max-w-full overflow-x-hidden">
@@ -119,6 +130,65 @@ export const TopNavbar = ({ activeTab, setActiveTab }: TopNavbarProps) => {
                     <div className="text-sm font-medium">{dealer}</div>
                   </button>
                 ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          {/* Notifications Dropdown */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="relative flex items-center justify-center hover:bg-muted p-2 rounded-xl transition-smooth">
+                <Bell className="w-5 h-5 text-muted-foreground" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" side="bottom" sideOffset={8} className="z-[500] w-80 p-0 bg-card rounded-2xl shadow-strong border border-border">
+              <div className="px-4 py-3 border-b border-border">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold">Notifications</h3>
+                  <button className="text-xs text-primary hover:underline">Mark all as read</button>
+                </div>
+              </div>
+              <div className="max-h-80 overflow-y-auto">
+                {notifications.map((notification) => (
+                  <button
+                    key={notification.id}
+                    className={cn(
+                      "w-full flex items-start gap-3 px-4 py-3 hover:bg-muted transition-smooth text-left border-b border-border/50 last:border-0",
+                      !notification.read && "bg-primary/5"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
+                      notification.type === 'lead' && "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]",
+                      notification.type === 'message' && "bg-[hsl(var(--blue))]/10 text-[hsl(var(--blue))]",
+                      notification.type === 'alert' && "bg-orange-500/10 text-orange-500",
+                      notification.type === 'success' && "bg-green-500/10 text-green-500",
+                      notification.type === 'calendar' && "bg-purple-500/10 text-purple-500"
+                    )}>
+                      <notification.icon className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium truncate">{notification.title}</span>
+                        {!notification.read && (
+                          <span className="w-2 h-2 bg-primary rounded-full flex-shrink-0" />
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground truncate">{notification.message}</p>
+                      <span className="text-[10px] text-muted-foreground">{notification.time}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+              <div className="px-4 py-3 border-t border-border">
+                <button className="w-full text-center text-sm text-primary hover:underline">
+                  View all notifications
+                </button>
               </div>
             </PopoverContent>
           </Popover>
