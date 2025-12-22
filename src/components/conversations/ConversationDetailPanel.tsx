@@ -175,25 +175,25 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
     <div className="w-80 border-l border-border bg-card flex flex-col overflow-hidden">
       <Tabs defaultValue="overview" className="flex-1 flex flex-col">
         <TabsList className="w-full justify-start rounded-none border-b h-auto p-0 bg-transparent overflow-x-auto">
-          <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
+          <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary">
             Overview
           </TabsTrigger>
-          <TabsTrigger value="participants" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
+          <TabsTrigger value="participants" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary">
             Participants
           </TabsTrigger>
-          <TabsTrigger value="attributes" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
+          <TabsTrigger value="attributes" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary">
             Attributes
           </TabsTrigger>
-          <TabsTrigger value="states" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
+          <TabsTrigger value="states" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary">
             States
           </TabsTrigger>
-          <TabsTrigger value="webhooks" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
+          <TabsTrigger value="webhooks" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary">
             Webhooks
           </TabsTrigger>
-          <TabsTrigger value="activity" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
+          <TabsTrigger value="activity" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary">
             Activity
           </TabsTrigger>
-          <TabsTrigger value="notes" className="rounded-none border-b-2 border-transparent data-[state=active]:border-teal-500 data-[state=active]:text-teal-600">
+          <TabsTrigger value="notes" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary">
             Notes
           </TabsTrigger>
         </TabsList>
@@ -225,14 +225,14 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
             <div className="space-y-2">
               <Label>Unique IDs</Label>
               <div className="space-y-1 text-sm">
-                <div className="flex items-center justify-between p-2 bg-muted/30 rounded-xl">
+              <div className="flex items-center justify-between p-2 bg-muted/30 rounded-xl">
                   <span className="text-muted-foreground">Service SID</span>
                   <div className="flex items-center gap-1">
                     <code className="text-xs">{conversation.serviceSid.slice(0, 12)}...</code>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6 rounded-lg hover:bg-teal-500/10 hover:text-teal-600"
+                      className="h-6 w-6 rounded-lg hover:bg-muted"
                       onClick={() => copyToClipboard(conversation.serviceSid, "Service SID")}
                     >
                       <Copy className="h-3 w-3" />
@@ -246,7 +246,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6 rounded-lg hover:bg-teal-500/10 hover:text-teal-600"
+                      className="h-6 w-6 rounded-lg hover:bg-muted"
                       onClick={() => copyToClipboard(conversation.conversationSid, "Conversation SID")}
                     >
                       <Copy className="h-3 w-3" />
@@ -285,9 +285,9 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               <Label>Tags</Label>
               <div className="flex flex-wrap gap-1 mb-2">
                 {tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="gap-1 rounded-lg bg-teal-500/10 text-teal-600 border-0">
+                  <Badge key={tag} variant="secondary" className="gap-1 rounded-lg bg-[hsl(var(--blue))]/10 text-[hsl(var(--blue))] border-0">
                     {tag}
-                    <button onClick={() => removeTag(tag)} className="hover:bg-teal-500/20 rounded-full p-0.5">
+                    <button onClick={() => removeTag(tag)} className="hover:bg-[hsl(var(--blue))]/20 rounded-full p-0.5">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
@@ -301,7 +301,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                   onKeyDown={(e) => e.key === "Enter" && addTag()}
                   className="flex-1 rounded-xl bg-muted/30"
                 />
-                <Button size="sm" onClick={addTag} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
+                <Button size="sm" onClick={addTag} className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl">
                   Add
                 </Button>
               </div>
@@ -344,7 +344,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               <h4 className="font-medium">Participants ({demoParticipants.length})</h4>
               <Dialog open={showAddParticipant} onOpenChange={setShowAddParticipant}>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="gap-1 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
+                  <Button size="sm" className="gap-1 bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl">
                     <UserPlus className="h-4 w-4" />
                     Add
                   </Button>
@@ -382,7 +382,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                     <Button variant="outline" onClick={() => setShowAddParticipant(false)} className="rounded-xl">
                       Cancel
                     </Button>
-                    <Button onClick={() => setShowAddParticipant(false)} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
+                    <Button onClick={() => setShowAddParticipant(false)} className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl">
                       Add Participant
                     </Button>
                   </DialogFooter>
@@ -394,16 +394,16 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
               {demoParticipants.map((participant) => (
                 <div
                   key={participant.id}
-                  className="p-3 border border-teal-500/20 rounded-xl space-y-2 bg-teal-500/5"
+                  className="p-3 border border-border rounded-xl space-y-2 bg-muted/30"
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-medium text-sm">{participant.displayName}</span>
-                    <Badge variant="secondary" className="text-[10px] rounded-lg bg-teal-500/10 text-teal-600 border-0">
+                    <Badge variant="secondary" className="text-[10px] rounded-lg bg-[hsl(var(--blue))]/10 text-[hsl(var(--blue))] border-0">
                       {participant.role}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-[10px] rounded-lg border-teal-500/30 text-teal-600">
+                    <Badge variant="outline" className="text-[10px] rounded-lg border-border">
                       {participant.type === "identity" ? "Identity" : "Address"}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
@@ -417,7 +417,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
                       Joined {new Date(participant.joinedAt).toLocaleDateString()}
                     </span>
                     <div className="flex gap-1">
-                      <Button variant="ghost" size="icon" className="h-6 w-6 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
+                      <Button variant="ghost" size="icon" className="h-6 w-6 rounded-lg hover:bg-muted">
                         <Send className="h-3 w-3" />
                       </Button>
                       <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive rounded-lg hover:bg-destructive/10">
@@ -434,7 +434,7 @@ export const ConversationDetailPanel = ({ conversation }: ConversationDetailPane
           <TabsContent value="attributes" className="p-4 space-y-4 m-0">
             <div className="flex items-center justify-between">
               <h4 className="font-medium">Metadata</h4>
-              <Button size="sm" className="gap-1 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">
+              <Button size="sm" className="gap-1 bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl">
                 <Plus className="h-4 w-4" />
                 Add Field
               </Button>

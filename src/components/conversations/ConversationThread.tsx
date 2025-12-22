@@ -149,7 +149,7 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
                     className={cn(
                       "max-w-[70%] rounded-2xl px-4 py-2",
                       msg.type === "outbound"
-                        ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white"
+                        ? "bg-primary text-primary-foreground"
                         : "bg-muted/50 border border-border"
                     )}
                   >
@@ -176,7 +176,7 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
             <span className="text-sm text-muted-foreground">
               This conversation is closed
             </span>
-            <Button variant="outline" size="sm" className="gap-2 rounded-xl border-teal-500/30 hover:bg-teal-500/10 hover:text-teal-600">
+            <Button variant="outline" size="sm" className="gap-2 rounded-xl hover:bg-muted">
               <RefreshCw className="h-4 w-4" />
               Reopen
             </Button>
@@ -190,7 +190,7 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
                 placeholder="Type a message..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="min-h-[80px] resize-none rounded-xl bg-muted/30 border-0 focus-visible:ring-teal-500/50"
+                className="min-h-[80px] resize-none rounded-xl bg-muted/30 border-0 focus-visible:ring-ring"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -199,39 +199,39 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
                 }}
               />
               <div className="flex items-center gap-2 mt-2">
-                <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
+                <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-muted">
                   <Paperclip className="h-4 w-4" />
                   Attach
                 </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
+                    <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-muted">
                       <FileText className="h-4 w-4" />
                       Templates
                       <ChevronDown className="h-3 w-3" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="rounded-xl bg-card border-border shadow-soft">
-                    <DropdownMenuItem className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">Welcome Template</DropdownMenuItem>
-                    <DropdownMenuItem className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">Follow-up Template</DropdownMenuItem>
-                    <DropdownMenuItem className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">Closing Template</DropdownMenuItem>
+                    <DropdownMenuItem className="rounded-lg">Welcome Template</DropdownMenuItem>
+                    <DropdownMenuItem className="rounded-lg">Follow-up Template</DropdownMenuItem>
+                    <DropdownMenuItem className="rounded-lg">Closing Template</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
+                    <Button variant="ghost" size="sm" className="gap-1 rounded-lg hover:bg-muted">
                       Send as: {selectedChannel}
                       <ChevronDown className="h-3 w-3" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="rounded-xl bg-card border-border shadow-soft">
-                    <DropdownMenuItem onClick={() => setSelectedChannel("SMS")} className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
+                    <DropdownMenuItem onClick={() => setSelectedChannel("SMS")} className="rounded-lg">
                       SMS
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setSelectedChannel("WhatsApp")} className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
+                    <DropdownMenuItem onClick={() => setSelectedChannel("WhatsApp")} className="rounded-lg">
                       WhatsApp
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setSelectedChannel("Chat")} className="rounded-lg hover:bg-teal-500/10 hover:text-teal-600">
+                    <DropdownMenuItem onClick={() => setSelectedChannel("Chat")} className="rounded-lg">
                       Chat
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -241,7 +241,7 @@ export const ConversationThread = ({ conversationId }: ConversationThreadProps) 
             <Button 
               onClick={handleSend} 
               disabled={!message.trim()}
-              className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl shadow-soft"
             >
               <Send className="h-4 w-4" />
             </Button>
