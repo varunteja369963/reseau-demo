@@ -32,13 +32,13 @@ export const ConversationDetail = ({ conversationId, onClose }: ConversationDeta
         {/* Thread header */}
         <div className="p-4 border-b border-border bg-card flex items-center justify-between">
           <div>
-            <h2 className="font-semibold">{conversation.friendlyName}</h2>
+            <h2 className="font-semibold text-foreground">{conversation.friendlyName}</h2>
             <p className="text-sm text-muted-foreground">
               {conversation.status === "open" ? "Open" : "Closed"} • Last activity{" "}
               {new Date(conversation.lastActivity).toLocaleString()}
             </p>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button variant="ghost" size="icon" className="rounded-xl hover:bg-muted/50" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
         </div>
