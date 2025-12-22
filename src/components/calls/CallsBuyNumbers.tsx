@@ -95,7 +95,7 @@ export function CallsBuyNumbers() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Filters Panel */}
-        <Card className="lg:col-span-1">
+        <Card className="lg:col-span-1 rounded-3xl shadow-soft border-0 bg-card">
           <CardHeader>
             <CardTitle>Search Filters</CardTitle>
             <CardDescription>Configure your number search</CardDescription>
@@ -199,7 +199,7 @@ export function CallsBuyNumbers() {
               </Select>
             </div>
 
-            <Button onClick={handleSearch} className="w-full" disabled={isSearching}>
+            <Button onClick={handleSearch} className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl" disabled={isSearching}>
               {isSearching ? (
                 <>Searching...</>
               ) : (

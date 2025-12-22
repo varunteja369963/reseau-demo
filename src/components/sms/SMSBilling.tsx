@@ -45,26 +45,26 @@ export function SMSBilling() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Current Plan */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 rounded-3xl shadow-soft border-0 bg-card">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Current Plan</CardTitle>
                 <CardDescription>Your subscription details</CardDescription>
               </div>
-              <Badge variant="secondary" className="bg-primary/10 text-primary">
+              <Badge variant="secondary" className="bg-gradient-to-r from-teal-500/20 to-teal-600/20 text-teal-600">
                 Pro Plan
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl">
               <div>
                 <p className="text-3xl font-bold">$249<span className="text-lg font-normal text-muted-foreground">/month</span></p>
                 <p className="text-sm text-muted-foreground">Next billing date: Feb 1, 2024</p>
               </div>
               <div className="text-right">
-                <Button variant="outline" className="gap-2">
+                <Button variant="outline" className="gap-2 rounded-xl">
                   <TrendingUp className="h-4 w-4" />
                   Upgrade Plan
                 </Button>
@@ -104,14 +104,14 @@ export function SMSBilling() {
         </Card>
 
         {/* Payment Method */}
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0 bg-card">
           <CardHeader>
             <CardTitle>Payment Method</CardTitle>
             <CardDescription>Your default payment method</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center gap-3 p-3 border rounded-lg">
-              <div className="h-10 w-14 bg-gradient-to-r from-blue-600 to-blue-400 rounded flex items-center justify-center">
+            <div className="flex items-center gap-3 p-3 border-0 bg-muted/30 rounded-xl">
+              <div className="h-10 w-14 bg-gradient-to-r from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
                 <CreditCard className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -119,7 +119,7 @@ export function SMSBilling() {
                 <p className="text-sm text-muted-foreground">Expires 12/25</p>
               </div>
             </div>
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full rounded-xl">
               Update Payment Method
             </Button>
           </CardContent>
@@ -127,7 +127,7 @@ export function SMSBilling() {
       </div>
 
       {/* Usage */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0 bg-card">
         <CardHeader>
           <CardTitle>Current Usage</CardTitle>
           <CardDescription>Your usage for this billing period</CardDescription>
@@ -141,7 +141,9 @@ export function SMSBilling() {
                 <div key={meter.label} className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Icon className="h-4 w-4 text-muted-foreground" />
+                      <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-teal-500/20 to-teal-600/20 flex items-center justify-center">
+                        <Icon className="h-4 w-4 text-teal-500" />
+                      </div>
                       <span className="text-sm font-medium">{meter.label}</span>
                     </div>
                     <span className="text-sm text-muted-foreground">
@@ -160,7 +162,7 @@ export function SMSBilling() {
       </Card>
 
       {/* Invoices */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0 bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Invoices</CardTitle>
@@ -185,12 +187,12 @@ export function SMSBilling() {
                   <TableCell>{invoice.date}</TableCell>
                   <TableCell>{invoice.amount}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary" className="bg-green-500/10 text-green-500">
+                    <Badge variant="secondary" className="bg-green-500/10 text-green-500 rounded-lg">
                       {invoice.status}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm" className="gap-1">
+                    <Button variant="ghost" size="sm" className="gap-1 rounded-xl">
                       <Download className="h-4 w-4" />
                       PDF
                     </Button>

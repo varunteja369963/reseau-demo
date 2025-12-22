@@ -153,7 +153,7 @@ export function CallsAuditLogs() {
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0 bg-card">
         <CardContent className="p-4">
           <div className="flex items-center gap-4 flex-wrap">
             <div className="relative flex-1 max-w-sm">
@@ -162,10 +162,10 @@ export function CallsAuditLogs() {
                 placeholder="Search logs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 rounded-xl"
               />
             </div>
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 rounded-xl">
               <Calendar className="h-4 w-4" />
               Date Range
             </Button>
@@ -207,7 +207,7 @@ export function CallsAuditLogs() {
       </Card>
 
       {/* Logs Table */}
-      <Card>
+      <Card className="rounded-3xl shadow-soft border-0 bg-card">
         <CardContent className="p-0">
           <Table>
             <TableHeader>

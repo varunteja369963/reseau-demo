@@ -114,20 +114,20 @@ export const ConversationsSettings = () => {
       </div>
 
       <Tabs defaultValue="services">
-        <TabsList>
-          <TabsTrigger value="services" className="gap-2">
+        <TabsList className="rounded-xl">
+          <TabsTrigger value="services" className="gap-2 rounded-xl">
             <Settings className="h-4 w-4" />
             Services
           </TabsTrigger>
-          <TabsTrigger value="team" className="gap-2">
+          <TabsTrigger value="team" className="gap-2 rounded-xl">
             <Users className="h-4 w-4" />
             Team & Roles
           </TabsTrigger>
-          <TabsTrigger value="webhooks" className="gap-2">
+          <TabsTrigger value="webhooks" className="gap-2 rounded-xl">
             <Webhook className="h-4 w-4" />
             Webhooks
           </TabsTrigger>
-          <TabsTrigger value="retention" className="gap-2">
+          <TabsTrigger value="retention" className="gap-2 rounded-xl">
             <Database className="h-4 w-4" />
             Data Retention
           </TabsTrigger>
@@ -135,7 +135,7 @@ export const ConversationsSettings = () => {
 
         {/* Services Tab */}
         <TabsContent value="services" className="space-y-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -144,7 +144,7 @@ export const ConversationsSettings = () => {
                     Services are top-level containers for conversations and can be configured with webhooks
                   </CardDescription>
                 </div>
-                <Button className="gap-2">
+                <Button className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
                   <Plus className="h-4 w-4" />
                   New Service
                 </Button>

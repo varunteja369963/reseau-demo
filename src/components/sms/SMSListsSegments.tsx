@@ -125,12 +125,12 @@ export function SMSListsSegments() {
 
       <Tabs defaultValue="lists">
         <div className="flex items-center justify-between">
-          <TabsList>
-            <TabsTrigger value="lists" className="gap-2">
+          <TabsList className="rounded-xl">
+            <TabsTrigger value="lists" className="gap-2 rounded-xl">
               <ListTree className="h-4 w-4" />
               Lists
             </TabsTrigger>
-            <TabsTrigger value="segments" className="gap-2">
+            <TabsTrigger value="segments" className="gap-2 rounded-xl">
               <FilterIcon className="h-4 w-4" />
               Segments
             </TabsTrigger>
@@ -145,16 +145,16 @@ export function SMSListsSegments() {
                 placeholder="Search lists..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 rounded-xl"
               />
             </div>
-            <Button onClick={() => setCreateListOpen(true)} className="gap-2">
+            <Button onClick={() => setCreateListOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
               <Plus className="h-4 w-4" />
               Create List
             </Button>
           </div>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -219,16 +219,16 @@ export function SMSListsSegments() {
                 placeholder="Search segments..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 rounded-xl"
               />
             </div>
-            <Button onClick={() => setCreateSegmentOpen(true)} className="gap-2">
+            <Button onClick={() => setCreateSegmentOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
               <Plus className="h-4 w-4" />
               Create Segment
             </Button>
           </div>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>

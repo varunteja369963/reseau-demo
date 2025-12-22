@@ -69,27 +69,27 @@ export function CallsSettings() {
       </div>
 
       <Tabs defaultValue="workspace">
-        <TabsList>
-          <TabsTrigger value="workspace" className="gap-2">
+        <TabsList className="rounded-xl">
+          <TabsTrigger value="workspace" className="gap-2 rounded-xl">
             <Building2 className="h-4 w-4" />
             Workspace
           </TabsTrigger>
-          <TabsTrigger value="team" className="gap-2">
+          <TabsTrigger value="team" className="gap-2 rounded-xl">
             <Users className="h-4 w-4" />
             Team & Roles
           </TabsTrigger>
-          <TabsTrigger value="webhooks" className="gap-2">
+          <TabsTrigger value="webhooks" className="gap-2 rounded-xl">
             <Webhook className="h-4 w-4" />
             Webhooks
           </TabsTrigger>
-          <TabsTrigger value="retention" className="gap-2">
+          <TabsTrigger value="retention" className="gap-2 rounded-xl">
             <Database className="h-4 w-4" />
             Data Retention
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="workspace" className="space-y-4 mt-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <CardTitle>Workspace Settings</CardTitle>
               <CardDescription>Basic workspace configuration</CardDescription>
@@ -128,20 +128,20 @@ export function CallsSettings() {
                   </Select>
                 </div>
               </div>
-              <Button>Save Changes</Button>
+              <Button className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">Save Changes</Button>
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="team" className="space-y-4 mt-4">
           <div className="flex items-center justify-end">
-            <Button onClick={() => setInviteDialogOpen(true)} className="gap-2">
+            <Button onClick={() => setInviteDialogOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
               <Plus className="h-4 w-4" />
               Invite Member
             </Button>
           </div>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -200,7 +200,7 @@ export function CallsSettings() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <CardTitle className="text-base">Role Permissions</CardTitle>
             </CardHeader>
@@ -253,7 +253,7 @@ export function CallsSettings() {
         </TabsContent>
 
         <TabsContent value="webhooks" className="space-y-4 mt-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <CardTitle>Webhook Endpoint</CardTitle>
               <CardDescription>Your inbound webhook base URL</CardDescription>
@@ -302,7 +302,7 @@ export function CallsSettings() {
         </TabsContent>
 
         <TabsContent value="retention" className="space-y-4 mt-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <CardTitle>Data Retention Policies</CardTitle>
               <CardDescription>Configure how long data is retained</CardDescription>
@@ -351,7 +351,7 @@ export function CallsSettings() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button>Save Changes</Button>
+              <Button className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">Save Changes</Button>
             </CardContent>
           </Card>
         </TabsContent>

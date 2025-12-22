@@ -98,35 +98,35 @@ export function SMSSettings() {
       </div>
 
       <Tabs defaultValue="organization">
-        <TabsList>
-          <TabsTrigger value="organization" className="gap-2">
+        <TabsList className="rounded-xl">
+          <TabsTrigger value="organization" className="gap-2 rounded-xl">
             <Building2 className="h-4 w-4" />
             Organization
           </TabsTrigger>
-          <TabsTrigger value="team" className="gap-2">
+          <TabsTrigger value="team" className="gap-2 rounded-xl">
             <Users className="h-4 w-4" />
             Team & Roles
           </TabsTrigger>
-          <TabsTrigger value="provider" className="gap-2">
+          <TabsTrigger value="provider" className="gap-2 rounded-xl">
             <Server className="h-4 w-4" />
             SMS Provider
           </TabsTrigger>
-          <TabsTrigger value="senders" className="gap-2">
+          <TabsTrigger value="senders" className="gap-2 rounded-xl">
             <Phone className="h-4 w-4" />
             Sender IDs
           </TabsTrigger>
-          <TabsTrigger value="api" className="gap-2">
+          <TabsTrigger value="api" className="gap-2 rounded-xl">
             <Webhook className="h-4 w-4" />
             API & Webhooks
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="gap-2">
+          <TabsTrigger value="notifications" className="gap-2 rounded-xl">
             <Bell className="h-4 w-4" />
             Notifications
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="organization" className="space-y-4 mt-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <CardTitle>Organization Profile</CardTitle>
               <CardDescription>Basic information about your organization</CardDescription>
@@ -135,34 +135,34 @@ export function SMSSettings() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Organization Name</Label>
-                  <Input defaultValue="Reseau SMS" />
+                  <Input defaultValue="Reseau SMS" className="rounded-xl" />
                 </div>
                 <div className="space-y-2">
                   <Label>Legal Name</Label>
-                  <Input defaultValue="Reseau Inc." />
+                  <Input defaultValue="Reseau Inc." className="rounded-xl" />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label>Business Address</Label>
-                <Textarea defaultValue="123 Main St, Suite 100, San Francisco, CA 94105" />
+                <Textarea defaultValue="123 Main St, Suite 100, San Francisco, CA 94105" className="rounded-xl" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Support Email</Label>
-                  <Input type="email" defaultValue="support@reseau.com" />
+                  <Input type="email" defaultValue="support@reseau.com" className="rounded-xl" />
                 </div>
                 <div className="space-y-2">
                   <Label>Support Phone</Label>
-                  <Input defaultValue="+1 800-555-0100" />
+                  <Input defaultValue="+1 800-555-0100" className="rounded-xl" />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label>Timezone</Label>
                 <Select defaultValue="America/Los_Angeles">
-                  <SelectTrigger>
+                  <SelectTrigger className="rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="rounded-xl">
                     <SelectItem value="America/Los_Angeles">Pacific Time (PT)</SelectItem>
                     <SelectItem value="America/Denver">Mountain Time (MT)</SelectItem>
                     <SelectItem value="America/Chicago">Central Time (CT)</SelectItem>
@@ -170,19 +170,19 @@ export function SMSSettings() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button>Save Changes</Button>
+              <Button className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">Save Changes</Button>
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="team" className="space-y-4 mt-4">
           <div className="flex items-center justify-end">
-            <Button onClick={() => setInviteDialogOpen(true)} className="gap-2">
+            <Button onClick={() => setInviteDialogOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
               <Plus className="h-4 w-4" />
               Invite Member
             </Button>
           </div>
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -244,7 +244,7 @@ export function SMSSettings() {
         </TabsContent>
 
         <TabsContent value="provider" className="space-y-4 mt-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader>
               <CardTitle>SMS Provider</CardTitle>
               <CardDescription>Connect your SMS provider account</CardDescription>
@@ -299,16 +299,16 @@ export function SMSSettings() {
 
         <TabsContent value="senders" className="space-y-4 mt-4">
           <div className="flex items-center justify-end gap-2">
-            <Button variant="outline" onClick={() => setCreatePoolOpen(true)} className="gap-2">
+            <Button variant="outline" onClick={() => setCreatePoolOpen(true)} className="gap-2 rounded-xl">
               <Plus className="h-4 w-4" />
               Create Sending Pool
             </Button>
-            <Button onClick={() => setAddSenderOpen(true)} className="gap-2">
+            <Button onClick={() => setAddSenderOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
               <Plus className="h-4 w-4" />
               Add Sender
             </Button>
           </div>
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -347,13 +347,13 @@ export function SMSSettings() {
         </TabsContent>
 
         <TabsContent value="api" className="space-y-6 mt-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>API Keys</CardTitle>
                 <CardDescription>Manage your API keys for programmatic access</CardDescription>
               </div>
-              <Button onClick={() => setAddApiKeyOpen(true)} className="gap-2">
+              <Button onClick={() => setAddApiKeyOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
                 <Plus className="h-4 w-4" />
                 Create Key
               </Button>
@@ -403,13 +403,13 @@ export function SMSSettings() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>Webhooks</CardTitle>
                 <CardDescription>Receive real-time event notifications</CardDescription>
               </div>
-              <Button onClick={() => setAddWebhookOpen(true)} className="gap-2">
+              <Button onClick={() => setAddWebhookOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
                 <Plus className="h-4 w-4" />
                 Add Webhook
               </Button>

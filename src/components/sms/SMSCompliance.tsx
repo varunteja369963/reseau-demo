@@ -101,10 +101,10 @@ export function SMSCompliance() {
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0 bg-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-red-500/10 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/20 flex items-center justify-center">
                 <XCircle className="h-5 w-5 text-red-500" />
               </div>
               <div>
@@ -114,10 +114,10 @@ export function SMSCompliance() {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0 bg-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-orange-500/20 to-orange-600/20 flex items-center justify-center">
                 <AlertTriangle className="h-5 w-5 text-orange-500" />
               </div>
               <div>
@@ -127,10 +127,10 @@ export function SMSCompliance() {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0 bg-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center">
                 <Clock className="h-5 w-5 text-blue-500" />
               </div>
               <div>
@@ -140,10 +140,10 @@ export function SMSCompliance() {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-3xl shadow-soft border-0 bg-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-green-500/20 to-green-600/20 flex items-center justify-center">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
               </div>
               <div>
@@ -156,7 +156,7 @@ export function SMSCompliance() {
       </div>
 
       <Tabs defaultValue="consent">
-        <TabsList>
+        <TabsList className="rounded-xl">
           <TabsTrigger value="consent">Consent Logs</TabsTrigger>
           <TabsTrigger value="suppression">Suppression List</TabsTrigger>
           <TabsTrigger value="keywords">Keyword Settings</TabsTrigger>
@@ -170,15 +170,15 @@ export function SMSCompliance() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search by phone or contact..."
-                className="pl-9"
+                className="pl-9 rounded-xl"
               />
             </div>
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 rounded-xl">
               <Download className="h-4 w-4" />
               Export
             </Button>
           </div>
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -220,14 +220,14 @@ export function SMSCompliance() {
           <div className="flex items-center justify-between">
             <div className="relative max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search by phone..." className="pl-9" />
+              <Input placeholder="Search by phone..." className="pl-9 rounded-xl" />
             </div>
-            <Button onClick={() => setAddSuppressionOpen(true)} className="gap-2">
+            <Button onClick={() => setAddSuppressionOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
               <Plus className="h-4 w-4" />
               Add to Suppression
             </Button>
           </div>
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -261,12 +261,12 @@ export function SMSCompliance() {
 
         <TabsContent value="keywords" className="space-y-4 mt-4">
           <div className="flex items-center justify-end">
-            <Button onClick={() => setAddKeywordOpen(true)} className="gap-2">
+            <Button onClick={() => setAddKeywordOpen(true)} className="gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl shadow-soft">
               <Plus className="h-4 w-4" />
               Add Keyword
             </Button>
           </div>
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -298,7 +298,7 @@ export function SMSCompliance() {
 
         <TabsContent value="rules" className="space-y-4 mt-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
+            <Card className="rounded-3xl shadow-soft border-0 bg-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Clock className="h-5 w-5" />
@@ -348,7 +348,7 @@ export function SMSCompliance() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="rounded-3xl shadow-soft border-0 bg-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Hash className="h-5 w-5" />
@@ -376,7 +376,7 @@ export function SMSCompliance() {
               </CardContent>
             </Card>
 
-            <Card className="lg:col-span-2">
+            <Card className="lg:col-span-2 rounded-3xl shadow-soft border-0 bg-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MessageSquare className="h-5 w-5" />
@@ -389,8 +389,9 @@ export function SMSCompliance() {
               <CardContent className="space-y-4">
                 <Textarea
                   defaultValue="Reply STOP to unsubscribe. HELP for help."
-                  className="min-h-[100px]"
+                  className="min-h-[100px] rounded-xl"
                 />
+                <Button className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-0 rounded-xl">Save Changes</Button>
                 <Button>Save Changes</Button>
               </CardContent>
             </Card>
@@ -398,7 +399,7 @@ export function SMSCompliance() {
         </TabsContent>
 
         <TabsContent value="audit" className="space-y-4 mt-4">
-          <Card>
+          <Card className="rounded-3xl shadow-soft border-0 bg-card">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
