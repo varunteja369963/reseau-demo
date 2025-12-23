@@ -299,7 +299,7 @@ export const EmailCampaigns = () => {
                       </div>
                       <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-teal-500/50 rounded-full transition-all duration-500"
+                          className="h-full bg-teal-300/50 rounded-full transition-all duration-500"
                           style={{ width: `${campaign.clickRate * 5}%` }}
                         />
                       </div>
