@@ -283,11 +283,11 @@ export const EmailCampaigns = () => {
                     <div>
                       <div className="flex items-center justify-between text-xs mb-2">
                         <span className="text-muted-foreground font-medium">Open Rate</span>
-                        <span className="font-semibold text-blue-600">{campaign.openRate}%</span>
+                        <span className="font-semibold text-teal-600">{campaign.openRate}%</span>
                       </div>
-                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                      <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full transition-all duration-500"
+                          className="h-full bg-teal-400/60 rounded-full transition-all duration-500"
                           style={{ width: `${campaign.openRate}%` }}
                         />
                       </div>
@@ -295,11 +295,11 @@ export const EmailCampaigns = () => {
                     <div>
                       <div className="flex items-center justify-between text-xs mb-2">
                         <span className="text-muted-foreground font-medium">Click Rate</span>
-                        <span className="font-semibold text-purple-600">{campaign.clickRate}%</span>
+                        <span className="font-semibold text-teal-600">{campaign.clickRate}%</span>
                       </div>
-                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                      <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-gradient-to-r from-purple-400 to-purple-600 rounded-full transition-all duration-500"
+                          className="h-full bg-teal-500/50 rounded-full transition-all duration-500"
                           style={{ width: `${campaign.clickRate * 5}%` }}
                         />
                       </div>
