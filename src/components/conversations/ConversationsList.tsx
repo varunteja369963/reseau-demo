@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,84 +21,81 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useConversations } from "@/context/ConversationsProvider";
+import { listSubscribedConversations } from "@/integrations/twilio/client";
+import type { ConversationListItem } from "@/integrations/twilio/mappers";
+import { mapTwilioConversationsToListItems } from "@/integrations/twilio/mappers";
 
-interface Conversation {
-  id: string;
-  friendlyName: string;
-  participantCount: number;
-  channels: string[];
-  unreadCount: number;
-  assignedTo: string | null;
-  lastMessage: string;
-  lastMessageTime: string;
-  status: "open" | "closed";
-}
+// Conversations will be fetched from Twilio and mapped to `ConversationListItem`.
 
-const demoConversations: Conversation[] = [
-  {
-    id: "conv-1",
-    friendlyName: "Support Request #1234",
-    participantCount: 2,
-    channels: ["SMS"],
-    unreadCount: 3,
-    assignedTo: "John Doe",
-    lastMessage: "Thanks for your help!",
-    lastMessageTime: "2 min ago",
-    status: "open",
-  },
-  {
-    id: "conv-2",
-    friendlyName: "Order Inquiry #5678",
-    participantCount: 3,
-    channels: ["WhatsApp", "SMS"],
-    unreadCount: 0,
-    assignedTo: null,
-    lastMessage: "When will my order arrive?",
-    lastMessageTime: "15 min ago",
-    status: "open",
-  },
-  {
-    id: "conv-3",
-    friendlyName: "Sales Lead - Acme Corp",
-    participantCount: 4,
-    channels: ["Chat"],
-    unreadCount: 1,
-    assignedTo: "Jane Smith",
-    lastMessage: "Let's schedule a demo for next week",
-    lastMessageTime: "1 hour ago",
-    status: "open",
-  },
-  {
-    id: "conv-4",
-    friendlyName: "Technical Support",
-    participantCount: 2,
-    channels: ["SMS", "WhatsApp", "Chat"],
-    unreadCount: 0,
-    assignedTo: "Support Team",
-    lastMessage: "Issue resolved. Closing ticket.",
-    lastMessageTime: "2 hours ago",
-    status: "closed",
-  },
-  {
-    id: "conv-5",
-    friendlyName: "Billing Question",
-    participantCount: 2,
-    channels: ["SMS"],
-    unreadCount: 5,
-    assignedTo: null,
-    lastMessage: "I have a question about my invoice",
-    lastMessageTime: "3 hours ago",
-    status: "open",
-  },
-];
+// Helpers to safely render possibly-non-primitive fields
+const safeString = (v: any, fallback = ""): string => {
+  if (v == null) return fallback;
+  if (typeof v === "string" || typeof v === "number" || typeof v === "boolean")
+    return String(v);
+  if (typeof v === "object") {
+    // prefer common fields
+    return String(
+      (v as any).text ??
+        (v as any).name ??
+        (v as any).title ??
+        JSON.stringify(v)
+    );
+  }
+  return String(v);
+};
+
+const safeMessageText = (m: any) => {
+  if (m == null) return "—";
+  if (typeof m === "string") return m;
+  if (typeof m === "object")
+    return String(m.text ?? m.body ?? JSON.stringify(m));
+  return String(m);
+};
 
 interface ConversationsListProps {
   onSelectConversation: (id: string | null) => void;
   selectedId: string | null;
 }
 
-export const ConversationsList = ({ onSelectConversation, selectedId }: ConversationsListProps) => {
+export const ConversationsList = ({
+  onSelectConversation,
+  selectedId,
+}: ConversationsListProps) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const [conversations, setConversations] = useState<ConversationListItem[]>(
+    []
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
+  const { client } = useConversations();
+
+  useEffect(() => {
+    let mounted = true;
+    async function load() {
+      if (!client) return;
+      setLoading(true);
+      setFetchError(null);
+      try {
+        const twilioConvs = await listSubscribedConversations();
+        if (!mounted) return;
+        const mapped = mapTwilioConversationsToListItems(twilioConvs as any);
+        setConversations(mapped);
+      } catch (err: any) {
+        if (!mounted) return;
+        setFetchError(err?.message ?? String(err));
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [client]);
 
   const toggleSelect = (id: string) => {
     setSelectedItems((prev) =>
@@ -107,10 +104,10 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
   };
 
   const toggleSelectAll = () => {
-    if (selectedItems.length === demoConversations.length) {
+    if (selectedItems.length === conversations.length) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(demoConversations.map((c) => c.id));
+      setSelectedItems(conversations.map((c) => c.id));
     }
   };
 
@@ -119,27 +116,31 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
       case "SMS":
         return {
           icon: <MessageSquare className="h-3 w-3" />,
-          className: "bg-gradient-to-r from-violet-500/20 to-purple-500/20 text-violet-600 dark:text-violet-400 border-violet-500/30"
+          className:
+            "bg-gradient-to-r from-violet-500/20 to-purple-500/20 text-violet-600 dark:text-violet-400 border-violet-500/30",
         };
       case "WhatsApp":
         return {
           icon: <Phone className="h-3 w-3" />,
-          className: "bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+          className:
+            "bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
         };
       case "Chat":
         return {
           icon: <Users className="h-3 w-3" />,
-          className: "bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30"
+          className:
+            "bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30",
         };
       default:
         return {
           icon: <MessageSquare className="h-3 w-3" />,
-          className: "bg-gradient-to-r from-slate-500/20 to-gray-500/20 text-slate-600 dark:text-slate-400 border-slate-500/30"
+          className:
+            "bg-gradient-to-r from-slate-500/20 to-gray-500/20 text-slate-600 dark:text-slate-400 border-slate-500/30",
         };
     }
   };
 
-  if (demoConversations.length === 0) {
+  if (!loading && conversations.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
         <div className="w-16 h-16 rounded-2xl bg-[hsl(var(--teal))]/10 flex items-center justify-center mb-4">
@@ -147,7 +148,8 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
         </div>
         <h3 className="text-lg font-semibold mb-2">No conversations yet</h3>
         <p className="text-muted-foreground mb-4 max-w-sm">
-          Start a new conversation or inbound messages can auto-create conversations when enabled.
+          Start a new conversation or inbound messages can auto-create
+          conversations when enabled.
         </p>
         <Button className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 rounded-xl shadow-soft">
           Create Conversation
@@ -164,15 +166,27 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
           <span className="text-sm text-[hsl(var(--blue))] font-medium">
             {selectedItems.length} selected
           </span>
-          <Button variant="outline" size="sm" className="gap-1 rounded-xl bg-card shadow-soft hover:bg-muted">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1 rounded-xl bg-card shadow-soft hover:bg-muted"
+          >
             <UserPlus className="h-3 w-3" />
             Assign
           </Button>
-          <Button variant="outline" size="sm" className="gap-1 rounded-xl bg-card shadow-soft hover:bg-muted">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1 rounded-xl bg-card shadow-soft hover:bg-muted"
+          >
             <X className="h-3 w-3" />
             Close
           </Button>
-          <Button variant="outline" size="sm" className="gap-1 rounded-xl bg-card shadow-soft hover:bg-muted">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1 rounded-xl bg-card shadow-soft hover:bg-muted"
+          >
             <Download className="h-3 w-3" />
             Export
           </Button>
@@ -180,25 +194,30 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
       )}
 
       {/* Header */}
-      <div className={`p-3 border-b border-border flex items-center gap-2 bg-muted/30 ${selectedItems.length === 0 ? 'rounded-tl-3xl' : ''}`}>
+      <div
+        className={`p-3 border-b border-border flex items-center gap-2 bg-muted/30 ${
+          selectedItems.length === 0 ? "rounded-tl-3xl" : ""
+        }`}
+      >
         <Checkbox
-          checked={selectedItems.length === demoConversations.length}
+          checked={selectedItems.length === conversations.length}
           onCheckedChange={toggleSelectAll}
           className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
         />
         <span className="text-sm text-muted-foreground">
-          {demoConversations.length} conversations
+          {conversations.length} conversations
         </span>
       </div>
 
       {/* List */}
       <div className="flex-1 overflow-y-auto">
-        {demoConversations.map((conversation) => (
+        {conversations.map((conversation) => (
           <div
             key={conversation.id}
             className={cn(
               "p-4 border-b border-border cursor-pointer hover:bg-muted/50 transition-smooth",
-              selectedId === conversation.id && "bg-[hsl(var(--blue))]/5 border-l-2 border-l-[hsl(var(--blue))]"
+              selectedId === conversation.id &&
+                "bg-[hsl(var(--blue))]/5 border-l-2 border-l-[hsl(var(--blue))]"
             )}
             onClick={() => onSelectConversation(conversation.id)}
           >
@@ -212,10 +231,14 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <span className="font-medium text-sm truncate">
-                    {conversation.friendlyName}
+                    {conversation.friendlyName
+                      ? safeString(conversation.friendlyName, conversation.id)
+                      : conversation.id}
                   </span>
                   <span className="text-xs text-muted-foreground whitespace-nowrap">
-                    {conversation.lastMessageTime}
+                    {conversation.lastMessageTime
+                      ? safeString(conversation.lastMessageTime, "")
+                      : ""}
                   </span>
                 </div>
 
@@ -227,7 +250,11 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    {conversation.channels.map((channel) => {
+                    {conversation.channels?.map((channelRaw) => {
+                      const channel =
+                        typeof channelRaw === "string"
+                          ? channelRaw
+                          : safeString(channelRaw);
                       const styles = getChannelStyles(channel);
                       return (
                         <Badge
@@ -247,7 +274,7 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
                 </div>
 
                 <p className="text-sm text-muted-foreground truncate mb-2">
-                  {conversation.lastMessage}
+                  {safeMessageText(conversation.lastMessage)}
                 </p>
 
                 <div className="flex items-center justify-between">
@@ -255,8 +282,8 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
                     <Badge
                       variant="secondary"
                       className={`text-[10px] rounded-lg border-0 ${
-                        conversation.status === "open" 
-                          ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]" 
+                        conversation.status === "open"
+                          ? "bg-[hsl(var(--teal))]/10 text-[hsl(var(--teal))]"
                           : "bg-muted text-muted-foreground"
                       }`}
                     >
@@ -282,18 +309,34 @@ export const ConversationsList = ({ onSelectConversation, selectedId }: Conversa
               </div>
 
               <DropdownMenu>
-                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-muted">
+                <DropdownMenuTrigger
+                  asChild
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 rounded-lg hover:bg-muted"
+                  >
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="rounded-xl bg-card border-border shadow-soft">
-                  <DropdownMenuItem className="rounded-lg">View</DropdownMenuItem>
-                  <DropdownMenuItem className="rounded-lg">Assign</DropdownMenuItem>
+                <DropdownMenuContent
+                  align="end"
+                  className="rounded-xl bg-card border-border shadow-soft"
+                >
+                  <DropdownMenuItem className="rounded-lg">
+                    View
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="rounded-lg">
+                    Assign
+                  </DropdownMenuItem>
                   <DropdownMenuItem className="rounded-lg">
                     {conversation.status === "open" ? "Close" : "Reopen"}
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="rounded-lg">Export transcript</DropdownMenuItem>
+                  <DropdownMenuItem className="rounded-lg">
+                    Export transcript
+                  </DropdownMenuItem>
                   <DropdownMenuItem className="text-destructive rounded-lg hover:bg-destructive/10">
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete
