@@ -74,6 +74,7 @@ export const ConversationsList = ({
 
   useEffect(() => {
     let mounted = true;
+
     async function load() {
       if (!client) return;
       setLoading(true);
@@ -92,8 +93,41 @@ export const ConversationsList = ({
     }
 
     load();
+
+    if (!client) return;
+
+    const handleConversationAdded = (conversation: any) => {
+      setConversations((prev) => {
+        const mapped = mapTwilioConversationsToListItems([conversation] as any);
+        return [...mapped, ...prev];
+      });
+    };
+
+    const handleConversationUpdated = (conversation: any) => {
+      setConversations((prev) =>
+        prev.map((c) =>
+          c.sid === conversation.sid
+            ? mapTwilioConversationsToListItems([conversation] as any)[0]
+            : c
+        )
+      );
+    };
+
+    try {
+      client.on("conversationAdded", handleConversationAdded);
+      client.on("conversationUpdated", handleConversationUpdated);
+    } catch (e) {
+      // ignore subscription errors
+    }
+
     return () => {
       mounted = false;
+      try {
+        client.off("conversationAdded", handleConversationAdded);
+        client.off("conversationUpdated", handleConversationUpdated);
+      } catch (e) {
+        // ignore cleanup errors
+      }
     };
   }, [client]);
 
