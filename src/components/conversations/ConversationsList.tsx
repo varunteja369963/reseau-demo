@@ -64,25 +64,28 @@ export const ConversationsList = ({
 }: ConversationsListProps) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  const [conversations, setConversations] = useState<ConversationListItem[]>(
-    []
-  );
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
-  const { client } = useConversations();
+  const { client, conversations, setConversations } = useConversations();
 
   useEffect(() => {
     let mounted = true;
 
     async function load() {
       if (!client) return;
+      console.log("ConversationsList: load() starting", {
+        clientAvailable: !!client,
+      });
       setLoading(true);
       setFetchError(null);
       try {
         const twilioConvs = await listSubscribedConversations();
         if (!mounted) return;
         const mapped = mapTwilioConversationsToListItems(twilioConvs as any);
+        console.log("ConversationsList: fetched and mapped conversations", {
+          mappedLength: mapped.length,
+        });
         setConversations(mapped);
       } catch (err: any) {
         if (!mounted) return;
@@ -99,6 +102,10 @@ export const ConversationsList = ({
     const handleConversationAdded = (conversation: any) => {
       setConversations((prev) => {
         const mapped = mapTwilioConversationsToListItems([conversation] as any);
+        console.log("ConversationsList: conversationAdded", {
+          mapped,
+          prevLength: prev.length,
+        });
         return [...mapped, ...prev];
       });
     };
@@ -106,8 +113,25 @@ export const ConversationsList = ({
     const handleConversationUpdated = (conversation: any) => {
       setConversations((prev) =>
         prev.map((c) =>
-          c.sid === conversation.sid
-            ? mapTwilioConversationsToListItems([conversation] as any)[0]
+          // `c.id` is the mapped conversation sid from our mapper
+          c.id ===
+          (conversation.sid ?? conversation.conversationSid ?? conversation.id)
+            ? (function () {
+                const m = mapTwilioConversationsToListItems([
+                  conversation,
+                ] as any)[0];
+                // Merge mapped fields into existing item, preferring defined mapped values
+                const definedEntries = Object.entries(m).filter(
+                  ([, v]) => v !== undefined
+                );
+                const patch = Object.fromEntries(definedEntries);
+                const merged = { ...c, ...patch } as typeof c;
+                console.log("ConversationsList: conversationUpdated mapped", {
+                  m,
+                  merged,
+                });
+                return merged;
+              })()
             : c
         )
       );
@@ -129,7 +153,7 @@ export const ConversationsList = ({
         // ignore cleanup errors
       }
     };
-  }, [client]);
+  }, [client, setConversations]);
 
   const toggleSelect = (id: string) => {
     setSelectedItems((prev) =>

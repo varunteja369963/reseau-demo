@@ -15,20 +15,14 @@ export const ConversationDetail = ({
   onClose,
 }: ConversationDetailProps) => {
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
-  // Demo conversation metadata (kept for panel) — detailed fields may be filled by backend
-  const conversation = {
-    id: conversationId,
-    friendlyName: `Conversation ${conversationId}`,
-    status: "open" as const,
-    serviceSid: undefined,
-    conversationSid: conversationId,
-    createdAt: undefined,
-    lastActivity: undefined,
-    tags: [] as string[],
-    assignedTo: undefined,
-  };
+  const { client, conversations } = useConversations();
+  const conversation = conversations.find(
+    (c) => c.conversationSid === conversationId || c.id === conversationId
+  );
 
-  const { client } = useConversations();
+  const conversationWithId = conversation
+    ? { ...conversation, id: conversation.id || conversation.conversationSid }
+    : null;
 
   interface MessageItem {
     id?: string | number;
@@ -118,6 +112,16 @@ export const ConversationDetail = ({
     };
   }, [client, conversationId]);
 
+  if (!conversationWithId) {
+    return (
+      <div className="flex-1 flex items-center justify-center min-w-0">
+        <div className="text-muted-foreground text-sm">
+          Loading conversation…
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 flex min-w-0">
       {/* Center: Thread */}
@@ -126,11 +130,14 @@ export const ConversationDetail = ({
         <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
           <div>
             <h2 className="font-semibold text-foreground">
-              {conversation.friendlyName}
+              {conversationWithId.friendlyName}
             </h2>
             <p className="text-sm text-muted-foreground">
-              {conversation.status === "open" ? "Open" : "Closed"} • Last
-              activity {new Date(conversation.lastActivity).toLocaleString()}
+              {conversationWithId.status === "open" ? "Open" : "Closed"} • Last
+              activity{" "}
+              {conversationWithId.lastActivity
+                ? new Date(conversationWithId.lastActivity).toLocaleString()
+                : "—"}
             </p>
           </div>
           <Button
@@ -207,7 +214,11 @@ export const ConversationDetail = ({
       </div>
 
       {/* Right: Detail Panel */}
-      <ConversationDetailPanel conversation={conversation} />
+      <ConversationDetailPanel
+        conversationSid={
+          conversationWithId.conversationSid || conversationWithId.id
+        }
+      />
     </div>
   );
 };

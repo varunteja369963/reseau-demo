@@ -41,8 +41,18 @@ async function createClientWithToken(token: string): Promise<ConversationsClient
     throw new Error("@twilio/conversations Client not available");
   }
 
-  const c: ConversationsClientType = await ConversationsClient.create(token);
-  return c;
+  // Prefer the new constructor API; fall back to .create() for older SDKs
+  try {
+    // @ts-ignore - runtime flexible
+    const inst = new ConversationsClient(token);
+    return inst as ConversationsClientType;
+  } catch (e) {
+    if (typeof ConversationsClient.create === "function") {
+      const inst = await ConversationsClient.create(token);
+      return inst as ConversationsClientType;
+    }
+    throw e;
+  }
 }
 
 /**
@@ -101,8 +111,25 @@ export async function listSubscribedConversations(): Promise<TwilioConversation[
 export async function getConversationBySid(sid: string): Promise<TwilioConversation> {
   return withClientRetry(async () => {
     const c = getClient();
-    const conv: TwilioConversation = await (c as any).getConversationBySid(sid);
-    return conv;
+    // Try multiple getter methods; some SDK versions expose different names
+    let conv: any = null;
+    if (typeof (c as any).getConversationBySid === "function") {
+      try {
+        conv = await (c as any).getConversationBySid(sid);
+      } catch (e) {
+        // continue to fallback
+      }
+    }
+
+    if ((!conv || typeof conv.update !== "function") && typeof (c as any).getConversation === "function") {
+      try {
+        conv = await (c as any).getConversation(sid);
+      } catch (e) {
+        // leave conv as-is
+      }
+    }
+
+    return conv as TwilioConversation;
   });
 }
 
